@@ -412,6 +412,8 @@ public class SuppliesTrackerPlugin extends Plugin
 				case AVAS_ASSEMBLER:
 				case AVAS_ASSEMBLER_L:
 				case ASSEMBLER_MAX_CAPE:
+				case ASSEMBLER_MAX_CAPE_L:
+				case MAX_CAPE_13342:
 					percent = ASSEMBLER_PERCENT;
 					break;
 				case AVAS_ACCUMULATOR:
@@ -419,6 +421,7 @@ public class SuppliesTrackerPlugin extends Plugin
 				case ACCUMULATOR_MAX_CAPE:
 					// TODO: the ranging cape can be used as an attractor so this could be wrong
 				case RANGING_CAPE:
+				case RANGING_CAPET:
 					percent = ACCUMULATOR_PERCENT;
 					break;
 				case AVAS_ATTRACTOR:
