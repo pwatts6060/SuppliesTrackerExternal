@@ -77,7 +77,7 @@ public enum ItemType
 			|| item.getName().toLowerCase().contains("knive") || item.getName().toLowerCase().contains("throwing")
 			|| item.getName().toLowerCase().contains("zulrah's scale") || item.getName().toLowerCase().contains("cannonball")
 			|| item.getName().toLowerCase().contains("knife")|| item.getName().toLowerCase().contains("chinchompa")
-			|| item.getName().toLowerCase().contains("thrownaxe"))
+			|| item.getName().toLowerCase().contains("thrownaxe") || item.getId() == REVENANT_ETHER)
 		{
 			return ItemType.AMMO;
 		}
@@ -105,7 +105,9 @@ public enum ItemType
 		}
 		else if (item.getId() == SCYTHE_OF_VITUR || item.getId() == SANGUINESTI_STAFF ||
 				item.getId() == TRIDENT_OF_THE_SEAS || item.getId() == TRIDENT_OF_THE_SWAMP ||
-				item.getId() == BLADE_OF_SAELDOR || item.getId() == IBANS_STAFF)
+				item.getId() == BLADE_OF_SAELDOR || item.getId() == IBANS_STAFF ||
+				item.getId() == THAMMARONS_SCEPTRE || item.getId() == CRAWS_BOW ||
+				item.getId() == VIGGORAS_CHAINMACE)
 		{
 			return ItemType.CHARGES;
 		}

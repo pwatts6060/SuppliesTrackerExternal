@@ -551,6 +551,18 @@ public abstract class SuppliesBox extends JPanel
 						.append("gp")
 						.append("</html>");
 					return tooltip.toString();
+
+				case THAMMARONS_SCEPTRE:
+				case CRAWS_BOW:
+				case VIGGORAS_CHAINMACE:
+					tooltip.append("<html>")
+						.append("Revenant ether x ")
+						.append(qty)
+						.append(" (")
+						.append(QuantityFormatter.quantityToStackSize(item.getPrice()))
+						.append("gp)")
+						.append("</html>");
+					return tooltip.toString();
 			}
 
 			return tooltip.toString();
