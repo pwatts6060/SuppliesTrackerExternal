@@ -35,6 +35,8 @@ import static net.runelite.api.ItemID.IRON_DART;
 import static net.runelite.api.ItemID.MITHRIL_DART;
 import static net.runelite.api.ItemID.RUNE_DART;
 import static net.runelite.api.ItemID.STEEL_DART;
+import static net.runelite.api.ItemID.BLACK_DART;
+import static net.runelite.api.ItemID.AMETHYST_DART;
 
 /**
  * Type of darts that can be put into the blowpipe
@@ -43,11 +45,39 @@ import static net.runelite.api.ItemID.STEEL_DART;
 public enum BlowpipeDartType
 {
 	BRONZE(BRONZE_DART), IRON(IRON_DART),
-	STEEL(STEEL_DART), MITHRIL(MITHRIL_DART),
-	ADAMANT(ADAMANT_DART), RUNE(RUNE_DART),
+	STEEL(STEEL_DART), BLACK(BLACK_DART),
+	MITHRIL(MITHRIL_DART), ADAMANT(ADAMANT_DART),
+	RUNE(RUNE_DART), AMETHYST(AMETHYST_DART),
 	DRAGON(DRAGON_DART);
 
 	@Getter(AccessLevel.MODULE)
 	private int dartID;
 
+
+	public static BlowpipeDartType getByItemName(String itemName)
+	{
+		switch (itemName)
+		{
+			case "Bronze dart" :
+				return BRONZE;
+			case "Iron dart" :
+				return IRON;
+			case "Steel dart" :
+				return STEEL;
+			case "Black dart" :
+				return BLACK;
+			case "Mithril dart" :
+				return MITHRIL;
+			case "Adamant dart" :
+				return ADAMANT;
+			case "Rune dart" :
+				return RUNE;
+			case "Amethyst dart" :
+				return AMETHYST;
+			case "Dragon dart" :
+				return DRAGON;
+			default:
+				return null;
+		}
+	}
 }

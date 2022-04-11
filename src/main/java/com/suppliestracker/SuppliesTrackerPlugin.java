@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -108,6 +109,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private static final String TELEPORT_PATTERN = "^teleport";
 	private static final String TELETAB_PATTERN = "^break";
 	private static final String SPELL_PATTERN = "^cast|^grand\\sexchange|^outside|^seers|^yanille";
+	private static final String BLOWPIPE_CHECK_PATTERN = "Darts: <col=007f00>(.*) x.*";
 
 	//Equipment slot constants
 	private static final int EQUIPMENT_MAINHAND_SLOT = EquipmentInventorySlot.WEAPON.getSlotIdx();
@@ -246,6 +248,9 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Inject
 	@Getter
 	private SuppliesTrackerConfig config;
+
+	@Inject
+	private ConfigManager configManager;
 
 	@Inject
 	private Client client;
@@ -1013,6 +1018,9 @@ public class SuppliesTrackerPlugin extends Plugin
 	private void onChatMessage(ChatMessage event) {
 		String message = event.getMessage();
 
+		Pattern blowpipeCheckPattern = Pattern.compile(BLOWPIPE_CHECK_PATTERN);
+		Matcher blowpipeCheckMatcher = blowpipeCheckPattern.matcher(message);
+
 		if (event.getType() == ChatMessageType.GAMEMESSAGE || event.getType() == ChatMessageType.SPAM)
 		{
 			if (message.toLowerCase().contains("you plant "))
@@ -1102,6 +1110,11 @@ public class SuppliesTrackerPlugin extends Plugin
 			else if (event.getMessage().contains("Torfinn has retrieved some of your items."))
 			{
 				buildEntries(HEALER_ICON_22308);
+			}
+			else if (blowpipeCheckMatcher.matches())
+			{
+				BlowpipeDartType blowPipeAmmo = BlowpipeDartType.getByItemName(blowpipeCheckMatcher.group(1));
+				configManager.setConfiguration("suppliestracker", "blowpipeAmmo", blowPipeAmmo);
 			}
 		}
 	}
