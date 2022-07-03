@@ -261,9 +261,9 @@ public class SuppliesTrackerPlugin extends Plugin
 
 	//Item arrays
 	private final String[] RAIDS_CONSUMABLES = new String[]{"xeric's", "elder", "twisted", "revitalisation", "overload", "prayer enhance", "pysk", "suphi", "leckish", "brawk", "mycil", "roqed", "kyren", "guanic", "prael", "giral", "phluxia", "kryket", "murng", "psykk", "egniol"};
-	private final int[] TRIDENT_OF_THE_SEAS_IDS = new int[]{TRIDENT_OF_THE_SEAS, TRIDENT_OF_THE_SEAS_E, TRIDENT_OF_THE_SEAS_FULL};
-	private final int[] TRIDENT_OF_THE_SWAMP_IDS = new int[]{TRIDENT_OF_THE_SWAMP_E, TRIDENT_OF_THE_SWAMP, UNCHARGED_TOXIC_TRIDENT_E, UNCHARGED_TOXIC_TRIDENT};
-	private final int[] IBANS_STAFF_IDS = new int[]{IBANS_STAFF, IBANS_STAFF_U};
+	private final Set<Integer> TRIDENT_OF_THE_SEAS_IDS = ImmutableSet.of(TRIDENT_OF_THE_SEAS, TRIDENT_OF_THE_SEAS_E, TRIDENT_OF_THE_SEAS_FULL);
+	private final Set<Integer> TRIDENT_OF_THE_SWAMP_IDS = ImmutableSet.of(TRIDENT_OF_THE_SWAMP_E, TRIDENT_OF_THE_SWAMP, UNCHARGED_TOXIC_TRIDENT_E, UNCHARGED_TOXIC_TRIDENT);
+	private final Set<Integer> IBANS_STAFF_IDS = ImmutableSet.of(IBANS_STAFF, IBANS_STAFF_U);
 
 	private ItemContainer oldInv;
 	private int ammoId = 0;
@@ -616,128 +616,111 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Subscribe
 	private void onAnimationChanged(AnimationChanged animationChanged)
 	{
-		if (animationChanged.getActor() == client.getLocalPlayer())
+		if (animationChanged.getActor() != client.getLocalPlayer()) {
+			return;
+		}
+		int playerAniId = animationChanged.getActor().getAnimation();
+
+		switch (playerAniId)
 		{
-			int playerAniId = animationChanged.getActor().getAnimation();
-
-			switch (playerAniId)
-			{
-				case HIGH_LEVEL_MAGIC_ATTACK:
-					//Trident of the seas
-					for (int tridentOfTheSeas : TRIDENT_OF_THE_SEAS_IDS)
-					{
-						if (mainHandId == tridentOfTheSeas)
-						{
-							if (config.chargesBox())
-							{
-								buildChargesEntries(TRIDENT_OF_THE_SEAS);
-							}
-							else
-							{
-								buildEntries(CHAOS_RUNE);
-								buildEntries(DEATH_RUNE);
-								buildEntries(FIRE_RUNE, 5);
-								buildEntries(COINS_995, 10);
-							}
-							break;
-						}
-					}
-					//Trident of the swamp
-					for (int tridentOfTheSwamp : TRIDENT_OF_THE_SWAMP_IDS)
-					{
-						if (mainHandId == tridentOfTheSwamp)
-						{
-							if (config.chargesBox())
-							{
-								buildChargesEntries(TRIDENT_OF_THE_SWAMP);
-							}
-							else
-							{
-								buildEntries(CHAOS_RUNE);
-								buildEntries(DEATH_RUNE);
-								buildEntries(FIRE_RUNE, 5);
-								buildEntries(ZULRAHS_SCALES);
-							}
-							break;
-						}
-					}
-					//Sang Staff
-					if (mainHandId == SANGUINESTI_STAFF)
-					{
-						if (config.chargesBox())
-						{
-							buildChargesEntries(SANGUINESTI_STAFF);
-						}
-						else
-						{
-							buildEntries(BLOOD_RUNE, 3);
-						}
-					}
-					break;
-				case IBANS_STAFF_ANIMATION:
-					//Iban's staff
-					for (int ibansStaff : IBANS_STAFF_IDS)
-					{
-						if (mainHandId == ibansStaff)
-						{
-							if (config.chargesBox())
-							{
-								buildChargesEntries(IBANS_STAFF);
-								break;
-							}
-						}
-					}
-					// let case fall through to handle non-charge path through regular cast path
-					// to prevent double counting when manually casting from the spell book.
-				case SLAYERS_STAFF_ANIMATION:
-				case LOW_LEVEL_MAGIC_ATTACK:
-				case BARRAGE_ANIMATION:
-				case BLITZ_ANIMATION:
-				case LOW_LEVEL_STANDARD_SPELLS:
-				case WAVE_SPELL_ANIMATION:
-				case SURGE_SPELL_ANIMATION:
-				case HIGH_ALCH_ANIMATION:
-				case LUNAR_HUMIDIFY:
-					oldInv = client.getItemContainer(InventoryID.INVENTORY);
-
-					if (oldInv != null && oldInv.getItems() != null &&
-							actionStack.stream().noneMatch(a ->
-									a.getType() == CAST))
-					{
-						MenuAction newAction = new MenuAction(CAST, oldInv.getItems());
-						actionStack.push(newAction);
-					}
-					if (!magicXpChanged)
-					{
-						skipTick = true;
-						noXpCast = true;
-					}
-					break;
-				case SCYTHE_OF_VITUR_ANIMATION:
+			case HIGH_LEVEL_MAGIC_ATTACK:
+				//Trident of the seas
+				if (TRIDENT_OF_THE_SEAS_IDS.contains(mainHandId)) {
 					if (config.chargesBox())
 					{
-						buildChargesEntries(SCYTHE_OF_VITUR);
+						buildChargesEntries(TRIDENT_OF_THE_SEAS);
+					}
+					else
+					{
+						buildEntries(CHAOS_RUNE);
+						buildEntries(DEATH_RUNE);
+						buildEntries(FIRE_RUNE, 5);
+						buildEntries(COINS_995, 10);
+					}
+				}
+				//Trident of the swamp
+				if (TRIDENT_OF_THE_SWAMP_IDS.contains(mainHandId))
+				{
+					if (config.chargesBox())
+					{
+						buildChargesEntries(TRIDENT_OF_THE_SWAMP);
+					}
+					else
+					{
+						buildEntries(CHAOS_RUNE);
+						buildEntries(DEATH_RUNE);
+						buildEntries(FIRE_RUNE, 5);
+						buildEntries(ZULRAHS_SCALES);
+					}
+				}
+				//Sang Staff
+				if (mainHandId == SANGUINESTI_STAFF)
+				{
+					if (config.chargesBox())
+					{
+						buildChargesEntries(SANGUINESTI_STAFF);
 					}
 					else
 					{
 						buildEntries(BLOOD_RUNE, 3);
-						buildEntries(COINS_995, itemManager.getItemPrice(VIAL_OF_BLOOD_22446) / 100);
 					}
-					break;
-				case ONEHAND_SLASH_SWORD:
-				case ONEHAND_STAB_SWORD:
-					if (mainHandId == BLADE_OF_SAELDOR) buildChargesEntries(BLADE_OF_SAELDOR);
-					break;
-				case USING_GILDED_ALTAR:
-				case PRAY_AT_ALTAR:
-					prayerAltarAnimationCheck = true;
-					longTickWait = 5;
-				case ENSOULED_HEADS_ANIMATION:
-					if (ensouledHeadId != 0)
-					{
-						buildEntries(ensouledHeadId);
-					}
-			}
+				}
+				break;
+			case IBANS_STAFF_ANIMATION:
+				//Iban's staff
+				if (IBANS_STAFF_IDS.contains(mainHandId) && config.chargesBox()) {
+					buildChargesEntries(IBANS_STAFF);
+				}
+				// let case fall through to handle non-charge path through regular cast path
+				// to prevent double counting when manually casting from the spell book.
+			case SLAYERS_STAFF_ANIMATION:
+			case LOW_LEVEL_MAGIC_ATTACK:
+			case BARRAGE_ANIMATION:
+			case BLITZ_ANIMATION:
+			case LOW_LEVEL_STANDARD_SPELLS:
+			case WAVE_SPELL_ANIMATION:
+			case SURGE_SPELL_ANIMATION:
+			case HIGH_ALCH_ANIMATION:
+			case LUNAR_HUMIDIFY:
+				oldInv = client.getItemContainer(InventoryID.INVENTORY);
+
+				if (oldInv != null && oldInv.getItems() != null &&
+						actionStack.stream().noneMatch(a ->
+								a.getType() == CAST))
+				{
+					MenuAction newAction = new MenuAction(CAST, oldInv.getItems());
+					actionStack.push(newAction);
+				}
+				if (!magicXpChanged)
+				{
+					skipTick = true;
+					noXpCast = true;
+				}
+				break;
+			case SCYTHE_OF_VITUR_ANIMATION:
+				if (config.chargesBox())
+				{
+					buildChargesEntries(SCYTHE_OF_VITUR);
+				}
+				else
+				{
+					buildEntries(BLOOD_RUNE, 3);
+					buildEntries(COINS_995, itemManager.getItemPrice(VIAL_OF_BLOOD_22446) / 100);
+				}
+				break;
+			case ONEHAND_SLASH_SWORD:
+			case ONEHAND_STAB_SWORD:
+				if (mainHandId == BLADE_OF_SAELDOR) buildChargesEntries(BLADE_OF_SAELDOR);
+				break;
+			case USING_GILDED_ALTAR:
+			case PRAY_AT_ALTAR:
+				prayerAltarAnimationCheck = true;
+				longTickWait = 5;
+			case ENSOULED_HEADS_ANIMATION:
+				if (ensouledHeadId != 0)
+				{
+					buildEntries(ensouledHeadId);
+				}
 		}
 	}
 
