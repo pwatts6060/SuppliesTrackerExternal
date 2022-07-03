@@ -69,7 +69,6 @@ public class SuppliesTrackerPanel extends PluginPanel
 
 	private final PluginErrorPanel errorPanel = new PluginErrorPanel();
 
-
 	// Handle overall session data
 	public final JPanel overallPanel = new JPanel();
 	private final JLabel overallSuppliesUsedLabel = new JLabel();
@@ -142,16 +141,12 @@ public class SuppliesTrackerPanel extends PluginPanel
 		logsContainer.setVisible(true);
 
 		switchTrack = new JButton("Switch Tracking");
-		switchTrack.addActionListener(e ->
-		{
-			plugin.switchTracking();
-		});
+		switchTrack.addActionListener(e -> plugin.switchTracking());
 
 		layoutPanel.add(switchTrack);
 
 		errorPanel.setContent("Supply trackers", "You have not used any supplies yet.\nCheck Configs for options.     \nMake sure to set blowpipe dart in configs");
 		add(errorPanel);
-
 	}
 
 	/**
@@ -241,7 +236,6 @@ public class SuppliesTrackerPanel extends PluginPanel
 		{
 			remove(errorPanel);
 			overallPanel.setVisible(true);
-
 		}
 	}
 }
