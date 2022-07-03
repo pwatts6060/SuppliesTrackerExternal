@@ -105,6 +105,8 @@ public class SuppliesTrackerPlugin extends Plugin
 	static final String POTION_PATTERN = "[(]\\d[)]";
 	private static final String EAT_PATTERN = "^eat";
 	private static final String DRINK_PATTERN = "^drink";
+	private static final Pattern eatPattern = Pattern.compile(EAT_PATTERN);
+	private static final Pattern drinkPattern = Pattern.compile(DRINK_PATTERN);
 	private static final String TELEPORT_PATTERN = "^teleport";
 	private static final String TELETAB_PATTERN = "^break";
 	private static final String SPELL_PATTERN = "^cast|^grand\\sexchange|^outside|^seers|^yanille";
@@ -846,9 +848,10 @@ public class SuppliesTrackerPlugin extends Plugin
 
 		// Uses stacks to push/pop for tick eating
 		// Create pattern to find eat/drink at beginning
-		Pattern eatPattern = Pattern.compile(EAT_PATTERN);
-		Pattern drinkPattern = Pattern.compile(DRINK_PATTERN);
-		if ((eatPattern.matcher(event.getMenuTarget().toLowerCase()).find() || drinkPattern.matcher(event.getMenuTarget().toLowerCase()).find()) &&
+
+		String target = event.getMenuTarget().toLowerCase();
+
+		if ((eatPattern.matcher(target).find() || drinkPattern.matcher(target).find()) &&
 			actionStack.stream().noneMatch(a ->
 			{
 				if (a instanceof MenuAction.ItemAction)
@@ -861,31 +864,26 @@ public class SuppliesTrackerPlugin extends Plugin
 		{
 			old = client.getItemContainer(InventoryID.INVENTORY);
 			int slot = event.getActionParam();
-			if (old.getItems() != null)
+			int pushItem = old.getItems()[event.getActionParam()].getId();
+			if (pushItem == PURPLE_SWEETS || pushItem == PURPLE_SWEETS_10476)
 			{
-				int pushItem = old.getItems()[event.getActionParam()].getId();
-				if (pushItem == PURPLE_SWEETS || pushItem == PURPLE_SWEETS_10476)
-				{
-					return;
-				}
-				MenuAction newAction = new MenuAction.ItemAction(ActionType.CONSUMABLE, old.getItems(), pushItem, slot);
-				actionStack.push(newAction);
+				return;
 			}
+			MenuAction newAction = new MenuAction.ItemAction(ActionType.CONSUMABLE, old.getItems(), pushItem, slot);
+			actionStack.push(newAction);
 		}
 
 		// Create pattern for teleport scrolls and tabs
 		Pattern teleportPattern = Pattern.compile(TELEPORT_PATTERN);
 		Pattern teletabPattern = Pattern.compile(TELETAB_PATTERN);
-		if (teleportPattern.matcher(event.getMenuTarget().toLowerCase()).find() ||
-			teletabPattern.matcher(event.getMenuTarget().toLowerCase()).find())
+		if (teleportPattern.matcher(target).find() ||
+			teletabPattern.matcher(target).find())
 		{
 			old = client.getItemContainer(InventoryID.INVENTORY);
 
 			// Makes stack only contains one teleport type to stop from adding multiple of one teleport
-			if (old != null && old.getItems() != null &&
-				actionStack.stream().noneMatch(a ->
-					a.getType() == ActionType.TELEPORT))
-			{
+			if (old != null && actionStack.stream().noneMatch(a ->
+					a.getType() == ActionType.TELEPORT)) {
 				int teleid = event.getId();
 				MenuAction newAction = new MenuAction.ItemAction(ActionType.TELEPORT, old.getItems(), teleid, event.getActionParam());
 				actionStack.push(newAction);
@@ -900,15 +898,14 @@ public class SuppliesTrackerPlugin extends Plugin
 		{
 			old = client.getItemContainer(InventoryID.INVENTORY);
 
-			if (old != null && old.getItems() != null && actionStack.stream().noneMatch(a ->
-					a.getType() == CAST))
-			{
+			if (old != null && actionStack.stream().noneMatch(a ->
+					a.getType() == CAST)) {
 				MenuAction newAction = new MenuAction(CAST, old.getItems());
 				actionStack.push(newAction);
 			}
 		}
 
-		if (event.getMenuTarget().toLowerCase().equals("use"))
+		if (target.equals("use"))
 		{
 			if (itemManager.getItemComposition(event.getId()).getName().toLowerCase().contains("compost"))
 			{
@@ -934,12 +931,11 @@ public class SuppliesTrackerPlugin extends Plugin
 		}
 
 		//Adds tracking to Master Scroll Book
-		if (event.getMenuOption().toLowerCase().equals("activate"))
+		if (event.getMenuOption().equalsIgnoreCase("activate"))
 		{
-			String target = event.getMenuTarget();
-			if (target.toLowerCase().contains("teleport scroll"))
+			if (target.contains("teleport scroll"))
 			{
-				switch (target.toLowerCase().substring(target.indexOf(">") + 1))
+				switch (target.substring(target.indexOf(">") + 1))
 				{
 					case "watson teleport scroll":
 						buildEntries(WATSON_TELEPORT);
