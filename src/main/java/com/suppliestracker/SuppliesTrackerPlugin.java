@@ -691,27 +691,13 @@ public class SuppliesTrackerPlugin extends Plugin
 	private void onItemContainerChanged(ItemContainerChanged itemContainerChanged)
 	{
 		ItemContainer itemContainer = itemContainerChanged.getItemContainer();
-
-		if (itemContainer != null && itemContainer == client.getItemContainer(InventoryID.INVENTORY))
+		boolean isInv = itemContainer == client.getItemContainer(InventoryID.INVENTORY);
+		if (isInv)
 		{
-			for (int i = 0; i < client.getItemContainer(InventoryID.INVENTORY).getItems().length; i++)
-			{
-				int tItemId = client.getItemContainer(InventoryID.INVENTORY).getItems()[i].getId();
-
-				if (tItemId == RUNE_POUCH || tItemId == RUNE_POUCH_23650 || tItemId == RUNE_POUCH_L)
-				{
-					runepouchInInv = true;
-					break;
-				}
-				else
-				{
-					runepouchInInv = false;
-				}
-			}
+			runepouchInInv = RunePouch.hasRunePouch(itemContainer);
 		}
 
-		if (itemContainer == client.getItemContainer(InventoryID.INVENTORY) &&
-			old != null)
+		if (isInv && old != null)
 		{
 			while (!actionStack.isEmpty())
 			{
