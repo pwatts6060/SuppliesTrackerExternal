@@ -127,7 +127,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private static final int BLOWPIPE_TICKS_NORMAL_PVP = 4;
 
 	//blowpipe scale usage
-	private static final double SCALES_PERCENT = 0.66;
+	private static final double SCALES_PERCENT = 2.0 / 3.0;
 
 	//Max use amounts
 	private static final int POTION_DOSES = 4, CAKE_DOSES = 3, PIZZA_PIE_DOSES = 2;
