@@ -108,10 +108,4 @@ public enum Runes
 		return runes.get(varbit);
 	}
 
-	public String getName()
-	{
-		String name = this.name();
-		name = name.substring(0, 1) + name.substring(1).toLowerCase();
-		return name;
-	}
 }
