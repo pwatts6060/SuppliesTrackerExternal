@@ -1,7 +1,21 @@
 package com.suppliestracker.Skills;
 
 import com.suppliestracker.SuppliesTrackerPlugin;
-import static net.runelite.api.ItemID.*;
+
+import static net.runelite.api.ItemID.BOTTOMLESS_COMPOST_BUCKET;
+import static net.runelite.api.ItemID.BOTTOMLESS_COMPOST_BUCKET_22997;
+import static net.runelite.api.ItemID.CABBAGE_SEED;
+import static net.runelite.api.ItemID.COMPOST;
+import static net.runelite.api.ItemID.ONION_SEED;
+import static net.runelite.api.ItemID.POTATO_SEED;
+import static net.runelite.api.ItemID.SNAPE_GRASS_SEED;
+import static net.runelite.api.ItemID.STRAWBERRY_SEED;
+import static net.runelite.api.ItemID.SUPERCOMPOST;
+import static net.runelite.api.ItemID.SWEETCORN_SEED;
+import static net.runelite.api.ItemID.TOMATO_SEED;
+import static net.runelite.api.ItemID.ULTRACOMPOST;
+import static net.runelite.api.ItemID.WATERMELON_SEED;
+
 import net.runelite.client.game.ItemManager;
 
 import javax.inject.Singleton;
@@ -9,8 +23,8 @@ import javax.inject.Singleton;
 @Singleton
 public class Farming
 {
-	private SuppliesTrackerPlugin plugin;
-	private ItemManager itemManager;
+	private final SuppliesTrackerPlugin plugin;
+	private final ItemManager itemManager;
 	private int plantId = 0;
 	private int compostId = 0;
 	private int bucketId = 0;
@@ -25,7 +39,7 @@ public class Farming
 		this.itemManager = itemManager;
 	}
 
-    public void OnChatPlant(String message)
+    public void onChatPlant(String message)
     {
         if (plantId <= 0)
         {
@@ -34,7 +48,7 @@ public class Farming
 
         String name = itemManager.getItemComposition(plantId).getName().toLowerCase();
 
-        if ( name.contains(" seed") || name.contains(" sapling"))
+        if (name.contains(" seed") || name.contains(" sapling"))
         {
             for (int seedId: ALLOTMENT_SEEDS)
             {
@@ -48,7 +62,7 @@ public class Farming
         }
     }
 
-    public void OnChatTreat(String message)
+    public void onChatTreat(String message)
     {
         if (bucketId <= 0)
         {

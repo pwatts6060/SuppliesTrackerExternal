@@ -1017,13 +1017,13 @@ public class SuppliesTrackerPlugin extends Plugin
 		}
 		if (message.toLowerCase().contains("you plant "))
 		{
-			farming.OnChatPlant(message.toLowerCase());
+			farming.onChatPlant(message.toLowerCase());
 		}
 
 		else if (message.toLowerCase().contains("you treat "))
 		{
 			farming.setEndlessBucket(message);
-			farming.OnChatTreat(message.toLowerCase());
+			farming.onChatTreat(message.toLowerCase());
 		}
 
 		else if (message.toLowerCase().contains("you bury the bones"))
