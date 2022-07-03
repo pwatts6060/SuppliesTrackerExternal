@@ -78,7 +78,7 @@ public class SessionHandler
 				sessionFile.createNewFile();
 			}
 
-			try (FileWriter f = new FileWriter(sessionFile, true); BufferedWriter b = new BufferedWriter(f); PrintWriter p = new PrintWriter(b);)
+			try (FileWriter f = new FileWriter(sessionFile, true); BufferedWriter b = new BufferedWriter(f); PrintWriter p = new PrintWriter(b))
 			{
 				for (int id:c.keySet())
 				{
