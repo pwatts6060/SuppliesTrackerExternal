@@ -1206,6 +1206,10 @@ public class SuppliesTrackerPlugin extends Plugin
 		String name = itemComposition.getName();
 		long calculatedPrice;
 
+		if (itemId == GAUNTLET_PADDLEFISH)
+		{
+			return;
+		}
 
 		for (String raidsConsumables : RAIDS_CONSUMABLES)
 		{
@@ -1215,11 +1219,6 @@ public class SuppliesTrackerPlugin extends Plugin
 			}
 		}
 
-		if (itemId == GAUNTLET_PADDLEFISH)
-		{
-			return;
-		}
-
 		// convert potions, pizzas/pies, and cakes to their full equivalents
 		// e.g. a half pizza becomes full pizza, 3 dose potion becomes 4, etc...
 		if (isPotion(name))
@@ -1227,12 +1226,12 @@ public class SuppliesTrackerPlugin extends Plugin
 			name = name.replaceAll(POTION_PATTERN, "(4)");
 			itemId = getPotionID(name);
 		}
-		if (isPizzaPie(name))
+		else if (isPizzaPie(name))
 		{
 			itemId = getFullVersionItemID(itemId);
 			name = itemManager.getItemComposition(itemId).getName();
 		}
-		if (isCake(name, itemId))
+		else if (isCake(name, itemId))
 		{
 			itemId = getFullVersionItemID(itemId);
 			name = itemManager.getItemComposition(itemId).getName();
@@ -1259,7 +1258,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		}
 
 		// calculate price for amount of doses used
-		calculatedPrice = (itemManager.getItemPrice(itemId));
+		calculatedPrice = itemManager.getItemPrice(itemId);
 		calculatedPrice = scalePriceByDoses(name, itemId, calculatedPrice);
 
 		// write the new quantity and calculated price for this entry
@@ -1267,7 +1266,7 @@ public class SuppliesTrackerPlugin extends Plugin
 			itemId,
 			name,
 			newQuantity,
-			(calculatedPrice * newQuantity));
+			calculatedPrice * newQuantity);
 
 		suppliesEntry.put(itemId, newEntry);
 
@@ -1275,7 +1274,7 @@ public class SuppliesTrackerPlugin extends Plugin
 			itemId,
 			name,
 			newQuantityC,
-			(calculatedPrice * newQuantityC));
+			calculatedPrice * newQuantityC);
 
 		if (!sessionLoading)
 		{
@@ -1283,16 +1282,7 @@ public class SuppliesTrackerPlugin extends Plugin
 			currentSuppliesEntry.put(itemId, newEntryC);
 		}
 
-		if (showSession)
-		{
-			SwingUtilities.invokeLater(() ->
-					panel.addItem(newEntryC));
-		}
-		else
-		{
-			SwingUtilities.invokeLater(() ->
-					panel.addItem(newEntry));
-		}
+		SwingUtilities.invokeLater(() -> panel.addItem(showSession ? newEntryC : newEntry));
 	}
 
 	private void buildChargesEntries(int itemId)
