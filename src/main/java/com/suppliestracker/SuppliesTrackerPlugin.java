@@ -192,7 +192,6 @@ public class SuppliesTrackerPlugin extends Plugin
 
 
 	//Rune pouch stuff
-	private boolean runepouchInInv = false;
 	private static final int[] AMOUNT_VARBITS =
 			{
 					Varbits.RUNE_POUCH_AMOUNT1, Varbits.RUNE_POUCH_AMOUNT2, Varbits.RUNE_POUCH_AMOUNT3
@@ -696,11 +695,6 @@ public class SuppliesTrackerPlugin extends Plugin
 	{
 		ItemContainer itemContainer = itemContainerChanged.getItemContainer();
 		boolean isInv = itemContainer == client.getItemContainer(InventoryID.INVENTORY);
-		if (isInv)
-		{
-			runepouchInInv = runeManager.hasRunePouch(itemContainer);
-		}
-
 		if (isInv && old != null)
 		{
 			while (!actionStack.isEmpty())
