@@ -694,81 +694,50 @@ public class SuppliesTrackerPlugin extends Plugin
 	private void onItemContainerChanged(ItemContainerChanged itemContainerChanged)
 	{
 		ItemContainer itemContainer = itemContainerChanged.getItemContainer();
-		boolean isInv = itemContainer == client.getItemContainer(InventoryID.INVENTORY);
-		if (isInv && old != null)
+		int containerId = itemContainer.getId();
+
+		if (containerId == InventoryID.INVENTORY.getId() && old != null)
 		{
-			while (!actionStack.isEmpty())
-			{
-				MenuAction frame = actionStack.pop();
-				ActionType type = frame.getType();
-				MenuAction.ItemAction itemFrame;
-				Item[] oldInv = frame.getOldInventory();
-				switch (type)
-				{
-					case CONSUMABLE:
-						itemFrame = (MenuAction.ItemAction) frame;
-						int nextItem = itemFrame.getItemID();
-						int nextSlot = itemFrame.getSlot();
-						if (itemContainer.getItems()[nextSlot].getId() != oldInv[nextSlot].getId())
-						{
-							buildEntries(nextItem);
-						}
-						break;
-					case TELEPORT:
-						itemFrame = (MenuAction.ItemAction) frame;
-						int teleid = itemFrame.getItemID();
-						int slot = itemFrame.getSlot();
-						if (itemContainer.getItems()[slot].getId() != oldInv[slot].getId() ||
-							itemContainer.getItems()[slot].getQuantity() != oldInv[slot].getQuantity())
-						{
-							buildEntries(teleid);
-						}
-						break;
-					case CAST:
-						checkUsedRunes(itemContainer, oldInv);
-						break;
-				}
-			}
+			processInvChange(itemContainer);
 		}
 
-		if (itemContainer == client.getItemContainer(InventoryID.EQUIPMENT))
+		if (containerId == InventoryID.EQUIPMENT.getId())
 		{
-			//set mainhand for trident tracking
-			if (itemContainer.getItems().length > EQUIPMENT_MAINHAND_SLOT)
+			processEquipChange(itemContainer);
+		}
+	}
+
+	private void processEquipChange(ItemContainer itemContainer) {
+		//set mainhand for trident tracking
+		if (itemContainer.getItems().length > EQUIPMENT_MAINHAND_SLOT)
+		{
+			mainHand = itemContainer.getItems()[EQUIPMENT_MAINHAND_SLOT].getId();
+			Item mainHandItem = itemContainer.getItems()[EQUIPMENT_MAINHAND_SLOT];
+			for (int throwingIDs : THROWING_IDS)
 			{
-				mainHand = itemContainer.getItems()[EQUIPMENT_MAINHAND_SLOT].getId();
-				Item mainHandItem = itemContainer.getItems()[EQUIPMENT_MAINHAND_SLOT];
-				for (int throwingIDs : THROWING_IDS)
+				if (mainHand == throwingIDs)
 				{
-					if (mainHand == throwingIDs)
-					{
-						mainHandThrowing = true;
-						break;
-					}
-					else
-					{
-						mainHandThrowing = false;
-					}
+					mainHandThrowing = true;
+					break;
 				}
-				if (mainHandThrowing)
+				else
 				{
-					if (throwingAmmoLoaded)
+					mainHandThrowing = false;
+				}
+			}
+			if (mainHandThrowing)
+			{
+				if (throwingAmmoLoaded)
+				{
+					if (thrownId == mainHandItem.getId())
 					{
-						if (thrownId == mainHandItem.getId())
+						if (thrownAmount - 1 == mainHandItem.getQuantity())
 						{
-							if (thrownAmount - 1 == mainHandItem.getQuantity())
-							{
-								buildEntries(mainHandItem.getId());
-								thrownAmount = mainHandItem.getQuantity();
-							}
-							else
-							{
-								thrownAmount = mainHandItem.getQuantity();
-							}
+							buildEntries(mainHandItem.getId());
+							thrownAmount = mainHandItem.getQuantity();
 						}
 						else
 						{
-							thrownId = mainHandItem.getId();
 							thrownAmount = mainHandItem.getQuantity();
 						}
 					}
@@ -776,37 +745,37 @@ public class SuppliesTrackerPlugin extends Plugin
 					{
 						thrownId = mainHandItem.getId();
 						thrownAmount = mainHandItem.getQuantity();
-						throwingAmmoLoaded = true;
 					}
 				}
 				else
 				{
-					throwingAmmoLoaded = false;
+					thrownId = mainHandItem.getId();
+					thrownAmount = mainHandItem.getQuantity();
+					throwingAmmoLoaded = true;
 				}
 			}
-			//Ammo tracking
-			if (itemContainer.getItems().length > EQUIPMENT_AMMO_SLOT)
+			else
 			{
-				Item ammoSlot = itemContainer.getItems()[EQUIPMENT_AMMO_SLOT];
-				if (ammoSlot != null)
+				throwingAmmoLoaded = false;
+			}
+		}
+		//Ammo tracking
+		if (itemContainer.getItems().length > EQUIPMENT_AMMO_SLOT)
+		{
+			Item ammoSlot = itemContainer.getItems()[EQUIPMENT_AMMO_SLOT];
+			if (ammoSlot != null)
+			{
+				if (ammoLoaded)
 				{
-					if (ammoLoaded)
+					if (ammoId == ammoSlot.getId())
 					{
-						if (ammoId == ammoSlot.getId())
+						if (ammoAmount - 1 == ammoSlot.getQuantity())
 						{
-							if (ammoAmount - 1 == ammoSlot.getQuantity())
-							{
-								buildEntries(ammoSlot.getId());
-								ammoAmount = ammoSlot.getQuantity();
-							}
-							else
-							{
-								ammoAmount = ammoSlot.getQuantity();
-							}
+							buildEntries(ammoSlot.getId());
+							ammoAmount = ammoSlot.getQuantity();
 						}
 						else
 						{
-							ammoId = ammoSlot.getId();
 							ammoAmount = ammoSlot.getQuantity();
 						}
 					}
@@ -814,11 +783,50 @@ public class SuppliesTrackerPlugin extends Plugin
 					{
 						ammoId = ammoSlot.getId();
 						ammoAmount = ammoSlot.getQuantity();
-						ammoLoaded = true;
 					}
 				}
+				else
+				{
+					ammoId = ammoSlot.getId();
+					ammoAmount = ammoSlot.getQuantity();
+					ammoLoaded = true;
+				}
 			}
+		}
+	}
 
+	private void processInvChange(ItemContainer itemContainer) {
+		while (!actionStack.isEmpty())
+		{
+			MenuAction frame = actionStack.pop();
+			ActionType type = frame.getType();
+			MenuAction.ItemAction itemFrame;
+			Item[] oldInv = frame.getOldInventory();
+			switch (type)
+			{
+				case CONSUMABLE:
+					itemFrame = (MenuAction.ItemAction) frame;
+					int nextItem = itemFrame.getItemID();
+					int nextSlot = itemFrame.getSlot();
+					if (itemContainer.getItems()[nextSlot].getId() != oldInv[nextSlot].getId())
+					{
+						buildEntries(nextItem);
+					}
+					break;
+				case TELEPORT:
+					itemFrame = (MenuAction.ItemAction) frame;
+					int teleid = itemFrame.getItemID();
+					int slot = itemFrame.getSlot();
+					if (itemContainer.getItems()[slot].getId() != oldInv[slot].getId() ||
+							itemContainer.getItems()[slot].getQuantity() != oldInv[slot].getQuantity())
+					{
+						buildEntries(teleid);
+					}
+					break;
+				case CAST:
+					checkUsedRunes(itemContainer, oldInv);
+					break;
+			}
 		}
 	}
 
