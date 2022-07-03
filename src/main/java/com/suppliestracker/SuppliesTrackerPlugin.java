@@ -253,7 +253,6 @@ public class SuppliesTrackerPlugin extends Plugin
 	private RuneManager runeManager;
 
 	private int prayerXp = 0;
-	private int boneId = 0;
 	private boolean skipBone = false;
 	private int longTickWait = 0;
 	private int ensouledHeadId = 0;
@@ -927,7 +926,6 @@ public class SuppliesTrackerPlugin extends Plugin
 			if (itemManager.getItemComposition(event.getId()).getName().toLowerCase().contains("bones"))
 			{
 				prayer.setBonesId(event.getId());
-				boneId = event.getId();
 			}
 		}
 
