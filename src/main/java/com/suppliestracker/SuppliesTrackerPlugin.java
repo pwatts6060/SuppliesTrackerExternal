@@ -994,96 +994,96 @@ public class SuppliesTrackerPlugin extends Plugin
 	private void onChatMessage(ChatMessage event) {
 		String message = event.getMessage();
 
-		if (event.getType() == ChatMessageType.GAMEMESSAGE || event.getType() == ChatMessageType.SPAM)
+		if (event.getType() != ChatMessageType.GAMEMESSAGE && event.getType() != ChatMessageType.SPAM) {
+			return;
+		}
+		if (message.toLowerCase().contains("you plant "))
 		{
-			if (message.toLowerCase().contains("you plant "))
-			{
-				farming.OnChatPlant(message.toLowerCase());
-			}
+			farming.OnChatPlant(message.toLowerCase());
+		}
 
-			else if (message.toLowerCase().contains("you treat "))
-			{
-				farming.setEndlessBucket(message);
-				farming.OnChatTreat(message.toLowerCase());
-			}
+		else if (message.toLowerCase().contains("you treat "))
+		{
+			farming.setEndlessBucket(message);
+			farming.OnChatTreat(message.toLowerCase());
+		}
 
-			else if (message.toLowerCase().contains("you bury the bones"))
-			{
-				prayer.OnChat(message);
-			}
-			else if (message.toLowerCase().contains("you eat the sweets."))
-			{
-				buildEntries(PURPLE_SWEETS_10476);
-			}
-			else if (message.toLowerCase().contains("dark lord"))
-			{
-				skipBone = true;
-			}
-			else if (message.toLowerCase().contains("your amulet has") ||
-				message.toLowerCase().contains("your amulet's last charge"))
-			{
-				buildChargesEntries(AMULET_OF_GLORY6);
-			}
-			else if (message.toLowerCase().contains("your ring of dueling has") ||
-				message.toLowerCase().contains("your ring of dueling crumbles"))
-			{
-				buildChargesEntries(RING_OF_DUELING8);
-			}
-			else if (message.toLowerCase().contains("your ring of wealth has"))
-			{
-				buildChargesEntries(RING_OF_WEALTH_5);
-			}
-			else if (message.toLowerCase().contains("your combat bracelet has") ||
-				message.toLowerCase().contains("your combat bracelet's last charge"))
-			{
-				buildChargesEntries(COMBAT_BRACELET6);
-			}
-			else if (message.toLowerCase().contains("your games necklace has") ||
-				message.toLowerCase().contains("your games necklace crumbles"))
-			{
-				buildChargesEntries(GAMES_NECKLACE8);
-			}
-			else if (message.toLowerCase().contains("your skills necklace has") ||
-				message.toLowerCase().contains("your skills necklace's last charge"))
-			{
-				buildChargesEntries(SKILLS_NECKLACE6);
-			}
-			else if (message.toLowerCase().contains("your necklace of passage has") ||
-				message.toLowerCase().contains("your necklace of passage crumbles"))
-			{
-				buildChargesEntries(NECKLACE_OF_PASSAGE5);
-			}
-			else if (message.toLowerCase().contains("your burning amulet has") ||
-				message.toLowerCase().contains("your burning amulet crumbles"))
-			{
-				buildChargesEntries(BURNING_AMULET5);
-			}
+		else if (message.toLowerCase().contains("you bury the bones"))
+		{
+			prayer.OnChat(message);
+		}
+		else if (message.toLowerCase().contains("you eat the sweets."))
+		{
+			buildEntries(PURPLE_SWEETS_10476);
+		}
+		else if (message.toLowerCase().contains("dark lord"))
+		{
+			skipBone = true;
+		}
+		else if (message.toLowerCase().contains("your amulet has") ||
+			message.toLowerCase().contains("your amulet's last charge"))
+		{
+			buildChargesEntries(AMULET_OF_GLORY6);
+		}
+		else if (message.toLowerCase().contains("your ring of dueling has") ||
+			message.toLowerCase().contains("your ring of dueling crumbles"))
+		{
+			buildChargesEntries(RING_OF_DUELING8);
+		}
+		else if (message.toLowerCase().contains("your ring of wealth has"))
+		{
+			buildChargesEntries(RING_OF_WEALTH_5);
+		}
+		else if (message.toLowerCase().contains("your combat bracelet has") ||
+			message.toLowerCase().contains("your combat bracelet's last charge"))
+		{
+			buildChargesEntries(COMBAT_BRACELET6);
+		}
+		else if (message.toLowerCase().contains("your games necklace has") ||
+			message.toLowerCase().contains("your games necklace crumbles"))
+		{
+			buildChargesEntries(GAMES_NECKLACE8);
+		}
+		else if (message.toLowerCase().contains("your skills necklace has") ||
+			message.toLowerCase().contains("your skills necklace's last charge"))
+		{
+			buildChargesEntries(SKILLS_NECKLACE6);
+		}
+		else if (message.toLowerCase().contains("your necklace of passage has") ||
+			message.toLowerCase().contains("your necklace of passage crumbles"))
+		{
+			buildChargesEntries(NECKLACE_OF_PASSAGE5);
+		}
+		else if (message.toLowerCase().contains("your burning amulet has") ||
+			message.toLowerCase().contains("your burning amulet crumbles"))
+		{
+			buildChargesEntries(BURNING_AMULET5);
+		}
 
-			//Cannon
-			else if (event.getMessage().equals("You add the furnace."))
-			{
-				cannonPlaced = true;
-			}
+		//Cannon
+		else if (event.getMessage().equals("You add the furnace."))
+		{
+			cannonPlaced = true;
+		}
 
-			else if (event.getMessage().contains("You pick up the cannon")
-					|| event.getMessage().contains("Your cannon has decayed. Speak to Nulodion to get a new one!"))
-			{
-				cannonPlaced = false;
-			}
-			else if (event.getMessage().startsWith("You unload your cannon and receive Cannonball")
-					|| event.getMessage().startsWith("You unload your cannon and receive Granite cannonball"))
-			{
-				skipProjectileCheckThisTick = true;
-			}
-			else if (event.getMessage().contains("A magical chest")
-					&& event.getMessage().contains("outside the Theatre of Blood"))
-			{
-				buildEntries(HEALER_ICON_20802);
-			}
-			else if (event.getMessage().contains("Torfinn has retrieved some of your items."))
-			{
-				buildEntries(HEALER_ICON_22308);
-			}
+		else if (event.getMessage().contains("You pick up the cannon")
+				|| event.getMessage().contains("Your cannon has decayed. Speak to Nulodion to get a new one!"))
+		{
+			cannonPlaced = false;
+		}
+		else if (event.getMessage().startsWith("You unload your cannon and receive Cannonball")
+				|| event.getMessage().startsWith("You unload your cannon and receive Granite cannonball"))
+		{
+			skipProjectileCheckThisTick = true;
+		}
+		else if (event.getMessage().contains("A magical chest")
+				&& event.getMessage().contains("outside the Theatre of Blood"))
+		{
+			buildEntries(HEALER_ICON_20802);
+		}
+		else if (event.getMessage().contains("Torfinn has retrieved some of your items."))
+		{
+			buildEntries(HEALER_ICON_22308);
 		}
 	}
 
