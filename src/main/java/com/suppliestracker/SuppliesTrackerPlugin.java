@@ -1098,7 +1098,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		GameObject gameObject = event.getGameObject();
 
 		Player localPlayer = client.getLocalPlayer();
-		if (gameObject.getId() == ObjectID.CANNON_BASE && !cannonPlaced)
+		if ((gameObject.getId() == ObjectID.CANNON_BASE || gameObject.getId() == ObjectID.CANNON_BASE_43029) && !cannonPlaced)
 		{
 			if (localPlayer.getWorldLocation().distanceTo(gameObject.getWorldLocation()) <= 2
 					&& localPlayer.getAnimation() == AnimationID.BURYING_BONES)
