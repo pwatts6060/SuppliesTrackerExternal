@@ -280,7 +280,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private int ticks = 0;
 	private int ticksInAnimation;
 
-	private Boolean sessionLoading = false;
+	private boolean sessionLoading = false;
 	private SessionHandler sessionHandler;
 	private String sessionUser = "";
 
@@ -1613,55 +1613,51 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Subscribe
 	private void onGameStateChanged(final GameStateChanged event)
 	{
-		if (event.getGameState() == GameState.LOGGED_IN && !client.getUsername().equalsIgnoreCase(sessionUser))
+		if (event.getGameState() != GameState.LOGGED_IN || client.getUsername().equalsIgnoreCase(sessionUser)) {
+			return;
+		}
+		sessionUser = client.getUsername();
+
+		//clear on new username login
+		suppliesEntry.clear();
+		SwingUtilities.invokeLater(() -> panel.resetAll());
+		sessionHandler.clearSession();
+
+		try
 		{
-			sessionUser = client.getUsername();
+			File sessionFile = new File(RUNELITE_DIR + "/supplies-tracker/" + client.getUsername() + ".txt");
 
-			//clear on new username login
-			suppliesEntry.clear();
-			SwingUtilities.invokeLater(() ->
-					panel.resetAll());
-			sessionHandler.clearSession();
+			if (sessionFile.createNewFile()) {
+				// already exists
+				return;
+			}
+			sessionLoading = true;
+			List<String> savedSupplies = Files.readAllLines(sessionFile.toPath());
 
-			try
+			for (String supplies: savedSupplies)
 			{
-				File sessionFile = new File(RUNELITE_DIR + "/supplies-tracker/" + client.getUsername() + ".txt");
+				if (!supplies.contains(":")) {
+					continue;
+				}
+				String[] temp = supplies.split(":");
 
-				if (sessionFile.createNewFile())
+				if (temp[0].contains("c"))
 				{
-					return;
+					buildChargesEntries(Integer.parseInt(temp[0].replace("c", "")), Integer.parseInt(temp[1]));
+					sessionHandler.setupMaps(Integer.parseInt(temp[0].replace("c", "")), Integer.parseInt(temp[1]), "c");
 				}
 				else
 				{
-					sessionLoading = true;
-					List<String> savedSupplies = Files.readAllLines(sessionFile.toPath());
-
-					for (String supplies: savedSupplies)
-					{
-						if (supplies.contains(":"))
-						{
-							String[] temp = supplies.split(":");
-
-							if (temp[0].contains("c"))
-							{
-								buildChargesEntries(Integer.parseInt(temp[0].replace("c", "")), Integer.parseInt(temp[1]));
-								sessionHandler.setupMaps(Integer.parseInt(temp[0].replace("c", "")), Integer.parseInt(temp[1]), "c");
-							}
-							else
-							{
-								buildEntries(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
-								sessionHandler.setupMaps(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]), "");
-							}
-
-						}
-					}
-					sessionLoading = false;
+					buildEntries(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
+					sessionHandler.setupMaps(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]), "");
 				}
+
 			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
+			sessionLoading = false;
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
 		}
 	}
 
