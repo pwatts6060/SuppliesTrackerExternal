@@ -758,12 +758,8 @@ public class SuppliesTrackerPlugin extends Plugin
 						if (thrownAmount - 1 == mainHandItem.getQuantity())
 						{
 							buildEntries(mainHandId);
-							thrownAmount = mainHandItem.getQuantity();
 						}
-						else
-						{
-							thrownAmount = mainHandItem.getQuantity();
-						}
+						thrownAmount = mainHandItem.getQuantity();
 					}
 					else
 					{
@@ -796,12 +792,8 @@ public class SuppliesTrackerPlugin extends Plugin
 						if (ammoAmount - 1 == ammoSlot.getQuantity())
 						{
 							buildEntries(ammoSlot.getId());
-							ammoAmount = ammoSlot.getQuantity();
 						}
-						else
-						{
-							ammoAmount = ammoSlot.getQuantity();
-						}
+						ammoAmount = ammoSlot.getQuantity();
 					}
 					else
 					{
