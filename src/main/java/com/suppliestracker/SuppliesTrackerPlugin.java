@@ -545,28 +545,24 @@ public class SuppliesTrackerPlugin extends Plugin
 	{
 		updateRunePouch();
 
-		if (attackStyleVarbit == -1 ||
-				attackStyleVarbit != client.getVar(VarPlayer.ATTACK_STYLE))
+		if (attackStyleVarbit != -1 && attackStyleVarbit == client.getVar(VarPlayer.ATTACK_STYLE)) {
+			return;
+		}
+		attackStyleVarbit = client.getVar(VarPlayer.ATTACK_STYLE);
+		if (attackStyleVarbit == 0 || attackStyleVarbit == 3)
 		{
-			attackStyleVarbit = client.getVar(VarPlayer.ATTACK_STYLE);
-			if (attackStyleVarbit == 0 ||
-					attackStyleVarbit == 3)
+			ticksInAnimation = BLOWPIPE_TICKS_NORMAL_PVM;
+			if (client.getLocalPlayer() != null && client.getLocalPlayer().getInteracting() instanceof Player)
 			{
-				ticksInAnimation = BLOWPIPE_TICKS_NORMAL_PVM;
-				if (client.getLocalPlayer() != null &&
-						client.getLocalPlayer().getInteracting() instanceof Player)
-				{
-					ticksInAnimation = BLOWPIPE_TICKS_NORMAL_PVP;
-				}
+				ticksInAnimation = BLOWPIPE_TICKS_NORMAL_PVP;
 			}
-			else if (attackStyleVarbit == 1)
+		}
+		else if (attackStyleVarbit == 1)
+		{
+			ticksInAnimation = BLOWPIPE_TICKS_RAPID_PVM;
+			if (client.getLocalPlayer() != null && client.getLocalPlayer().getInteracting() instanceof Player)
 			{
-				ticksInAnimation = BLOWPIPE_TICKS_RAPID_PVM;
-				if (client.getLocalPlayer() != null &&
-						client.getLocalPlayer().getInteracting() instanceof Player)
-				{
-					ticksInAnimation = BLOWPIPE_TICKS_RAPID_PVP;
-				}
+				ticksInAnimation = BLOWPIPE_TICKS_RAPID_PVP;
 			}
 		}
 	}
