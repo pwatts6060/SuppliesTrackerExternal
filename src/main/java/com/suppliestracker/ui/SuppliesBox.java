@@ -49,6 +49,7 @@ import net.runelite.client.ui.FontManager;
 import net.runelite.client.util.AsyncBufferedImage;
 import net.runelite.client.util.QuantityFormatter;
 import net.runelite.client.util.Text;
+import net.runelite.http.api.item.ItemPrice;
 
 @Singleton
 public abstract class SuppliesBox extends JPanel
@@ -179,7 +180,7 @@ public abstract class SuppliesBox extends JPanel
 			return;
 		}
 		trackedItems.add(item);
-		setVisible(trackedItems.size() > 0);
+		setVisible(true);
 	}
 
 	/**
@@ -303,7 +304,7 @@ public abstract class SuppliesBox extends JPanel
 		{
 			if (item.getId() == HEALER_ICON_20802 || item.getId() == HEALER_ICON_22308)
 			{
-				totalPrice += item.getQuantity() * 100000;
+				totalPrice += item.getQuantity() * 100000L;
 			}
 			else
 				{
@@ -348,7 +349,7 @@ public abstract class SuppliesBox extends JPanel
 				slotContainer.add(imageLabel);
 
 				if (item.getName() == null || item.getId() == 0
-						|| item.getName().toLowerCase().equals("null")
+						|| item.getName().equalsIgnoreCase("null")
 						|| getModifiedItemId(item.getName(), item.getId()) == 0
 						|| itemManager.getImage(getModifiedItemId(item.getName(), item.getId()), item.getQuantity(), item.getQuantity() > 1) == null)
 				{
@@ -654,7 +655,6 @@ public abstract class SuppliesBox extends JPanel
 				case MEAT_PIE:
 					itemId = HALF_A_MEAT_PIE;
 					break;
-
 			}
 			return itemId;
 		}
@@ -680,10 +680,10 @@ public abstract class SuppliesBox extends JPanel
 		@Override
 		int getModifiedItemId(String name, int itemId)
 		{
-			if (name.contains("(4)") ||
-					name.contains("(3)") ||
-					name.contains("(2)") ||
-					name.contains("(1)"))
+			if (name.endsWith("(4)") ||
+					name.endsWith("(3)") ||
+					name.endsWith("(2)") ||
+					name.endsWith("(1)"))
 			{
 				return getSingleDose(name);
 			}
@@ -700,15 +700,13 @@ public abstract class SuppliesBox extends JPanel
 		private int getSingleDose(String name)
 		{
 			String nameModified = name.replace("(4)", "(1)");
-			int itemId = 0;
 
-
-			if (itemManager.search(nameModified).size() > 0)
+			List<ItemPrice> prices = itemManager.search(nameModified);
+			if (!prices.isEmpty())
 			{
-				itemId = itemManager.search(nameModified).get(0).getId();
+				return prices.get(0).getId();
 			}
-
-			return itemId;
+			return 0;
 		}
 	}
 
@@ -724,12 +722,12 @@ public abstract class SuppliesBox extends JPanel
 		{
 			if (itemId == HEALER_ICON_20802)
 			{
-				final long price = 100000 * qty;
+				final long price = 100_000L * qty;
 				return "ToB Deaths" + " x " + qty + " (" + QuantityFormatter.quantityToStackSize(price) + "gp) ";
 			}
 			if (itemId == HEALER_ICON_22308)
 			{
-				final long price = 100000 * qty;
+				final long price = 100_000L * qty;
 				return "Vorkath Deaths" + " x " + qty + " (" + QuantityFormatter.quantityToStackSize(price) + "gp) ";
 			}
 			return "";
@@ -753,7 +751,6 @@ public abstract class SuppliesBox extends JPanel
 		@Override
 		final String buildTooltip(int itemId, int qty, SuppliesTrackerItem item)
 		{
-
 			final long price = item.getPrice();
 			return item.getName() + " x " + qty + " (" + QuantityFormatter.quantityToStackSize(price) + "gp) ";
 		}
