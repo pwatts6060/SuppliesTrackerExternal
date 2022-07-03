@@ -265,10 +265,10 @@ public class SuppliesTrackerPlugin extends Plugin
 	 */
 	static boolean isPotion(String name)
 	{
-		return name.contains("(4)") ||
-			name.contains("(3)") ||
-			name.contains("(2)") ||
-			name.contains("(1)");
+		return name.endsWith("(4)") ||
+			name.endsWith("(3)") ||
+			name.endsWith("(2)") ||
+			name.endsWith("(1)");
 	}
 
 	/**
