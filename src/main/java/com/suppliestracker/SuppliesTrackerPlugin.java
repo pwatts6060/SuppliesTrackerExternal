@@ -442,29 +442,9 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Subscribe
 	private void onGameTick(GameTick tick)
 	{
-		Player player = client.getLocalPlayer();
+		blowpipeTick();
+
 		skipProjectileCheckThisTick = false;
-		if (player.getAnimation() == BLOWPIPE_ATTACK)
-		{
-			ticks++;
-		}
-		if (ticks == ticksInAnimation &&
-				(player.getAnimation() == BLOWPIPE_ATTACK))
-		{
-			double ava_percent = getAccumulatorPercent();
-			// randomize the usage of supplies since we CANNOT actually get real supplies used
-			if (random.nextDouble() <= ava_percent)
-			{
-				buildEntries(config.blowpipeAmmo().dartID);
-			}
-			if (random.nextDouble() <= SCALES_PERCENT)
-			{
-				buildEntries(ZULRAHS_SCALES);
-			}
-			ticks = 0;
-		}
-
-
 
 		skipBone = false;
 
@@ -498,6 +478,31 @@ public class SuppliesTrackerPlugin extends Plugin
 		amountused2 = 0;
 		amountused3 = 0;
 
+	}
+
+	private void blowpipeTick() {
+		Player player = client.getLocalPlayer();
+		if (player.getAnimation() != BLOWPIPE_ATTACK)
+		{
+			return;
+		}
+
+		ticks++;
+		if (ticks != ticksInAnimation) {
+			return;
+		}
+
+		double ava_percent = getAccumulatorPercent();
+		// randomize the usage of supplies since we CANNOT actually get real supplies used
+		if (random.nextDouble() <= ava_percent)
+		{
+			buildEntries(config.blowpipeAmmo().dartID);
+		}
+		if (random.nextDouble() <= SCALES_PERCENT)
+		{
+			buildEntries(ZULRAHS_SCALES);
+		}
+		ticks = 0;
 	}
 
 	/**
