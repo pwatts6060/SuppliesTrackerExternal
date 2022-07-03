@@ -513,58 +513,31 @@ public class SuppliesTrackerPlugin extends Plugin
 	 */
 	private double getAccumulatorPercent()
 	{
-		double percent = NO_AVAS_PERCENT;
 		ItemContainer equipment = client.getItemContainer(InventoryID.EQUIPMENT);
-		if (equipment != null && equipment.getItems().length > EQUIPMENT_CAPE_SLOT)
-		{
-			int capeID = equipment.getItems()[EQUIPMENT_CAPE_SLOT].getId();
-
-			if (config.vorkathsHead())
-			{
-				switch (capeID)
-				{
-					case ASSEMBLER_MAX_CAPE:
-					case ASSEMBLER_MAX_CAPE_L:
-					case AVAS_ASSEMBLER:
-					case AVAS_ASSEMBLER_L:
-					case MAX_CAPE_13342:
-					case RANGING_CAPE:
-					case RANGING_CAPET:
-						percent = ASSEMBLER_PERCENT;
-						break;
-					case ACCUMULATOR_MAX_CAPE:
-					case AVAS_ACCUMULATOR:
-						percent = ACCUMULATOR_PERCENT;
-						break;
-					case AVAS_ATTRACTOR:
-						percent = ATTRACTOR_PERCENT;
-						break;
-				}
-			}
-			else
-			{
-				switch (capeID)
-				{
-					case ASSEMBLER_MAX_CAPE:
-					case ASSEMBLER_MAX_CAPE_L:
-					case AVAS_ASSEMBLER:
-					case AVAS_ASSEMBLER_L:
-						percent = ASSEMBLER_PERCENT;
-						break;
-					case ACCUMULATOR_MAX_CAPE:
-					case AVAS_ACCUMULATOR:
-					case MAX_CAPE_13342:
-					case RANGING_CAPE:
-					case RANGING_CAPET:
-						percent = ACCUMULATOR_PERCENT;
-						break;
-					case AVAS_ATTRACTOR:
-						percent = ATTRACTOR_PERCENT;
-						break;
-				}
-			}
+		if (equipment == null || EQUIPMENT_CAPE_SLOT >= equipment.getItems().length) {
+			return NO_AVAS_PERCENT;
 		}
-		return percent;
+		int capeID = equipment.getItems()[EQUIPMENT_CAPE_SLOT].getId();
+
+		switch (capeID)
+		{
+			case MAX_CAPE_13342:
+			case RANGING_CAPE:
+			case RANGING_CAPET:
+				return config.vorkathsHead() ? ASSEMBLER_PERCENT : ACCUMULATOR_PERCENT;
+			case ASSEMBLER_MAX_CAPE:
+			case ASSEMBLER_MAX_CAPE_L:
+			case AVAS_ASSEMBLER:
+			case AVAS_ASSEMBLER_L:
+				return ASSEMBLER_PERCENT;
+			case ACCUMULATOR_MAX_CAPE:
+			case AVAS_ACCUMULATOR:
+				return ACCUMULATOR_PERCENT;
+			case AVAS_ATTRACTOR:
+				return ATTRACTOR_PERCENT;
+			default:
+				return NO_AVAS_PERCENT;
+		}
 	}
 
 	@Subscribe
