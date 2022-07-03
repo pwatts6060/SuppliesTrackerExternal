@@ -55,21 +55,8 @@ import lombok.extern.slf4j.Slf4j;
 import static net.runelite.api.AnimationID.*;
 import static net.runelite.api.ItemID.*;
 import static net.runelite.client.RuneLite.RUNELITE_DIR;
-import net.runelite.api.AnimationID;
-import net.runelite.api.ChatMessageType;
-import net.runelite.api.Client;
-import net.runelite.api.EquipmentInventorySlot;
-import net.runelite.api.GameObject;
-import net.runelite.api.GameState;
-import net.runelite.api.InventoryID;
-import net.runelite.api.Item;
-import net.runelite.api.ItemComposition;
-import net.runelite.api.ItemContainer;
-import net.runelite.api.ObjectID;
-import net.runelite.api.Player;
-import net.runelite.api.Projectile;
-import net.runelite.api.VarPlayer;
-import net.runelite.api.Varbits;
+
+import net.runelite.api.*;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.AnimationChanged;
 import net.runelite.api.events.ChatMessage;
@@ -436,29 +423,19 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Subscribe
 	void onStatChanged(StatChanged event)
 	{
-		if (event.getSkill().name().toLowerCase().equals("magic"))
-		{
-			if (magicXp != event.getXp())
-			{
-				skipTick = true;
-				magicXpChanged = true;
-				magicXp = event.getXp();
-			}
+		if (event.getSkill().equals(Skill.MAGIC) && magicXp != event.getXp()) {
+			skipTick = true;
+			magicXpChanged = true;
+			magicXp = event.getXp();
 		}
-		if (event.getSkill().name().toLowerCase().equals("prayer"))
-		{
-			if (prayerXp != event.getXp())
-			{
-				if (prayerAltarAnimationCheck)
-				{
-					if (!skipBone)
-					{
-						prayer.build();
-					}
+		if (event.getSkill().equals(Skill.PRAYER) && prayerXp != event.getXp()) {
+			if (prayerAltarAnimationCheck) {
+				if (!skipBone) {
+					prayer.build();
 				}
-				prayerXp = event.getXp();
-				ensouledHeadId = 0;
 			}
+			prayerXp = event.getXp();
+			ensouledHeadId = 0;
 		}
 	}
 
