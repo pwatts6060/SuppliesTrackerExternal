@@ -1443,16 +1443,16 @@ public class SuppliesTrackerPlugin extends Plugin
 	 */
 	public void removeOneItem(int itemId)
 	{
-		if (suppliesEntry.containsKey(itemId))
+		if (!suppliesEntry.containsKey(itemId)) {
+			return;
+		}
+		if (suppliesEntry.get(itemId).getQuantity() == 1)
 		{
-			if (suppliesEntry.get(itemId).getQuantity() == 1)
-			{
-				clearItem(itemId);
-			}
-			else
-			{
-				suppliesEntry.get(itemId).setQuantity(suppliesEntry.get(itemId).getQuantity() - 1);
-			}
+			clearItem(itemId);
+		}
+		else
+		{
+			suppliesEntry.get(itemId).setQuantity(suppliesEntry.get(itemId).getQuantity() - 1);
 		}
 	}
 
