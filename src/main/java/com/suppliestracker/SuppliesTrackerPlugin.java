@@ -585,9 +585,12 @@ public class SuppliesTrackerPlugin extends Plugin
 			{
 				Item newItem = itemContainer.getItems()[i];
 				Item oldItem = oldInv[i];
-				boolean isRune = runeIds.contains(oldItem.getId());
-				if (isRune && (newItem.getId() != oldItem.getId() ||
-					newItem.getQuantity() != oldItem.getQuantity()))
+				if (!runeIds.contains(oldItem.getId()))
+				{
+					continue;
+				}
+				// if item ids or quantity changed
+				if (newItem.getId() != oldItem.getId() || newItem.getQuantity() != oldItem.getQuantity())
 				{
 					int quantity = oldItem.getQuantity();
 					if (newItem.getId() == oldItem.getId())
