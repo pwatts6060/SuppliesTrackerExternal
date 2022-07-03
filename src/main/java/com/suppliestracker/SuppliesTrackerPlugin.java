@@ -28,6 +28,7 @@
  */
 package com.suppliestracker;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provides;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -39,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -137,7 +139,41 @@ public class SuppliesTrackerPlugin extends Plugin
 	private static final Random random = new Random();
 
 	// id array for checking thrown items and runes
-	private static final int[] THROWING_IDS = new int[]{BRONZE_DART, IRON_DART, STEEL_DART, BLACK_DART, MITHRIL_DART, ADAMANT_DART, RUNE_DART, AMETHYST_DART, DRAGON_DART, BRONZE_KNIFE, IRON_KNIFE, STEEL_KNIFE, BLACK_KNIFE, MITHRIL_KNIFE, ADAMANT_KNIFE, RUNE_KNIFE, BRONZE_THROWNAXE, IRON_THROWNAXE, STEEL_THROWNAXE, MITHRIL_THROWNAXE, ADAMANT_THROWNAXE, RUNE_THROWNAXE, DRAGON_KNIFE, DRAGON_KNIFE_22812, DRAGON_KNIFE_22814, DRAGON_KNIFEP_22808, DRAGON_KNIFEP_22810, DRAGON_KNIFEP, DRAGON_THROWNAXE, CHINCHOMPA_10033, RED_CHINCHOMPA_10034, BLACK_CHINCHOMPA};
+	private static final Set<Integer> thrownWeaponIds = ImmutableSet.of(
+			BRONZE_DART,
+			IRON_DART,
+			STEEL_DART,
+			BLACK_DART,
+			MITHRIL_DART,
+			ADAMANT_DART,
+			RUNE_DART,
+			AMETHYST_DART,
+			DRAGON_DART,
+			BRONZE_KNIFE,
+			IRON_KNIFE,
+			STEEL_KNIFE,
+			BLACK_KNIFE,
+			MITHRIL_KNIFE,
+			ADAMANT_KNIFE,
+			RUNE_KNIFE,
+			BRONZE_THROWNAXE,
+			IRON_THROWNAXE,
+			STEEL_THROWNAXE,
+			MITHRIL_THROWNAXE,
+			ADAMANT_THROWNAXE,
+			RUNE_THROWNAXE,
+			DRAGON_KNIFE,
+			DRAGON_KNIFE_22812,
+			DRAGON_KNIFE_22814,
+			DRAGON_KNIFEP_22808,
+			DRAGON_KNIFEP_22810,
+			DRAGON_KNIFEP,
+			DRAGON_THROWNAXE,
+			CHINCHOMPA_10033,
+			RED_CHINCHOMPA_10034,
+			BLACK_CHINCHOMPA
+	);
+
 	private static final int[] RUNE_IDS = new int[]{FIRE_RUNE, AIR_RUNE, WATER_RUNE, EARTH_RUNE, MIND_RUNE, BODY_RUNE, COSMIC_RUNE, CHAOS_RUNE, NATURE_RUNE, LAW_RUNE, DEATH_RUNE, ASTRAL_RUNE, BLOOD_RUNE, SOUL_RUNE, WRATH_RUNE, MIST_RUNE, DUST_RUNE, MUD_RUNE, SMOKE_RUNE, STEAM_RUNE, LAVA_RUNE};
 
 	//Hold Supply Data
@@ -181,7 +217,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private boolean throwingAmmoLoaded = false;
 	private boolean mainHandThrowing = false;
 
-	private int mainHand = 0;
+	private int mainHandId = 0;
 	private SuppliesTrackerPanel panel;
 	private NavigationButton navButton;
 	private int attackStyleVarbit = -1;
@@ -575,7 +611,7 @@ public class SuppliesTrackerPlugin extends Plugin
 					//Trident of the seas
 					for (int tridentOfTheSeas : TRIDENT_OF_THE_SEAS_IDS)
 					{
-						if (mainHand == tridentOfTheSeas)
+						if (mainHandId == tridentOfTheSeas)
 						{
 							if (config.chargesBox())
 							{
@@ -594,7 +630,7 @@ public class SuppliesTrackerPlugin extends Plugin
 					//Trident of the swamp
 					for (int tridentOfTheSwamp : TRIDENT_OF_THE_SWAMP_IDS)
 					{
-						if (mainHand == tridentOfTheSwamp)
+						if (mainHandId == tridentOfTheSwamp)
 						{
 							if (config.chargesBox())
 							{
@@ -611,7 +647,7 @@ public class SuppliesTrackerPlugin extends Plugin
 						}
 					}
 					//Sang Staff
-					if (mainHand == SANGUINESTI_STAFF)
+					if (mainHandId == SANGUINESTI_STAFF)
 					{
 						if (config.chargesBox())
 						{
@@ -627,7 +663,7 @@ public class SuppliesTrackerPlugin extends Plugin
 					//Iban's staff
 					for (int ibansStaff : IBANS_STAFF_IDS)
 					{
-						if (mainHand == ibansStaff)
+						if (mainHandId == ibansStaff)
 						{
 							if (config.chargesBox())
 							{
@@ -675,7 +711,7 @@ public class SuppliesTrackerPlugin extends Plugin
 					break;
 				case ONEHAND_SLASH_SWORD:
 				case ONEHAND_STAB_SWORD:
-					if (mainHand == BLADE_OF_SAELDOR) buildChargesEntries(BLADE_OF_SAELDOR);
+					if (mainHandId == BLADE_OF_SAELDOR) buildChargesEntries(BLADE_OF_SAELDOR);
 					break;
 				case USING_GILDED_ALTAR:
 				case PRAY_AT_ALTAR:
@@ -711,29 +747,18 @@ public class SuppliesTrackerPlugin extends Plugin
 		//set mainhand for trident tracking
 		if (itemContainer.getItems().length > EQUIPMENT_MAINHAND_SLOT)
 		{
-			mainHand = itemContainer.getItems()[EQUIPMENT_MAINHAND_SLOT].getId();
 			Item mainHandItem = itemContainer.getItems()[EQUIPMENT_MAINHAND_SLOT];
-			for (int throwingIDs : THROWING_IDS)
-			{
-				if (mainHand == throwingIDs)
-				{
-					mainHandThrowing = true;
-					break;
-				}
-				else
-				{
-					mainHandThrowing = false;
-				}
-			}
+			mainHandId = mainHandItem.getId();
+			mainHandThrowing = thrownWeaponIds.contains(mainHandId);
 			if (mainHandThrowing)
 			{
 				if (throwingAmmoLoaded)
 				{
-					if (thrownId == mainHandItem.getId())
+					if (thrownId == mainHandId)
 					{
 						if (thrownAmount - 1 == mainHandItem.getQuantity())
 						{
-							buildEntries(mainHandItem.getId());
+							buildEntries(mainHandId);
 							thrownAmount = mainHandItem.getQuantity();
 						}
 						else
@@ -743,13 +768,13 @@ public class SuppliesTrackerPlugin extends Plugin
 					}
 					else
 					{
-						thrownId = mainHandItem.getId();
+						thrownId = mainHandId;
 						thrownAmount = mainHandItem.getQuantity();
 					}
 				}
 				else
 				{
-					thrownId = mainHandItem.getId();
+					thrownId = mainHandId;
 					thrownAmount = mainHandItem.getQuantity();
 					throwingAmmoLoaded = true;
 				}
