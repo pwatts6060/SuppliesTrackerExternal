@@ -1268,7 +1268,7 @@ public class SuppliesTrackerPlugin extends Plugin
 
 		if (!sessionLoading)
 		{
-			sessionHandler.addtoSession(itemId, count, "");
+			sessionHandler.addToSession(itemId, count, false);
 			currentSuppliesEntry.put(itemId, newEntryC);
 		}
 
@@ -1377,7 +1377,7 @@ public class SuppliesTrackerPlugin extends Plugin
 
 		if (!sessionLoading)
 		{
-			sessionHandler.addtoSession(itemId, count, "c");
+			sessionHandler.addToSession(itemId, count, true);
 			currentSuppliesEntry.put(itemId, newEntryC);
 		}
 
@@ -1622,14 +1622,13 @@ public class SuppliesTrackerPlugin extends Plugin
 				if (temp[0].contains("c"))
 				{
 					buildChargesEntries(Integer.parseInt(temp[0].replace("c", "")), Integer.parseInt(temp[1]));
-					sessionHandler.setupMaps(Integer.parseInt(temp[0].replace("c", "")), Integer.parseInt(temp[1]), "c");
+					sessionHandler.setupMaps(Integer.parseInt(temp[0].replace("c", "")), Integer.parseInt(temp[1]), true);
 				}
 				else
 				{
 					buildEntries(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
-					sessionHandler.setupMaps(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]), "");
+					sessionHandler.setupMaps(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]), false);
 				}
-
 			}
 			sessionLoading = false;
 		}

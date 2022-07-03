@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Map;
+
 import static net.runelite.client.RuneLite.RUNELITE_DIR;
 
 public class SessionHandler
@@ -16,8 +18,8 @@ public class SessionHandler
 
 	private final Client client;
 
-	private final HashMap<Integer, Integer> supplies = new HashMap<>();
-	private final HashMap<Integer, Integer> charges = new HashMap<>();
+	private final Map<Integer, Integer> supplies = new HashMap<>();
+	private final Map<Integer, Integer> charges = new HashMap<>();
 
 	@Inject
 	public SessionHandler(Client client)
@@ -26,16 +28,10 @@ public class SessionHandler
 		SESSION_DIR.mkdir();
 	}
 
-	public void setupMaps(int itemId, int quantity, String type)
+	public void setupMaps(int itemId, int quantity, boolean isCharges)
 	{
-		if (type.equals("c"))
-		{
-			this.charges.put(itemId, this.charges.getOrDefault(itemId, 0) + quantity);
-		}
-		else
-		{
-			this.supplies.put(itemId, this.supplies.getOrDefault(itemId, 0) + quantity);
-		}
+		Map<Integer, Integer> map = isCharges ? charges : supplies;
+		map.put(itemId, map.getOrDefault(itemId, 0) + quantity);
 	}
 
 	public void clearItem(int itemId)
@@ -52,20 +48,14 @@ public class SessionHandler
 		buildSessionFile(this.charges, this.supplies);
 	}
 
-	public void addtoSession(int itemId, int quantity, String type)
+	public void addToSession(int itemId, int quantity, boolean isCharges)
 	{
-		if (type.equals("c"))
-		{
-			this.charges.put(itemId, this.charges.getOrDefault(itemId, 0) + quantity);
-		}
-		else
-		{
-			this.supplies.put(itemId, this.supplies.getOrDefault(itemId, 0) + quantity);
-		}
+		Map<Integer, Integer> map = isCharges ? charges : supplies;
+		map.put(itemId, map.getOrDefault(itemId, 0) + quantity);
 		buildSessionFile(this.charges, this.supplies);
 	}
 
-	private void buildSessionFile(HashMap<Integer, Integer> c, HashMap<Integer, Integer> s)
+	private void buildSessionFile(Map<Integer, Integer> c, Map<Integer, Integer> s)
 	{
 		try
 		{
@@ -73,18 +63,17 @@ public class SessionHandler
 
 			if (!sessionFile.createNewFile())
 			{
-
 				sessionFile.delete();
 				sessionFile.createNewFile();
 			}
 
 			try (FileWriter f = new FileWriter(sessionFile, true); BufferedWriter b = new BufferedWriter(f); PrintWriter p = new PrintWriter(b))
 			{
-				for (int id:c.keySet())
+				for (int id : c.keySet())
 				{
 					p.println("c" + id + ":" + c.get(id));
 				}
-				for (int id:s.keySet())
+				for (int id : s.keySet())
 				{
 					p.println(id + ":" + s.get(id));
 				}
