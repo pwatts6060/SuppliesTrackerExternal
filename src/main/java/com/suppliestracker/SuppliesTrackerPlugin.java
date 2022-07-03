@@ -711,17 +711,22 @@ public class SuppliesTrackerPlugin extends Plugin
 				{
 					skipTick = true;
 					noXpCast = true;
-				}
+				}{
+
+			}
 				break;
 			case SCYTHE_OF_VITUR_ANIMATION:
-				if (config.chargesBox())
+				if (mainHandId == SCYTHE_OF_VITUR || mainHandId == HOLY_SCYTHE_OF_VITUR || mainHandId == SANGUINE_SCYTHE_OF_VITUR)
 				{
-					buildChargesEntries(SCYTHE_OF_VITUR);
-				}
-				else
-				{
-					buildEntries(BLOOD_RUNE, 3);
-					buildEntries(COINS_995, itemManager.getItemPrice(VIAL_OF_BLOOD_22446) / 100);
+					if (config.chargesBox())
+					{
+						buildChargesEntries(SCYTHE_OF_VITUR);
+					}
+					else
+					{
+						buildEntries(BLOOD_RUNE, 3);
+						buildEntries(COINS_995, itemManager.getItemPrice(VIAL_OF_BLOOD_22446) / 100);
+					}
 				}
 				break;
 			case ONEHAND_SLASH_SWORD:
