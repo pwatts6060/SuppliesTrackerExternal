@@ -1545,46 +1545,46 @@ public class SuppliesTrackerPlugin extends Plugin
 	private void updateRunePouch()
 	{
 		//check amounts
-		if (OLD_AMOUNT_VARBITS[0] != client.getVar(AMOUNT_VARBITS[0]))
+		if (OLD_AMOUNT_VARBITS[0] != client.getVarbitValue(AMOUNT_VARBITS[0]))
 		{
-			if (OLD_AMOUNT_VARBITS[0] > client.getVar(AMOUNT_VARBITS[0]))
+			if (OLD_AMOUNT_VARBITS[0] > client.getVarbitValue(AMOUNT_VARBITS[0]))
 			{
-				amountused1 += OLD_AMOUNT_VARBITS[0] - client.getVar(AMOUNT_VARBITS[0]);
+				amountused1 += OLD_AMOUNT_VARBITS[0] - client.getVarbitValue(AMOUNT_VARBITS[0]);
 			}
-			OLD_AMOUNT_VARBITS[0] = client.getVar(AMOUNT_VARBITS[0]);
+			OLD_AMOUNT_VARBITS[0] = client.getVarbitValue(AMOUNT_VARBITS[0]);
 		}
-		if (OLD_AMOUNT_VARBITS[1] != client.getVar(AMOUNT_VARBITS[1]))
+		if (OLD_AMOUNT_VARBITS[1] != client.getVarbitValue(AMOUNT_VARBITS[1]))
 		{
-			if (OLD_AMOUNT_VARBITS[1] > client.getVar(AMOUNT_VARBITS[1]))
+			if (OLD_AMOUNT_VARBITS[1] > client.getVarbitValue(AMOUNT_VARBITS[1]))
 			{
-				amountused2 += OLD_AMOUNT_VARBITS[1] - client.getVar(AMOUNT_VARBITS[1]);
+				amountused2 += OLD_AMOUNT_VARBITS[1] - client.getVarbitValue(AMOUNT_VARBITS[1]);
 			}
-			OLD_AMOUNT_VARBITS[1] = client.getVar(AMOUNT_VARBITS[1]);
+			OLD_AMOUNT_VARBITS[1] = client.getVarbitValue(AMOUNT_VARBITS[1]);
 		}
-		if (OLD_AMOUNT_VARBITS[2] != client.getVar(AMOUNT_VARBITS[2]))
+		if (OLD_AMOUNT_VARBITS[2] != client.getVarbitValue(AMOUNT_VARBITS[2]))
 		{
-			if (OLD_AMOUNT_VARBITS[2] > client.getVar(AMOUNT_VARBITS[2]))
+			if (OLD_AMOUNT_VARBITS[2] > client.getVarbitValue(AMOUNT_VARBITS[2]))
 			{
-				amountused3 += OLD_AMOUNT_VARBITS[2] - client.getVar(AMOUNT_VARBITS[2]);
+				amountused3 += OLD_AMOUNT_VARBITS[2] - client.getVarbitValue(AMOUNT_VARBITS[2]);
 			}
-			OLD_AMOUNT_VARBITS[2] = client.getVar(AMOUNT_VARBITS[2]);
+			OLD_AMOUNT_VARBITS[2] = client.getVarbitValue(AMOUNT_VARBITS[2]);
 		}
 
 		//check runes
-		if (OLD_RUNE_VARBITS[0] != client.getVar(RUNE_VARBITS[0]))
+		if (OLD_RUNE_VARBITS[0] != client.getVarbitValue(RUNE_VARBITS[0]))
 		{
-			rune1 = client.getVar(RUNE_VARBITS[0]);
-			OLD_RUNE_VARBITS[0] = client.getVar(RUNE_VARBITS[0]);
+			rune1 = client.getVarbitValue(RUNE_VARBITS[0]);
+			OLD_RUNE_VARBITS[0] = client.getVarbitValue(RUNE_VARBITS[0]);
 		}
-		if (OLD_RUNE_VARBITS[1] != client.getVar(RUNE_VARBITS[1]))
+		if (OLD_RUNE_VARBITS[1] != client.getVarbitValue(RUNE_VARBITS[1]))
 		{
-			rune2 = client.getVar(RUNE_VARBITS[1]);
-			OLD_RUNE_VARBITS[1] = client.getVar(RUNE_VARBITS[1]);
+			rune2 = client.getVarbitValue(RUNE_VARBITS[1]);
+			OLD_RUNE_VARBITS[1] = client.getVarbitValue(RUNE_VARBITS[1]);
 		}
-		if (OLD_RUNE_VARBITS[2] != client.getVar(RUNE_VARBITS[2]))
+		if (OLD_RUNE_VARBITS[2] != client.getVarbitValue(RUNE_VARBITS[2]))
 		{
-			rune3 = client.getVar(RUNE_VARBITS[2]);
-			OLD_RUNE_VARBITS[2] = client.getVar(RUNE_VARBITS[2]);
+			rune3 = client.getVarbitValue(RUNE_VARBITS[2]);
+			OLD_RUNE_VARBITS[2] = client.getVarbitValue(RUNE_VARBITS[2]);
 		}
 	}
 
