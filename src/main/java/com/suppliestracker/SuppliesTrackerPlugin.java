@@ -1113,17 +1113,17 @@ public class SuppliesTrackerPlugin extends Plugin
 	{
 		Projectile projectile = event.getProjectile();
 
-		if ((projectile.getId() == CANNONBALL || projectile.getId() == GRANITE_CANNONBALL) && cannonPosition != null)
-		{
-			WorldPoint projectileLoc = WorldPoint.fromLocal(client, projectile.getX1(), projectile.getY1(), client.getPlane());
+		if ((projectile.getId() != CANNONBALL && projectile.getId() != GRANITE_CANNONBALL) || cannonPosition == null) {
+			return;
+		}
+		WorldPoint projectileLoc = WorldPoint.fromLocal(client, projectile.getX1(), projectile.getY1(), client.getPlane());
 
-			if (projectileLoc.equals(cannonPosition) && projectile.getX() == 0 && projectile.getY() == 0)
-			{
-				if (!skipProjectileCheckThisTick)
-				{
-					buildEntries(CANNONBALL);
-				}
-			}
+		if (!projectileLoc.equals(cannonPosition) || projectile.getX() != 0 || projectile.getY() != 0) {
+			return;
+		}
+		if (!skipProjectileCheckThisTick)
+		{
+			buildEntries(CANNONBALL);
 		}
 	}
 
