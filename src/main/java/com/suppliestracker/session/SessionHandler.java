@@ -14,8 +14,6 @@ public class SessionHandler
 {
 	private static final File SESSION_DIR = new File(RUNELITE_DIR, "supplies-tracker");
 
-	private final File playerFolder = SESSION_DIR;
-
 	private final Client client;
 
 	private final HashMap<Integer, Integer> supplies = new HashMap<>();
