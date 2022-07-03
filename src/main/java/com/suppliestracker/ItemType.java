@@ -28,7 +28,16 @@ package com.suppliestracker;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import static net.runelite.api.ItemID.*;
+
+import static net.runelite.api.ItemID.BLADE_OF_SAELDOR;
+import static net.runelite.api.ItemID.COINS_995;
+import static net.runelite.api.ItemID.HEALER_ICON_20802;
+import static net.runelite.api.ItemID.HEALER_ICON_22308;
+import static net.runelite.api.ItemID.IBANS_STAFF;
+import static net.runelite.api.ItemID.SANGUINESTI_STAFF;
+import static net.runelite.api.ItemID.SCYTHE_OF_VITUR;
+import static net.runelite.api.ItemID.TRIDENT_OF_THE_SEAS;
+import static net.runelite.api.ItemID.TRIDENT_OF_THE_SWAMP;
 
 /**
  * The potential types that supplies can be along with a categorization function
@@ -63,56 +72,56 @@ public enum ItemType
 	 */
 	public static ItemType categorize(SuppliesTrackerItem item)
 	{
-		if (item.getName().contains("(4)"))
+		String name = item.getName().toLowerCase();
+		if (name.endsWith("(4)"))
 		{
-			return ItemType.POTION;
+			return POTION;
 		}
-		else if ((item.getName().toLowerCase().contains("bones") && !item.getName().toLowerCase().contains(" to ")) ||
-					item.getName().toLowerCase().contains("ensouled"))
+		else if ((name.contains("bones") && !name.contains(" to ")) || name.contains("ensouled"))
 		{
-			return ItemType.PRAYER;
+			return PRAYER;
 		}
-		else if (item.getName().toLowerCase().contains("bolt") || item.getName().toLowerCase().contains("dart")
-			|| item.getName().toLowerCase().contains(" arrow") || item.getName().toLowerCase().contains("javelin")
-			|| item.getName().toLowerCase().contains("knive") || item.getName().toLowerCase().contains("throwing")
-			|| item.getName().toLowerCase().contains("zulrah's scale") || item.getName().toLowerCase().contains("cannonball")
-			|| item.getName().toLowerCase().contains("knife")|| item.getName().toLowerCase().contains("chinchompa")
-			|| item.getName().toLowerCase().contains("thrownaxe"))
+		else if (name.contains("bolt") || name.contains("dart")
+			|| name.contains(" arrow") || name.contains("javelin")
+			|| name.contains("knive") || name.contains("throwing")
+			|| name.contains("zulrah's scale") || name.contains("cannonball")
+			|| name.contains("knife")|| name.contains("chinchompa")
+			|| name.contains("thrownaxe"))
 		{
-			return ItemType.AMMO;
+			return AMMO;
 		}
-		else if (item.getName().toLowerCase().contains("rune"))
+		else if (name.contains("rune"))
 		{
-			return ItemType.RUNE;
+			return RUNE;
 		}
-		else if (item.getName().toLowerCase().contains("teleport"))
+		else if (name.contains("teleport"))
 		{
-			return ItemType.TELEPORT;
+			return TELEPORT;
 		}
 		else if (item.getId() == COINS_995)
 		{
-			return ItemType.COINS;
+			return COINS;
 		}
-		else if (item.getName().toLowerCase().contains("ring of") || item.getName().toLowerCase().contains("amulet") ||
-				item.getName().toLowerCase().contains("bracelet") || item.getName().toLowerCase().contains("necklace"))
+		else if (name.contains("ring of") || name.contains("amulet") ||
+				name.contains("bracelet") || name.contains("necklace"))
 		{
-			return ItemType.JEWELLERY;
+			return JEWELLERY;
 		}
-		else if (item.getName().toLowerCase().contains(" sapling") || item.getName().toLowerCase().contains(" seed") ||
-				item.getName().toLowerCase().contains("compost") || item.getName().toLowerCase().contains("plant cure"))
+		else if (name.contains(" sapling") || name.contains(" seed") ||
+				name.contains("compost") || name.contains("plant cure"))
 		{
-			return ItemType.FARMING;
+			return FARMING;
 		}
 		else if (item.getId() == SCYTHE_OF_VITUR || item.getId() == SANGUINESTI_STAFF ||
 				item.getId() == TRIDENT_OF_THE_SEAS || item.getId() == TRIDENT_OF_THE_SWAMP ||
 				item.getId() == BLADE_OF_SAELDOR || item.getId() == IBANS_STAFF)
 		{
-			return ItemType.CHARGES;
+			return CHARGES;
 		}
 		else if (item.getId() == HEALER_ICON_20802 || item.getId() == HEALER_ICON_22308)
 		{
-			return ItemType.DEATH;
+			return DEATH;
 		}
-		return ItemType.FOOD;
+		return FOOD;
 	}
 }
