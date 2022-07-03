@@ -1544,20 +1544,20 @@ public class SuppliesTrackerPlugin extends Plugin
 
 	private void checkUsedRunePouch()
 	{
-		if (magicXpChanged || noXpCast)
+		if (!magicXpChanged && !noXpCast) {
+			return;
+		}
+		if (amountused1 != 0 && amountused1 < 20)
 		{
-			if (amountused1 != 0 && amountused1 < 20)
-			{
-				buildEntries(Runes.getRune(rune1).getItemId(), amountused1);
-			}
-			if (amountused2 != 0 && amountused2 < 20)
-			{
-				buildEntries(Runes.getRune(rune2).getItemId(), amountused2);
-			}
-			if (amountused3 != 0 && amountused3 < 20)
-			{
-				buildEntries(Runes.getRune(rune3).getItemId(), amountused3);
-			}
+			buildEntries(Runes.getRune(rune1).getItemId(), amountused1);
+		}
+		if (amountused2 != 0 && amountused2 < 20)
+		{
+			buildEntries(Runes.getRune(rune2).getItemId(), amountused2);
+		}
+		if (amountused3 != 0 && amountused3 < 20)
+		{
+			buildEntries(Runes.getRune(rune3).getItemId(), amountused3);
 		}
 	}
 
