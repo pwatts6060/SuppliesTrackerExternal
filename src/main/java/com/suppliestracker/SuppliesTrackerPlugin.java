@@ -1335,45 +1335,45 @@ public class SuppliesTrackerPlugin extends Plugin
 		switch (itemId)
 		{
 			case AMULET_OF_GLORY6:
-				calculatedPrice = (((itemManager.getItemPrice(AMULET_OF_GLORY6) - (itemManager.getItemPrice(AMULET_OF_GLORY)))) / 6);
+				calculatedPrice = (itemManager.getItemPrice(AMULET_OF_GLORY6) - itemManager.getItemPrice(AMULET_OF_GLORY)) / 6;
 				break;
 			case RING_OF_DUELING8:
-				calculatedPrice = ((itemManager.getItemPrice(RING_OF_DUELING8)) / 8);
+				calculatedPrice = itemManager.getItemPrice(RING_OF_DUELING8) / 8;
 				break;
 			case RING_OF_WEALTH_5:
-				calculatedPrice = (((itemManager.getItemPrice(RING_OF_WEALTH_5) - (itemManager.getItemPrice(RING_OF_WEALTH)))) / 5);
+				calculatedPrice = (itemManager.getItemPrice(RING_OF_WEALTH_5) - itemManager.getItemPrice(RING_OF_WEALTH)) / 5;
 				break;
 			case COMBAT_BRACELET6:
-				calculatedPrice = (((itemManager.getItemPrice(COMBAT_BRACELET6) - (itemManager.getItemPrice(COMBAT_BRACELET)))) / 6);
+				calculatedPrice = (itemManager.getItemPrice(COMBAT_BRACELET6) - itemManager.getItemPrice(COMBAT_BRACELET)) / 6;
 				break;
 			case GAMES_NECKLACE8:
-				calculatedPrice = ((itemManager.getItemPrice(GAMES_NECKLACE8)) / 8);
+				calculatedPrice = itemManager.getItemPrice(GAMES_NECKLACE8) / 8;
 				break;
 			case SKILLS_NECKLACE6:
-				calculatedPrice = (((itemManager.getItemPrice(SKILLS_NECKLACE6) - (itemManager.getItemPrice(SKILLS_NECKLACE)))) / 6);
+				calculatedPrice = (itemManager.getItemPrice(SKILLS_NECKLACE6) - itemManager.getItemPrice(SKILLS_NECKLACE)) / 6;
 				break;
 			case NECKLACE_OF_PASSAGE5:
-				calculatedPrice = ((itemManager.getItemPrice(NECKLACE_OF_PASSAGE5)) / 5);
+				calculatedPrice = itemManager.getItemPrice(NECKLACE_OF_PASSAGE5) / 5;
 				break;
 			case BURNING_AMULET5:
-				calculatedPrice = ((itemManager.getItemPrice(BURNING_AMULET5)) / 5);
+				calculatedPrice = itemManager.getItemPrice(BURNING_AMULET5) / 5;
 				break;
 			case SCYTHE_OF_VITUR:
-				calculatedPrice = (itemManager.getItemPrice(BLOOD_RUNE) * 3) + (itemManager.getItemPrice(VIAL_OF_BLOOD_22446) / 100);
+				calculatedPrice = itemManager.getItemPrice(BLOOD_RUNE) * 3L + itemManager.getItemPrice(VIAL_OF_BLOOD_22446) / 100;
 				break;
 			case TRIDENT_OF_THE_SWAMP:
-				calculatedPrice = (itemManager.getItemPrice(CHAOS_RUNE)) + (itemManager.getItemPrice(DEATH_RUNE)) +
-					(itemManager.getItemPrice(FIRE_RUNE) * 5) + (itemManager.getItemPrice(ZULRAHS_SCALES));
+				calculatedPrice = itemManager.getItemPrice(CHAOS_RUNE) + itemManager.getItemPrice(DEATH_RUNE) +
+						itemManager.getItemPrice(FIRE_RUNE) * 5L + itemManager.getItemPrice(ZULRAHS_SCALES);
 				break;
 			case TRIDENT_OF_THE_SEAS:
-				calculatedPrice = (itemManager.getItemPrice(CHAOS_RUNE)) + (itemManager.getItemPrice(DEATH_RUNE)) +
-					(itemManager.getItemPrice(FIRE_RUNE) * 5) + (itemManager.getItemPrice(COINS_995) * 10);
+				calculatedPrice = itemManager.getItemPrice(CHAOS_RUNE) + itemManager.getItemPrice(DEATH_RUNE) +
+						itemManager.getItemPrice(FIRE_RUNE) * 5L + itemManager.getItemPrice(COINS_995) * 10L;
 				break;
 			case SANGUINESTI_STAFF:
-				calculatedPrice = (itemManager.getItemPrice(BLOOD_RUNE) * 3);
+				calculatedPrice = itemManager.getItemPrice(BLOOD_RUNE) * 3L;
 				break;
 			case IBANS_STAFF:
-				calculatedPrice = ((itemManager.getItemPrice(DEATH_RUNE)) + (itemManager.getItemPrice(FIRE_RUNE) * 5));
+				calculatedPrice = itemManager.getItemPrice(DEATH_RUNE) + itemManager.getItemPrice(FIRE_RUNE) * 5L;
 				break;
 			case BLADE_OF_SAELDOR:
 				calculatedPrice = 0;
@@ -1385,7 +1385,7 @@ public class SuppliesTrackerPlugin extends Plugin
 				itemId,
 				name,
 				newQuantity,
-				(calculatedPrice * newQuantity));
+				calculatedPrice * newQuantity);
 
 		suppliesEntry.put(itemId, newEntry);
 
@@ -1393,7 +1393,7 @@ public class SuppliesTrackerPlugin extends Plugin
 				itemId,
 				name,
 				newQuantityC,
-				(calculatedPrice * newQuantityC));
+				calculatedPrice * newQuantityC);
 
 		if (!sessionLoading)
 		{
@@ -1403,13 +1403,11 @@ public class SuppliesTrackerPlugin extends Plugin
 
 		if (showSession)
 		{
-			SwingUtilities.invokeLater(() ->
-					panel.addItem(newEntryC));
+			SwingUtilities.invokeLater(() -> panel.addItem(newEntryC));
 		}
 		else
 		{
-			SwingUtilities.invokeLater(() ->
-					panel.addItem(newEntry));
+			SwingUtilities.invokeLater(() -> panel.addItem(newEntry));
 		}
 	}
 
