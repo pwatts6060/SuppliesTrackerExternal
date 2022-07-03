@@ -56,7 +56,22 @@ import static net.runelite.api.AnimationID.*;
 import static net.runelite.api.ItemID.*;
 import static net.runelite.client.RuneLite.RUNELITE_DIR;
 
-import net.runelite.api.*;
+import net.runelite.api.AnimationID;
+import net.runelite.api.ChatMessageType;
+import net.runelite.api.Client;
+import net.runelite.api.EquipmentInventorySlot;
+import net.runelite.api.GameObject;
+import net.runelite.api.GameState;
+import net.runelite.api.InventoryID;
+import net.runelite.api.Item;
+import net.runelite.api.ItemComposition;
+import net.runelite.api.ItemContainer;
+import net.runelite.api.ObjectID;
+import net.runelite.api.Player;
+import net.runelite.api.Projectile;
+import net.runelite.api.Skill;
+import net.runelite.api.VarPlayer;
+import net.runelite.api.Varbits;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.AnimationChanged;
 import net.runelite.api.events.ChatMessage;
@@ -76,6 +91,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
 import net.runelite.client.util.ImageUtil;
+import net.runelite.client.util.Text;
 import net.runelite.http.api.item.ItemPrice;
 import static net.runelite.api.GraphicID.CANNONBALL;
 import static net.runelite.api.GraphicID.GRANITE_CANNONBALL;
@@ -95,7 +111,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private static final Pattern eatPattern = Pattern.compile("^eat");
 	private static final Pattern drinkPattern = Pattern.compile("^drink");
 	private static final Pattern teleportPattern = Pattern.compile("^teleport");
-	private static final Pattern teletabPattern = Pattern.compile("^break|^Troll Stronghold|^Weiss");
+	private static final Pattern teletabPattern = Pattern.compile("^break|^troll stronghold|^weiss");
 	private static final Pattern spellPattern = Pattern.compile("^cast|^grand\\sexchange|^outside|^seers|^yanille");
 
 	//Equipment slot constants
@@ -869,7 +885,8 @@ public class SuppliesTrackerPlugin extends Plugin
 		// Uses stacks to push/pop for tick eating
 		// Create pattern to find eat/drink at beginning
 
-		String target = event.getMenuTarget().toLowerCase();
+		String target = Text.removeTags(event.getMenuTarget()).toLowerCase();
+		String menuOption = Text.removeTags(event.getMenuOption()).toLowerCase();
 
 		if ((eatPattern.matcher(target).find() || drinkPattern.matcher(target).find()) &&
 			actionStack.stream().noneMatch(a ->
@@ -895,14 +912,14 @@ public class SuppliesTrackerPlugin extends Plugin
 
 		// Create pattern for teleport scrolls and tabs
 		if (teleportPattern.matcher(target).find() ||
-			teletabPattern.matcher(target).find())
+			teletabPattern.matcher(menuOption).find())
 		{
 			oldInv = client.getItemContainer(InventoryID.INVENTORY);
 
 			// Makes stack only contains one teleport type to stop from adding multiple of one teleport
 			if (oldInv != null && actionStack.stream().noneMatch(a ->
 					a.getType() == ActionType.TELEPORT)) {
-				int teleid = event.getId();
+				int teleid = event.getItemId();
 				MenuAction newAction = new MenuAction.ItemAction(ActionType.TELEPORT, oldInv.getItems(), teleid, event.getMenuEntry().getParam0());
 				actionStack.push(newAction);
 			}
@@ -910,7 +927,7 @@ public class SuppliesTrackerPlugin extends Plugin
 
 		// note that here we look at the option not target b/c the option for all spells is cast
 		// but the target differs based on each spell name
-		if (spellPattern.matcher(event.getMenuOption().toLowerCase()).find())
+		if (spellPattern.matcher(menuOption).find())
 		{
 			oldInv = client.getItemContainer(InventoryID.INVENTORY);
 
@@ -933,7 +950,7 @@ public class SuppliesTrackerPlugin extends Plugin
 			}
 		}
 
-		if (event.getMenuAction().name().equals("ITEM_USE") || event.getMenuOption().toLowerCase().contains("bury"))
+		if (event.getMenuAction().name().equals("ITEM_USE") || menuOption.contains("bury"))
 		{
 			if (itemManager.getItemComposition(event.getId()).getName().toLowerCase().contains("bones"))
 			{
@@ -941,63 +958,58 @@ public class SuppliesTrackerPlugin extends Plugin
 			}
 		}
 
-		if (event.getMenuOption().equals("Reanimate") && event.getMenuAction().name().equals("ITEM_USE_ON_WIDGET"))
+		if (menuOption.equals("reanimate") && event.getMenuAction().name().equals("ITEM_USE_ON_WIDGET"))
 		{
 			ensouledHeadId = event.getId();
 		}
 
 		//Adds tracking to Master Scroll Book
-		if (event.getMenuOption().equalsIgnoreCase("activate"))
-		{
-			if (target.contains("teleport scroll"))
-			{
-				switch (target.substring(target.indexOf(">") + 1))
-				{
-					case "watson teleport scroll":
-						buildEntries(WATSON_TELEPORT);
-						break;
-					case "zul-andra teleport scroll":
-						buildEntries(ZULANDRA_TELEPORT);
-						break;
-					case "nardah teleport scroll":
-						buildEntries(NARDAH_TELEPORT);
-						break;
-					case "digsite teleport scroll":
-						buildEntries(DIGSITE_TELEPORT);
-						break;
-					case "feldip hills teleport scroll":
-						buildEntries(FELDIP_HILLS_TELEPORT);
-						break;
-					case "lunar isle teleport scroll":
-						buildEntries(LUNAR_ISLE_TELEPORT);
-						break;
-					case "mort'ton teleport scroll":
-						buildEntries(MORTTON_TELEPORT);
-						break;
-					case "pest control teleport scroll":
-						buildEntries(PEST_CONTROL_TELEPORT);
-						break;
-					case "piscatoris teleport scroll":
-						buildEntries(PISCATORIS_TELEPORT);
-						break;
-					case "iorwerth camp teleport scroll":
-						buildEntries(IORWERTH_CAMP_TELEPORT);
-						break;
-					case "mos le'harmless teleport scroll":
-						buildEntries(MOS_LEHARMLESS_TELEPORT);
-						break;
-					case "lumberyard teleport scroll":
-						buildEntries(LUMBERYARD_TELEPORT);
-						break;
-					case "revenant cave teleport scroll":
-						buildEntries(REVENANT_CAVE_TELEPORT);
-						break;
-					case "tai bwo wannai teleport scroll":
-						buildEntries(TAI_BWO_WANNAI_TELEPORT);
-						break;
-					case "key master teleport":
-						buildEntries(KEY_MASTER_TELEPORT);
-				}
+		if (menuOption.equalsIgnoreCase("activate") && target.contains("teleport scroll")) {
+			switch (target.substring(target.indexOf(">") + 1)) {
+				case "watson teleport scroll":
+					buildEntries(WATSON_TELEPORT);
+					break;
+				case "zul-andra teleport scroll":
+					buildEntries(ZULANDRA_TELEPORT);
+					break;
+				case "nardah teleport scroll":
+					buildEntries(NARDAH_TELEPORT);
+					break;
+				case "digsite teleport scroll":
+					buildEntries(DIGSITE_TELEPORT);
+					break;
+				case "feldip hills teleport scroll":
+					buildEntries(FELDIP_HILLS_TELEPORT);
+					break;
+				case "lunar isle teleport scroll":
+					buildEntries(LUNAR_ISLE_TELEPORT);
+					break;
+				case "mort'ton teleport scroll":
+					buildEntries(MORTTON_TELEPORT);
+					break;
+				case "pest control teleport scroll":
+					buildEntries(PEST_CONTROL_TELEPORT);
+					break;
+				case "piscatoris teleport scroll":
+					buildEntries(PISCATORIS_TELEPORT);
+					break;
+				case "iorwerth camp teleport scroll":
+					buildEntries(IORWERTH_CAMP_TELEPORT);
+					break;
+				case "mos le'harmless teleport scroll":
+					buildEntries(MOS_LEHARMLESS_TELEPORT);
+					break;
+				case "lumberyard teleport scroll":
+					buildEntries(LUMBERYARD_TELEPORT);
+					break;
+				case "revenant cave teleport scroll":
+					buildEntries(REVENANT_CAVE_TELEPORT);
+					break;
+				case "tai bwo wannai teleport scroll":
+					buildEntries(TAI_BWO_WANNAI_TELEPORT);
+					break;
+				case "key master teleport":
+					buildEntries(KEY_MASTER_TELEPORT);
 			}
 		}
 	}

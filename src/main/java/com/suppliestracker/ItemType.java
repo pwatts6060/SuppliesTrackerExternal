@@ -34,8 +34,10 @@ import static net.runelite.api.ItemID.COINS_995;
 import static net.runelite.api.ItemID.HEALER_ICON_20802;
 import static net.runelite.api.ItemID.HEALER_ICON_22308;
 import static net.runelite.api.ItemID.IBANS_STAFF;
+import static net.runelite.api.ItemID.ICY_BASALT;
 import static net.runelite.api.ItemID.SANGUINESTI_STAFF;
 import static net.runelite.api.ItemID.SCYTHE_OF_VITUR;
+import static net.runelite.api.ItemID.STONY_BASALT;
 import static net.runelite.api.ItemID.TRIDENT_OF_THE_SEAS;
 import static net.runelite.api.ItemID.TRIDENT_OF_THE_SWAMP;
 
@@ -73,6 +75,7 @@ public enum ItemType
 	public static ItemType categorize(SuppliesTrackerItem item)
 	{
 		String name = item.getName().toLowerCase();
+		int itemId = item.getId();
 		if (name.endsWith("(4)"))
 		{
 			return POTION;
@@ -94,7 +97,7 @@ public enum ItemType
 		{
 			return RUNE;
 		}
-		else if (name.contains("teleport"))
+		else if (name.contains("teleport") || itemId == STONY_BASALT || itemId == ICY_BASALT)
 		{
 			return TELEPORT;
 		}
