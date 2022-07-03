@@ -249,6 +249,10 @@ public class SuppliesTrackerPlugin extends Plugin
 
 	@Inject
 	private Client client;
+
+	@Inject
+	private RuneManager runeManager;
+
 	private int prayerXp = 0;
 	private int boneId = 0;
 	private boolean skipBone = false;
@@ -694,7 +698,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		boolean isInv = itemContainer == client.getItemContainer(InventoryID.INVENTORY);
 		if (isInv)
 		{
-			runepouchInInv = RunePouch.hasRunePouch(itemContainer);
+			runepouchInInv = runeManager.hasRunePouch(itemContainer);
 		}
 
 		if (isInv && old != null)
