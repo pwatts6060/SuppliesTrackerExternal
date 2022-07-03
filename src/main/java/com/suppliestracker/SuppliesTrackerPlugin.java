@@ -278,7 +278,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private final int[] TRIDENT_OF_THE_SWAMP_IDS = new int[]{TRIDENT_OF_THE_SWAMP_E, TRIDENT_OF_THE_SWAMP, UNCHARGED_TOXIC_TRIDENT_E, UNCHARGED_TOXIC_TRIDENT};
 	private final int[] IBANS_STAFF_IDS = new int[]{IBANS_STAFF, IBANS_STAFF_U};
 
-	private ItemContainer old;
+	private ItemContainer oldInv;
 	private int ammoId = 0;
 	private int ammoAmount = 0;
 	private int thrownId = 0;
@@ -745,13 +745,13 @@ public class SuppliesTrackerPlugin extends Plugin
 				case SURGE_SPELL_ANIMATION:
 				case HIGH_ALCH_ANIMATION:
 				case LUNAR_HUMIDIFY:
-					old = client.getItemContainer(InventoryID.INVENTORY);
+					oldInv = client.getItemContainer(InventoryID.INVENTORY);
 
-					if (old != null && old.getItems() != null &&
+					if (oldInv != null && oldInv.getItems() != null &&
 							actionStack.stream().noneMatch(a ->
 									a.getType() == CAST))
 					{
-						MenuAction newAction = new MenuAction(CAST, old.getItems());
+						MenuAction newAction = new MenuAction(CAST, oldInv.getItems());
 						actionStack.push(newAction);
 					}
 					if (!magicXpChanged)
@@ -794,7 +794,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		ItemContainer itemContainer = itemContainerChanged.getItemContainer();
 		int containerId = itemContainer.getId();
 
-		if (containerId == InventoryID.INVENTORY.getId() && old != null)
+		if (containerId == InventoryID.INVENTORY.getId() && oldInv != null)
 		{
 			processInvChange(itemContainer);
 		}
@@ -957,14 +957,14 @@ public class SuppliesTrackerPlugin extends Plugin
 				return false;
 			}))
 		{
-			old = client.getItemContainer(InventoryID.INVENTORY);
+			oldInv = client.getItemContainer(InventoryID.INVENTORY);
 			int slot = event.getActionParam();
-			int pushItem = old.getItems()[event.getActionParam()].getId();
+			int pushItem = oldInv.getItems()[event.getActionParam()].getId();
 			if (pushItem == PURPLE_SWEETS || pushItem == PURPLE_SWEETS_10476)
 			{
 				return;
 			}
-			MenuAction newAction = new MenuAction.ItemAction(ActionType.CONSUMABLE, old.getItems(), pushItem, slot);
+			MenuAction newAction = new MenuAction.ItemAction(ActionType.CONSUMABLE, oldInv.getItems(), pushItem, slot);
 			actionStack.push(newAction);
 		}
 
@@ -974,13 +974,13 @@ public class SuppliesTrackerPlugin extends Plugin
 		if (teleportPattern.matcher(target).find() ||
 			teletabPattern.matcher(target).find())
 		{
-			old = client.getItemContainer(InventoryID.INVENTORY);
+			oldInv = client.getItemContainer(InventoryID.INVENTORY);
 
 			// Makes stack only contains one teleport type to stop from adding multiple of one teleport
-			if (old != null && actionStack.stream().noneMatch(a ->
+			if (oldInv != null && actionStack.stream().noneMatch(a ->
 					a.getType() == ActionType.TELEPORT)) {
 				int teleid = event.getId();
-				MenuAction newAction = new MenuAction.ItemAction(ActionType.TELEPORT, old.getItems(), teleid, event.getActionParam());
+				MenuAction newAction = new MenuAction.ItemAction(ActionType.TELEPORT, oldInv.getItems(), teleid, event.getActionParam());
 				actionStack.push(newAction);
 			}
 		}
@@ -991,11 +991,11 @@ public class SuppliesTrackerPlugin extends Plugin
 		// but the target differs based on each spell name
 		if (spellPattern.matcher(event.getMenuOption().toLowerCase()).find())
 		{
-			old = client.getItemContainer(InventoryID.INVENTORY);
+			oldInv = client.getItemContainer(InventoryID.INVENTORY);
 
-			if (old != null && actionStack.stream().noneMatch(a ->
+			if (oldInv != null && actionStack.stream().noneMatch(a ->
 					a.getType() == CAST)) {
-				MenuAction newAction = new MenuAction(CAST, old.getItems());
+				MenuAction newAction = new MenuAction(CAST, oldInv.getItems());
 				actionStack.push(newAction);
 			}
 		}
