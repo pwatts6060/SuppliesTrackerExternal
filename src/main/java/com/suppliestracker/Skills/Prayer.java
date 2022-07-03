@@ -1,7 +1,7 @@
 package com.suppliestracker.Skills;
 
 import com.suppliestracker.SuppliesTrackerPlugin;
-import static net.runelite.api.ItemID.*;
+import lombok.Setter;
 import net.runelite.client.game.ItemManager;
 
 import javax.inject.Singleton;
@@ -9,8 +9,9 @@ import javax.inject.Singleton;
 @Singleton
 public class Prayer
 {
-	private SuppliesTrackerPlugin plugin;
-	private ItemManager itemManager;
+	private final SuppliesTrackerPlugin plugin;
+	private final ItemManager itemManager;
+	@Setter
 	private int bonesId = 0;
 
 	public Prayer(SuppliesTrackerPlugin plugin, ItemManager itemManager)
@@ -36,10 +37,5 @@ public class Prayer
 	public void build()
 	{
 		plugin.buildEntries(bonesId);
-	}
-
-	public void setBonesId(int bonesId)
-	{
-		this.bonesId = bonesId;
 	}
 }
