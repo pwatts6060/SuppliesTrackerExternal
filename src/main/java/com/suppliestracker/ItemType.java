@@ -89,7 +89,7 @@ public enum ItemType
 			|| name.contains("knive") || name.contains("throwing")
 			|| name.contains("zulrah's scale") || name.contains("cannonball")
 			|| name.contains("knife")|| name.contains("chinchompa")
-			|| name.contains("thrownaxe"))
+			|| name.endsWith(" brutal") || name.contains("thrownaxe"))
 		{
 			return AMMO;
 		}
