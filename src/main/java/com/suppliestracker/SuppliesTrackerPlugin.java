@@ -285,7 +285,6 @@ public class SuppliesTrackerPlugin extends Plugin
 	private int thrownAmount = 0;
 	private boolean ammoLoaded = false;
 	private boolean throwingAmmoLoaded = false;
-	private boolean mainHandThrowing = false;
 
 	private int mainHandId = 0;
 	private SuppliesTrackerPanel panel;
@@ -811,8 +810,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		{
 			Item mainHandItem = itemContainer.getItems()[EQUIPMENT_MAINHAND_SLOT];
 			mainHandId = mainHandItem.getId();
-			mainHandThrowing = thrownWeaponIds.contains(mainHandId);
-			if (mainHandThrowing)
+			if (thrownWeaponIds.contains(mainHandId))
 			{
 				if (throwingAmmoLoaded)
 				{
