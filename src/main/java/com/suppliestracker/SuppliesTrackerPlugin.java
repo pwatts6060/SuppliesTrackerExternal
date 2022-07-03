@@ -92,16 +92,11 @@ public class SuppliesTrackerPlugin extends Plugin
 {
 	//Regex patterns
 	private static final String POTION_PATTERN = "[(]\\d[)]";
-	private static final String EAT_PATTERN = "^eat";
-	private static final Pattern eatPattern = Pattern.compile(EAT_PATTERN);
-	private static final String DRINK_PATTERN = "^drink";
-	private static final Pattern drinkPattern = Pattern.compile(DRINK_PATTERN);
-	private static final String TELEPORT_PATTERN = "^teleport";
-	private static final Pattern teleportPattern = Pattern.compile(TELEPORT_PATTERN);
-	private static final String TELETAB_PATTERN = "^break|^Troll Stronghold|^Weiss";
-	private static final Pattern teletabPattern = Pattern.compile(TELETAB_PATTERN);
-	private static final String SPELL_PATTERN = "^cast|^grand\\sexchange|^outside|^seers|^yanille";
-	private static final Pattern spellPattern = Pattern.compile(SPELL_PATTERN);
+	private static final Pattern eatPattern = Pattern.compile("^eat");
+	private static final Pattern drinkPattern = Pattern.compile("^drink");
+	private static final Pattern teleportPattern = Pattern.compile("^teleport");
+	private static final Pattern teletabPattern = Pattern.compile("^break|^Troll Stronghold|^Weiss");
+	private static final Pattern spellPattern = Pattern.compile("^cast|^grand\\sexchange|^outside|^seers|^yanille");
 
 	//Equipment slot constants
 	private static final int EQUIPMENT_MAINHAND_SLOT = EquipmentInventorySlot.WEAPON.getSlotIdx();
