@@ -232,7 +232,6 @@ public class SuppliesTrackerPlugin extends Plugin
 
 	//Cannon
 	private WorldPoint cannonPosition;
-	private GameObject cannon;
 	private boolean cannonPlaced;
 	private boolean skipProjectileCheckThisTick;
 
@@ -1105,7 +1104,6 @@ public class SuppliesTrackerPlugin extends Plugin
 					&& localPlayer.getAnimation() == AnimationID.BURYING_BONES)
 			{
 				cannonPosition = gameObject.getWorldLocation();
-				cannon = gameObject;
 			}
 		}
 	}
