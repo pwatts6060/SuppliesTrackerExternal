@@ -684,10 +684,7 @@ public class SuppliesTrackerPlugin extends Plugin
 			case LUNAR_HUMIDIFY:
 				oldInv = client.getItemContainer(InventoryID.INVENTORY);
 
-				if (oldInv != null && oldInv.getItems() != null &&
-						actionStack.stream().noneMatch(a ->
-								a.getType() == CAST))
-				{
+				if (oldInv != null && actionStack.stream().noneMatch(a -> a.getType() == CAST)) {
 					MenuAction newAction = new MenuAction(CAST, oldInv.getItems());
 					actionStack.push(newAction);
 				}
@@ -710,17 +707,22 @@ public class SuppliesTrackerPlugin extends Plugin
 				break;
 			case ONEHAND_SLASH_SWORD:
 			case ONEHAND_STAB_SWORD:
-				if (mainHandId == BLADE_OF_SAELDOR) buildChargesEntries(BLADE_OF_SAELDOR);
+				if (mainHandId == BLADE_OF_SAELDOR)
+				{
+					buildChargesEntries(BLADE_OF_SAELDOR);
+				}
 				break;
 			case USING_GILDED_ALTAR:
 			case PRAY_AT_ALTAR:
 				prayerAltarAnimationCheck = true;
 				longTickWait = 5;
+				break;
 			case ENSOULED_HEADS_ANIMATION:
 				if (ensouledHeadId != 0)
 				{
 					buildEntries(ensouledHeadId);
 				}
+				break;
 		}
 	}
 
