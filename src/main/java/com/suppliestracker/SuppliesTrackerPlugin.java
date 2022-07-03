@@ -1667,26 +1667,12 @@ public class SuppliesTrackerPlugin extends Plugin
 
 	public void switchTracking()
 	{
-		SwingUtilities.invokeLater(() ->
-				panel.resetAll());
-
+		SwingUtilities.invokeLater(() -> panel.resetAll());
 		showSession = !showSession;
-
-		if (showSession)
+		Map<Integer, SuppliesTrackerItem> map = showSession ? currentSuppliesEntry : suppliesEntry;
+		for (SuppliesTrackerItem item: map.values())
 		{
-			for (SuppliesTrackerItem item: currentSuppliesEntry.values())
-			{
-				SwingUtilities.invokeLater(() ->
-						panel.addItem(item));
-			}
-		}
-		else
-		{
-			for (SuppliesTrackerItem item: suppliesEntry.values())
-			{
-				SwingUtilities.invokeLater(() ->
-						panel.addItem(item));
-			}
+			SwingUtilities.invokeLater(() -> panel.addItem(item));
 		}
 	}
 }
