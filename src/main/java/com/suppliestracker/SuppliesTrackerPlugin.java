@@ -370,7 +370,7 @@ public class SuppliesTrackerPlugin extends Plugin
 			// randomize the usage of supplies since we CANNOT actually get real supplies used
 			if (random.nextDouble() <= ava_percent)
 			{
-				buildEntries(config.blowpipeAmmo().getDartID());
+				buildEntries(config.blowpipeAmmo().dartID);
 			}
 			if (random.nextDouble() <= SCALES_PERCENT)
 			{

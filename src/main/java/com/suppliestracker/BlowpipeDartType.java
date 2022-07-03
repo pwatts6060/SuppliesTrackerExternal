@@ -25,11 +25,11 @@
  */
 package com.suppliestracker;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+
 import static net.runelite.api.ItemID.ADAMANT_DART;
 import static net.runelite.api.ItemID.AMETHYST_DART;
+import static net.runelite.api.ItemID.BLACK_DART;
 import static net.runelite.api.ItemID.BRONZE_DART;
 import static net.runelite.api.ItemID.DRAGON_DART;
 import static net.runelite.api.ItemID.IRON_DART;
@@ -43,12 +43,16 @@ import static net.runelite.api.ItemID.STEEL_DART;
 @AllArgsConstructor
 public enum BlowpipeDartType
 {
-	BRONZE(BRONZE_DART), IRON(IRON_DART),
-	STEEL(STEEL_DART), MITHRIL(MITHRIL_DART),
-	ADAMANT(ADAMANT_DART), RUNE(RUNE_DART),
-	DRAGON(DRAGON_DART);
+	BRONZE(BRONZE_DART),
+	IRON(IRON_DART),
+	STEEL(STEEL_DART),
+	BLACK(BLACK_DART),
+	MITHRIL(MITHRIL_DART),
+	ADAMANT(ADAMANT_DART),
+	RUNE(RUNE_DART),
+	AMETHYST(AMETHYST_DART),
+	DRAGON(DRAGON_DART),
+	;
 
-	@Getter(AccessLevel.MODULE)
-	private int dartID;
-
+	public final int dartID;
 }
