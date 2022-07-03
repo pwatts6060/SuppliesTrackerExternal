@@ -91,14 +91,17 @@ import static net.runelite.api.GraphicID.GRANITE_CANNONBALL;
 public class SuppliesTrackerPlugin extends Plugin
 {
 	//Regex patterns
-	static final String POTION_PATTERN = "[(]\\d[)]";
+	private static final String POTION_PATTERN = "[(]\\d[)]";
 	private static final String EAT_PATTERN = "^eat";
-	private static final String DRINK_PATTERN = "^drink";
 	private static final Pattern eatPattern = Pattern.compile(EAT_PATTERN);
+	private static final String DRINK_PATTERN = "^drink";
 	private static final Pattern drinkPattern = Pattern.compile(DRINK_PATTERN);
 	private static final String TELEPORT_PATTERN = "^teleport";
-	private static final String TELETAB_PATTERN = "^break";
+	private static final Pattern teleportPattern = Pattern.compile(TELEPORT_PATTERN);
+	private static final String TELETAB_PATTERN = "^break|^Troll Stronghold|^Weiss";
+	private static final Pattern teletabPattern = Pattern.compile(TELETAB_PATTERN);
 	private static final String SPELL_PATTERN = "^cast|^grand\\sexchange|^outside|^seers|^yanille";
+	private static final Pattern spellPattern = Pattern.compile(SPELL_PATTERN);
 
 	//Equipment slot constants
 	private static final int EQUIPMENT_MAINHAND_SLOT = EquipmentInventorySlot.WEAPON.getSlotIdx();
@@ -896,8 +899,6 @@ public class SuppliesTrackerPlugin extends Plugin
 		}
 
 		// Create pattern for teleport scrolls and tabs
-		Pattern teleportPattern = Pattern.compile(TELEPORT_PATTERN);
-		Pattern teletabPattern = Pattern.compile(TELETAB_PATTERN);
 		if (teleportPattern.matcher(target).find() ||
 			teletabPattern.matcher(target).find())
 		{
@@ -912,8 +913,6 @@ public class SuppliesTrackerPlugin extends Plugin
 			}
 		}
 
-		// Create pattern for spell cast
-		Pattern spellPattern = Pattern.compile(SPELL_PATTERN);
 		// note that here we look at the option not target b/c the option for all spells is cast
 		// but the target differs based on each spell name
 		if (spellPattern.matcher(event.getMenuOption().toLowerCase()).find())
