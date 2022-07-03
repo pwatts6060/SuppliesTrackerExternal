@@ -887,8 +887,8 @@ public class SuppliesTrackerPlugin extends Plugin
 			}))
 		{
 			oldInv = client.getItemContainer(InventoryID.INVENTORY);
-			int slot = event.getActionParam();
-			int pushItem = oldInv.getItems()[event.getActionParam()].getId();
+			int slot = event.getMenuEntry().getParam0();
+			int pushItem = oldInv.getItems()[event.getMenuEntry().getParam0()].getId();
 			if (pushItem == PURPLE_SWEETS || pushItem == PURPLE_SWEETS_10476)
 			{
 				return;
@@ -909,7 +909,7 @@ public class SuppliesTrackerPlugin extends Plugin
 			if (oldInv != null && actionStack.stream().noneMatch(a ->
 					a.getType() == ActionType.TELEPORT)) {
 				int teleid = event.getId();
-				MenuAction newAction = new MenuAction.ItemAction(ActionType.TELEPORT, oldInv.getItems(), teleid, event.getActionParam());
+				MenuAction newAction = new MenuAction.ItemAction(ActionType.TELEPORT, oldInv.getItems(), teleid, event.getMenuEntry().getParam0());
 				actionStack.push(newAction);
 			}
 		}
