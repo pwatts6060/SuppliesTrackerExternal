@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -113,6 +114,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private static final Pattern teleportPattern = Pattern.compile("^teleport");
 	private static final Pattern teletabPattern = Pattern.compile("^break|^troll stronghold|^weiss");
 	private static final Pattern spellPattern = Pattern.compile("^cast|^grand\\sexchange|^outside|^seers|^yanille");
+	private static final Pattern bpDartsPattern = Pattern.compile("Darts: <col=007f00>(.*) dart x (.*)</col>\\. Scales: <col=007f00>(.*) \\((.*)%\\)</col>\\.");
 
 	//Equipment slot constants
 	private static final int EQUIPMENT_MAINHAND_SLOT = EquipmentInventorySlot.WEAPON.getSlotIdx();
@@ -352,6 +354,9 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Inject
 	@Getter
 	private SuppliesTrackerConfig config;
+
+	@Inject
+	private ConfigManager configManager;
 
 	@Inject
 	private Client client;
@@ -1085,29 +1090,36 @@ public class SuppliesTrackerPlugin extends Plugin
 		}
 
 		//Cannon
-		else if (event.getMessage().equals("You add the furnace."))
+		else if (message.equals("You add the furnace."))
 		{
 			cannonPlaced = true;
 		}
 
-		else if (event.getMessage().contains("You pick up the cannon")
-				|| event.getMessage().contains("Your cannon has decayed. Speak to Nulodion to get a new one!"))
+		else if (message.contains("You pick up the cannon")
+				|| message.contains("Your cannon has decayed. Speak to Nulodion to get a new one!"))
 		{
 			cannonPlaced = false;
 		}
-		else if (event.getMessage().startsWith("You unload your cannon and receive Cannonball")
-				|| event.getMessage().startsWith("You unload your cannon and receive Granite cannonball"))
+		else if (message.startsWith("You unload your cannon and receive Cannonball")
+				|| message.startsWith("You unload your cannon and receive Granite cannonball"))
 		{
 			skipProjectileCheckThisTick = true;
 		}
-		else if (event.getMessage().contains("A magical chest")
-				&& event.getMessage().contains("outside the Theatre of Blood"))
+		else if (message.contains("A magical chest")
+				&& message.contains("outside the Theatre of Blood"))
 		{
 			buildEntries(HEALER_ICON_20802);
 		}
-		else if (event.getMessage().contains("Torfinn has retrieved some of your items."))
+		else if (message.contains("Torfinn has retrieved some of your items."))
 		{
 			buildEntries(HEALER_ICON_22308);
+		}
+
+		Matcher bpMatcher = bpDartsPattern.matcher(message);
+		if (bpMatcher.matches()) {
+			String dartName = bpMatcher.group(1);
+			BlowpipeDartType dart = BlowpipeDartType.forName(dartName);
+			configManager.setRSProfileConfiguration(SuppliesTrackerConfig.GROUP_NAME, SuppliesTrackerConfig.BLOW_PIPE_AMMO, dart);
 		}
 	}
 

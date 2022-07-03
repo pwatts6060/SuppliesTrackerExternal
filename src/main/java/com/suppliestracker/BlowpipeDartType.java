@@ -55,4 +55,15 @@ public enum BlowpipeDartType
 	;
 
 	public final int dartID;
+
+	public static final BlowpipeDartType[] values = values();
+
+	public static BlowpipeDartType forName(String name) {
+		for (BlowpipeDartType type : values) {
+			if (type.name().equalsIgnoreCase(name)) {
+				return type;
+			}
+		}
+		return BlowpipeDartType.MITHRIL;
+	}
 }

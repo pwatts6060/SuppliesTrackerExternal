@@ -29,11 +29,16 @@ import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 
-@ConfigGroup("suppliestracker")
+import static com.suppliestracker.SuppliesTrackerConfig.GROUP_NAME;
+
+@ConfigGroup(GROUP_NAME)
 public interface SuppliesTrackerConfig extends Config
 {
+	String GROUP_NAME = "suppliestracker";
+	String BLOW_PIPE_AMMO = "blowpipeAmmo";
+
 	@ConfigItem(
-		keyName = "blowpipeAmmo",
+		keyName = BLOW_PIPE_AMMO,
 		name = "Ammo",
 		description = "What type of dart are you using in your toxic blowpipe"
 	)
