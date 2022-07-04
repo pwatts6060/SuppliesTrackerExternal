@@ -340,7 +340,6 @@ public class SuppliesTrackerPlugin extends Plugin
 	private int amountused2 = 0;
 	private int amountused3 = 0;
 
-	private boolean skipTick = false;
 	private boolean noXpCast = false;
 	private boolean prayerAltarAnimationCheck = false;
 
@@ -467,7 +466,6 @@ public class SuppliesTrackerPlugin extends Plugin
 		xpDropTracker.update(skill, xpDrop);
 
 		if (skill.equals(Skill.MAGIC)) {
-			skipTick = true;
 		}
 
 		if (skill.equals(Skill.PRAYER)) {
@@ -496,12 +494,7 @@ public class SuppliesTrackerPlugin extends Plugin
 			prayerAltarAnimationCheck = false;
 		}
 
-		if (skipTick)
-		{
-			skipTick = false;
-			return;
-		}
-		else if (xpDropTracker.hadXpThisTick(Skill.MAGIC))
+		if (xpDropTracker.hadXpThisTick(Skill.MAGIC))
 		{
 			checkUsedRunePouch();
 			noXpCast = false;
@@ -728,7 +721,6 @@ public class SuppliesTrackerPlugin extends Plugin
 				}
 				if (!xpDropTracker.hadXpThisTick(Skill.MAGIC))
 				{
-					skipTick = true;
 					noXpCast = true;
 				}{
 
