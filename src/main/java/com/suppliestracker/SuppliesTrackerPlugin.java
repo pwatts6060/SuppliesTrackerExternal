@@ -278,7 +278,6 @@ public class SuppliesTrackerPlugin extends Plugin
 	private static final int SURGE_SPELL_ANIMATION = 7855;
 	private static final int HIGH_ALCH_ANIMATION = 713;
 	private static final int LUNAR_HUMIDIFY = 6294;
-	private static final int PRAY_AT_ALTAR = 645;
 	private static final int ENSOULED_HEADS_ANIMATION = 7198;
 	private static final int IBANS_STAFF_ANIMATION = 708;
 	private static final int SLAYERS_STAFF_ANIMATION = 1576;
@@ -369,7 +368,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Inject
 	private RuneManager runeManager;
 
-	private int ensouledHeadId = 0;
+	private int ensouledHeadId = -1;
 
 	@Inject
 	public XpDropTracker xpDropTracker;
@@ -721,11 +720,11 @@ public class SuppliesTrackerPlugin extends Plugin
 				}
 				break;
 			case ENSOULED_HEADS_ANIMATION:
-				if (ensouledHeadId != 0)
+				if (ensouledHeadId > 0)
 				{
 					buildEntries(ensouledHeadId);
 				}
-				ensouledHeadId = 0;
+				ensouledHeadId = -1;
 				break;
 		}
 	}
@@ -995,9 +994,16 @@ public class SuppliesTrackerPlugin extends Plugin
 			}
 		}
 
-		if (menuOption.equals("reanimate") && event.getMenuAction() == MenuAction.WIDGET_TARGET_ON_WIDGET)
+		if (target.contains(" reanimation ->") && event.getMenuAction() == MenuAction.WIDGET_TARGET_ON_WIDGET)
 		{
-			ensouledHeadId = event.getItemId();
+			System.out.println(event.getParam0() +"|" + event.getParam1() + "|" + event.getId());
+			ItemContainer inv = client.getItemContainer(InventoryID.INVENTORY);
+			if (inv != null) {
+				Item item = inv.getItem(event.getParam0());
+				if (item != null) {
+					ensouledHeadId = item.getId();
+				}
+			}
 		}
 
 		//Adds tracking to Master Scroll Book
