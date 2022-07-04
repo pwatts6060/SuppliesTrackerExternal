@@ -57,22 +57,7 @@ import static net.runelite.api.AnimationID.*;
 import static net.runelite.api.ItemID.*;
 import static net.runelite.client.RuneLite.RUNELITE_DIR;
 
-import net.runelite.api.AnimationID;
-import net.runelite.api.ChatMessageType;
-import net.runelite.api.Client;
-import net.runelite.api.EquipmentInventorySlot;
-import net.runelite.api.GameObject;
-import net.runelite.api.GameState;
-import net.runelite.api.InventoryID;
-import net.runelite.api.Item;
-import net.runelite.api.ItemComposition;
-import net.runelite.api.ItemContainer;
-import net.runelite.api.ObjectID;
-import net.runelite.api.Player;
-import net.runelite.api.Projectile;
-import net.runelite.api.Skill;
-import net.runelite.api.VarPlayer;
-import net.runelite.api.Varbits;
+import net.runelite.api.*;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.AnimationChanged;
 import net.runelite.api.events.ChatMessage;
@@ -1164,7 +1149,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		}
 		if (!skipProjectileCheckThisTick)
 		{
-			buildEntries(CANNONBALL);
+			buildEntries(projectile.getId() == GRANITE_CANNONBALL ? ItemID.GRANITE_CANNONBALL : ItemID.CANNONBALL);
 		}
 	}
 
