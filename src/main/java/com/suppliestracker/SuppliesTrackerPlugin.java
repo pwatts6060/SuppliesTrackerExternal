@@ -56,7 +56,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import static com.suppliestracker.ActionType.CAST;
-import static net.runelite.api.AnimationID.USING_GILDED_ALTAR;
 import static net.runelite.api.ItemID.*;
 import static net.runelite.client.RuneLite.RUNELITE_DIR;
 
@@ -88,6 +87,7 @@ import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.api.events.ProjectileMoved;
+import net.runelite.api.events.SoundEffectPlayed;
 import net.runelite.api.events.StatChanged;
 import net.runelite.api.events.VarbitChanged;
 import net.runelite.client.config.ConfigManager;
@@ -133,11 +133,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private static final double ACCUMULATOR_PERCENT = 0.28;
 	private static final double ATTRACTOR_PERCENT = 0.40;
 
-	//blowpipe attack timings
-	private static final int BLOWPIPE_TICKS_RAPID_PVM = 2;
-	private static final int BLOWPIPE_TICKS_RAPID_PVP = 3;
-	private static final int BLOWPIPE_TICKS_NORMAL_PVM = 3;
-	private static final int BLOWPIPE_TICKS_NORMAL_PVP = 4;
+	private static final int BLOWPIPE_SOUND = 2696;
 
 	//blowpipe scale usage
 	private static final double SCALES_PERCENT = 2.0 / 3.0;
@@ -300,8 +296,6 @@ public class SuppliesTrackerPlugin extends Plugin
 	private SuppliesTrackerPanel panel;
 	private NavigationButton navButton;
 	private int attackStyleVarbit = -1;
-	private int ticks = 0;
-	private int ticksInAnimation;
 
 	private boolean sessionLoading = false;
 	private SessionHandler sessionHandler;
@@ -462,8 +456,6 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Subscribe
 	private void onGameTick(GameTick tick)
 	{
-		blowpipeTick();
-
 		skipProjectileCheckThisTick = false;
 
 		if (xpDropTracker.hadXpThisTick(Skill.MAGIC))
@@ -480,21 +472,9 @@ public class SuppliesTrackerPlugin extends Plugin
 		amountused1 = 0;
 		amountused2 = 0;
 		amountused3 = 0;
-
 	}
 
-	private void blowpipeTick() {
-		Player player = client.getLocalPlayer();
-		if (player.getAnimation() != BLOWPIPE_ATTACK)
-		{
-			return;
-		}
-
-		ticks++;
-		if (ticks != ticksInAnimation) {
-			return;
-		}
-
+	private void blowpipeShot() {
 		double ava_percent = getAccumulatorPercent();
 		// randomize the usage of supplies since we CANNOT actually get real supplies used
 		if (random.nextDouble() <= ava_percent)
@@ -505,7 +485,6 @@ public class SuppliesTrackerPlugin extends Plugin
 		{
 			buildEntries(ZULRAHS_SCALES);
 		}
-		ticks = 0;
 	}
 
 	/**
@@ -554,18 +533,14 @@ public class SuppliesTrackerPlugin extends Plugin
 		attackStyleVarbit = client.getVar(VarPlayer.ATTACK_STYLE);
 		if (attackStyleVarbit == 0 || attackStyleVarbit == 3)
 		{
-			ticksInAnimation = BLOWPIPE_TICKS_NORMAL_PVM;
 			if (client.getLocalPlayer() != null && client.getLocalPlayer().getInteracting() instanceof Player)
 			{
-				ticksInAnimation = BLOWPIPE_TICKS_NORMAL_PVP;
 			}
 		}
 		else if (attackStyleVarbit == 1)
 		{
-			ticksInAnimation = BLOWPIPE_TICKS_RAPID_PVM;
 			if (client.getLocalPlayer() != null && client.getLocalPlayer().getInteracting() instanceof Player)
 			{
-				ticksInAnimation = BLOWPIPE_TICKS_RAPID_PVP;
 			}
 		}
 	}
@@ -1148,7 +1123,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		if (bpMatcher.matches()) {
 			String dartName = bpMatcher.group(1);
 			BlowpipeDartType dart = BlowpipeDartType.forName(dartName);
-			configManager.setRSProfileConfiguration(SuppliesTrackerConfig.GROUP_NAME, SuppliesTrackerConfig.BLOW_PIPE_AMMO, dart);
+			configManager.setConfiguration(SuppliesTrackerConfig.GROUP_NAME, SuppliesTrackerConfig.BLOW_PIPE_AMMO, dart);
 		}
 	}
 
@@ -1170,6 +1145,14 @@ public class SuppliesTrackerPlugin extends Plugin
 				&& localPlayer.getAnimation() == AnimationID.BURYING_BONES)
 		{
 			cannonPosition = gameObject.getWorldLocation();
+		}
+	}
+
+	@Subscribe
+	public void onSoundEffectPlayed(SoundEffectPlayed event)
+	{
+		if (mainHandId == TOXIC_BLOWPIPE && event.getSoundId() == BLOWPIPE_SOUND) {
+			blowpipeShot();
 		}
 	}
 
