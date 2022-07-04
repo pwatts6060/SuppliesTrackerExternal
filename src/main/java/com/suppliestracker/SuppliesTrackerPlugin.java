@@ -883,7 +883,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		String target = Text.removeTags(event.getMenuTarget()).toLowerCase();
 		String menuOption = Text.removeTags(event.getMenuOption()).toLowerCase();
 
-		if ((eatPattern.matcher(target).find() || drinkPattern.matcher(target).find()) &&
+		if ((eatPattern.matcher(menuOption).find() || drinkPattern.matcher(menuOption).find()) &&
 			actionStack.stream().noneMatch(a ->
 			{
 				if (a instanceof MenuAction.ItemAction)
