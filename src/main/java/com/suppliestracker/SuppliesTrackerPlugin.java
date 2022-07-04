@@ -258,7 +258,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private static final int ENSOULED_HEADS_ANIMATION = 7198;
 	private static final int IBANS_STAFF_ANIMATION = 708;
 	private static final int SLAYERS_STAFF_ANIMATION = 1576;
-	private final Deque<MenuAction> actionStack = new ArrayDeque<>();
+	private final Deque<ItemMenuAction> actionStack = new ArrayDeque<>();
 
 	//Item arrays
 	private final String[] RAIDS_CONSUMABLES = new String[]{"xeric's", "elder", "twisted", "revitalisation", "overload", "prayer enhance", "pysk", "suphi", "leckish", "brawk", "mycil", "roqed", "kyren", "guanic", "prael", "giral", "phluxia", "kryket", "murng", "psykk", "egniol"};
@@ -689,7 +689,7 @@ public class SuppliesTrackerPlugin extends Plugin
 				oldInv = client.getItemContainer(InventoryID.INVENTORY);
 
 				if (oldInv != null && actionStack.stream().noneMatch(a -> a.getType() == CAST)) {
-					MenuAction newAction = new MenuAction(CAST, oldInv.getItems());
+					ItemMenuAction newAction = new ItemMenuAction(CAST, oldInv.getItems());
 					actionStack.push(newAction);
 				}
 				if (!magicXpChanged)
@@ -821,14 +821,14 @@ public class SuppliesTrackerPlugin extends Plugin
 	private void processInvChange(ItemContainer itemContainer) {
 		while (!actionStack.isEmpty())
 		{
-			MenuAction frame = actionStack.pop();
+			ItemMenuAction frame = actionStack.pop();
 			ActionType type = frame.getType();
-			MenuAction.ItemAction itemFrame;
+			ItemMenuAction.ItemAction itemFrame;
 			Item[] oldInv = frame.getOldInventory();
 			switch (type)
 			{
 				case CONSUMABLE:
-					itemFrame = (MenuAction.ItemAction) frame;
+					itemFrame = (ItemMenuAction.ItemAction) frame;
 					int nextItem = itemFrame.getItemID();
 					int nextSlot = itemFrame.getSlot();
 					if (itemContainer.getItems()[nextSlot].getId() != oldInv[nextSlot].getId())
@@ -837,7 +837,7 @@ public class SuppliesTrackerPlugin extends Plugin
 					}
 					break;
 				case TELEPORT:
-					itemFrame = (MenuAction.ItemAction) frame;
+					itemFrame = (ItemMenuAction.ItemAction) frame;
 					int teleid = itemFrame.getItemID();
 					int slot = itemFrame.getSlot();
 					if (itemContainer.getItems()[slot].getId() != oldInv[slot].getId() ||
@@ -886,9 +886,9 @@ public class SuppliesTrackerPlugin extends Plugin
 		if ((eatPattern.matcher(menuOption).find() || drinkPattern.matcher(menuOption).find()) &&
 			actionStack.stream().noneMatch(a ->
 			{
-				if (a instanceof MenuAction.ItemAction)
+				if (a instanceof ItemMenuAction.ItemAction)
 				{
-					MenuAction.ItemAction i = (MenuAction.ItemAction) a;
+					ItemMenuAction.ItemAction i = (ItemMenuAction.ItemAction) a;
 					return i.getItemID() == event.getId();
 				}
 				return false;
@@ -901,7 +901,7 @@ public class SuppliesTrackerPlugin extends Plugin
 			{
 				return;
 			}
-			MenuAction newAction = new MenuAction.ItemAction(ActionType.CONSUMABLE, oldInv.getItems(), pushItem, slot);
+			ItemMenuAction newAction = new ItemMenuAction.ItemAction(ActionType.CONSUMABLE, oldInv.getItems(), pushItem, slot);
 			actionStack.push(newAction);
 		}
 
@@ -915,7 +915,7 @@ public class SuppliesTrackerPlugin extends Plugin
 			if (oldInv != null && actionStack.stream().noneMatch(a ->
 					a.getType() == ActionType.TELEPORT)) {
 				int teleid = event.getItemId();
-				MenuAction newAction = new MenuAction.ItemAction(ActionType.TELEPORT, oldInv.getItems(), teleid, event.getMenuEntry().getParam0());
+				ItemMenuAction newAction = new ItemMenuAction.ItemAction(ActionType.TELEPORT, oldInv.getItems(), teleid, event.getMenuEntry().getParam0());
 				actionStack.push(newAction);
 			}
 		}
@@ -928,7 +928,7 @@ public class SuppliesTrackerPlugin extends Plugin
 
 			if (oldInv != null && actionStack.stream().noneMatch(a ->
 					a.getType() == CAST)) {
-				MenuAction newAction = new MenuAction(CAST, oldInv.getItems());
+				ItemMenuAction newAction = new ItemMenuAction(CAST, oldInv.getItems());
 				actionStack.push(newAction);
 			}
 		}

@@ -33,14 +33,14 @@ import net.runelite.api.Item;
  * Data class that tracks all info related to a menu click action
  */
 @AllArgsConstructor
-public class MenuAction
+public class ItemMenuAction
 {
 	@Getter(AccessLevel.MODULE)
 	private ActionType type;
 	@Getter(AccessLevel.MODULE)
 	private Item[] oldInventory;
 
-	static class ItemAction extends MenuAction
+	static class ItemAction extends ItemMenuAction
 	{
 
 		@Getter(AccessLevel.MODULE)
