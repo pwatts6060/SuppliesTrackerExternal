@@ -48,7 +48,6 @@ import javax.inject.Singleton;
 import javax.swing.SwingUtilities;
 
 import com.suppliestracker.Skills.Farming;
-import com.suppliestracker.Skills.Prayer;
 import com.suppliestracker.Skills.SkillTracker;
 import com.suppliestracker.Skills.XpDropTracker;
 import com.suppliestracker.session.SessionHandler;
@@ -341,12 +340,10 @@ public class SuppliesTrackerPlugin extends Plugin
 	private int amountused3 = 0;
 
 	private boolean noXpCast = false;
-	private boolean prayerAltarAnimationCheck = false;
 
 	//skills
 
 	private Farming farming;
-	private Prayer prayer;
 
 	//Cannon
 	private WorldPoint cannonPosition;
@@ -372,8 +369,6 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Inject
 	private RuneManager runeManager;
 
-	private boolean skipBone = false;
-	private int longTickWait = 0;
 	private int ensouledHeadId = 0;
 
 	@Inject
@@ -420,7 +415,6 @@ public class SuppliesTrackerPlugin extends Plugin
 	{
 		panel = new SuppliesTrackerPanel(itemManager, this);
 		farming = new Farming(this, itemManager);
-		prayer = new Prayer(this, itemManager);
 		final BufferedImage header = ImageUtil.getResourceStreamFromClass(getClass(), "panel_icon.png");
 		panel.loadHeaderIcon(header);
 		final BufferedImage icon = ImageUtil.getResourceStreamFromClass(getClass(), "panel_icon.png");
@@ -464,16 +458,6 @@ public class SuppliesTrackerPlugin extends Plugin
 
 	private void onXpDrop(Skill skill, int xpDrop) {
 		xpDropTracker.update(skill, xpDrop);
-
-		if (skill.equals(Skill.MAGIC)) {
-		}
-
-		if (skill.equals(Skill.PRAYER)) {
-			if (prayerAltarAnimationCheck && !skipBone) {
-				prayer.build();
-			}
-			ensouledHeadId = 0;
-		}
 	}
 
 	@Subscribe
@@ -482,17 +466,6 @@ public class SuppliesTrackerPlugin extends Plugin
 		blowpipeTick();
 
 		skipProjectileCheckThisTick = false;
-
-		skipBone = false;
-
-		if (longTickWait > 0)
-		{
-			longTickWait = longTickWait - 1;
-		}
-		else if (prayerAltarAnimationCheck)
-		{
-			prayerAltarAnimationCheck = false;
-		}
 
 		if (xpDropTracker.hadXpThisTick(Skill.MAGIC))
 		{
@@ -747,16 +720,12 @@ public class SuppliesTrackerPlugin extends Plugin
 					buildChargesEntries(BLADE_OF_SAELDOR);
 				}
 				break;
-			case USING_GILDED_ALTAR:
-			case PRAY_AT_ALTAR:
-				prayerAltarAnimationCheck = true;
-				longTickWait = 5;
-				break;
 			case ENSOULED_HEADS_ANIMATION:
 				if (ensouledHeadId != 0)
 				{
 					buildEntries(ensouledHeadId);
 				}
+				ensouledHeadId = 0;
 				break;
 		}
 	}
@@ -783,6 +752,15 @@ public class SuppliesTrackerPlugin extends Plugin
 	private void xpDropLinkedSupplies() {
 		if (xpDropTracker.hadXpThisTick(Skill.FISHING)) {
 			bait.onXpDrop();
+		}
+		if (xpDropTracker.hadXpThisTick(Skill.PRAYER)) {
+			for (Map.Entry<Integer, Integer> entry : changedItems.entrySet()) {
+				int itemId = entry.getKey();
+				String itemName = itemManager.getItemComposition(itemId).getName().toLowerCase();
+				if (itemName.endsWith(" bones") || itemName.endsWith("ashes")) {
+					buildEntries(itemId, -entry.getValue());
+				}
+			}
 		}
 	}
 
@@ -1017,14 +995,6 @@ public class SuppliesTrackerPlugin extends Plugin
 			}
 		}
 
-		if (event.getMenuAction() == MenuAction.CC_OP || menuOption.contains("bury"))
-		{
-			if (itemManager.getItemComposition(event.getItemId()).getName().toLowerCase().contains("bones"))
-			{
-				prayer.setBonesId(event.getItemId());
-			}
-		}
-
 		if (menuOption.equals("reanimate") && event.getMenuAction() == MenuAction.WIDGET_TARGET_ON_WIDGET)
 		{
 			ensouledHeadId = event.getItemId();
@@ -1100,18 +1070,9 @@ public class SuppliesTrackerPlugin extends Plugin
 			farming.setEndlessBucket(message);
 			farming.onChatTreat(message.toLowerCase());
 		}
-
-		else if (message.toLowerCase().contains("you bury the bones"))
-		{
-			prayer.OnChat(message);
-		}
 		else if (message.toLowerCase().contains("you eat the sweets."))
 		{
 			buildEntries(PURPLE_SWEETS_10476);
-		}
-		else if (message.toLowerCase().contains("dark lord"))
-		{
-			skipBone = true;
 		}
 		else if (message.toLowerCase().contains("your amulet has") ||
 			message.toLowerCase().contains("your amulet's last charge"))
