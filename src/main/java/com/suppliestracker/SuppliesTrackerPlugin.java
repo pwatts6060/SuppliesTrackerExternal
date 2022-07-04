@@ -996,7 +996,6 @@ public class SuppliesTrackerPlugin extends Plugin
 
 		if (target.contains(" reanimation ->") && event.getMenuAction() == MenuAction.WIDGET_TARGET_ON_WIDGET)
 		{
-			System.out.println(event.getParam0() +"|" + event.getParam1() + "|" + event.getId());
 			ItemContainer inv = client.getItemContainer(InventoryID.INVENTORY);
 			if (inv != null) {
 				Item item = inv.getItem(event.getParam0());
