@@ -1055,7 +1055,6 @@ public class SuppliesTrackerPlugin extends Plugin
 					break;
 			}
 		}
-		client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", target + "|" + menuOption + "|" + event.getMenuAction().name(), "");
 	}
 
 	@Subscribe
