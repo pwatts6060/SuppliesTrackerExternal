@@ -82,7 +82,7 @@ public enum ItemType
 		{
 			return POTION;
 		}
-		else if ((name.contains("bones") && !name.contains(" to ")) || name.contains("ensouled"))
+		else if ((name.contains("bones") && !name.contains(" to ")) || name.startsWith("ensouled") || name.endsWith(" ashes"))
 		{
 			return PRAYER;
 		}
