@@ -960,7 +960,7 @@ public class SuppliesTrackerPlugin extends Plugin
 
 		//Adds tracking to Master Scroll Book
 		if (menuOption.equalsIgnoreCase("activate") && target.contains("teleport scroll")) {
-			switch (target.substring(target.indexOf(">") + 1)) {
+			switch (target) {
 				case "watson teleport scroll":
 					buildEntries(WATSON_TELEPORT);
 					break;
