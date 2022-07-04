@@ -46,18 +46,40 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.SwingUtilities;
-import static com.suppliestracker.ActionType.*;
+
 import com.suppliestracker.Skills.Farming;
 import com.suppliestracker.Skills.Prayer;
+import com.suppliestracker.Skills.SkillTracker;
+import com.suppliestracker.Skills.XpDropTracker;
 import com.suppliestracker.session.SessionHandler;
 import com.suppliestracker.ui.SuppliesTrackerPanel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import static net.runelite.api.AnimationID.*;
+
+import static com.suppliestracker.ActionType.CAST;
+import static net.runelite.api.AnimationID.USING_GILDED_ALTAR;
 import static net.runelite.api.ItemID.*;
 import static net.runelite.client.RuneLite.RUNELITE_DIR;
 
-import net.runelite.api.*;
+import net.runelite.api.AnimationID;
+import net.runelite.api.ChatMessageType;
+import net.runelite.api.Client;
+import net.runelite.api.EquipmentInventorySlot;
+import net.runelite.api.GameObject;
+import net.runelite.api.GameState;
+import net.runelite.api.GraphicID;
+import net.runelite.api.InventoryID;
+import net.runelite.api.Item;
+import net.runelite.api.ItemComposition;
+import net.runelite.api.ItemContainer;
+import net.runelite.api.ItemID;
+import net.runelite.api.MenuAction;
+import net.runelite.api.ObjectID;
+import net.runelite.api.Player;
+import net.runelite.api.Projectile;
+import net.runelite.api.Skill;
+import net.runelite.api.VarPlayer;
+import net.runelite.api.Varbits;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.AnimationChanged;
 import net.runelite.api.events.ChatMessage;
@@ -125,6 +147,9 @@ public class SuppliesTrackerPlugin extends Plugin
 	private static final int POTION_DOSES = 4, CAKE_DOSES = 3, PIZZA_PIE_DOSES = 2;
 
 	private static final Random random = new Random();
+
+	private Map<Integer, Integer> itemAmounts;
+	public final Map<Integer, Integer> changedItems = new HashMap<>(4);
 
 	// id array for checking thrown items and runes
 	private static final Set<Integer> thrownWeaponIds = ImmutableSet.of(
@@ -266,7 +291,6 @@ public class SuppliesTrackerPlugin extends Plugin
 	private final Set<Integer> TRIDENT_OF_THE_SWAMP_IDS = ImmutableSet.of(TRIDENT_OF_THE_SWAMP_E, TRIDENT_OF_THE_SWAMP, UNCHARGED_TOXIC_TRIDENT_E, UNCHARGED_TOXIC_TRIDENT);
 	private final Set<Integer> IBANS_STAFF_IDS = ImmutableSet.of(IBANS_STAFF, IBANS_STAFF_U);
 
-	private ItemContainer oldInv;
 	private int ammoId = 0;
 	private int ammoAmount = 0;
 	private int thrownId = 0;
@@ -314,10 +338,8 @@ public class SuppliesTrackerPlugin extends Plugin
 	private int amountused2 = 0;
 	private int amountused3 = 0;
 
-	private boolean magicXpChanged = false;
 	private boolean skipTick = false;
 	private boolean noXpCast = false;
-	private int magicXp = 0;
 	private boolean prayerAltarAnimationCheck = false;
 
 	//skills
@@ -349,10 +371,15 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Inject
 	private RuneManager runeManager;
 
-	private int prayerXp = 0;
 	private boolean skipBone = false;
 	private int longTickWait = 0;
 	private int ensouledHeadId = 0;
+
+	@Inject
+	public XpDropTracker xpDropTracker;
+
+	@Inject
+	public SkillTracker skillTracker;
 
 	/**
 	 * Checks if item name is potion
@@ -427,18 +454,24 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Subscribe
 	void onStatChanged(StatChanged event)
 	{
-		if (event.getSkill().equals(Skill.MAGIC) && magicXp != event.getXp()) {
-			skipTick = true;
-			magicXpChanged = true;
-			magicXp = event.getXp();
+		int oldXp = skillTracker.skillXp.getOrDefault(event.getSkill(), 0);
+		if (event.getXp() != oldXp) {
+			onXpDrop(event.getSkill(), event.getXp() - oldXp);
+			skillTracker.skillXp.put(event.getSkill(), event.getXp());
 		}
-		if (event.getSkill().equals(Skill.PRAYER) && prayerXp != event.getXp()) {
-			if (prayerAltarAnimationCheck) {
-				if (!skipBone) {
-					prayer.build();
-				}
+	}
+
+	private void onXpDrop(Skill skill, int xpDrop) {
+		xpDropTracker.update(skill, xpDrop);
+
+		if (skill.equals(Skill.MAGIC)) {
+			skipTick = true;
+		}
+
+		if (skill.equals(Skill.PRAYER)) {
+			if (prayerAltarAnimationCheck && !skipBone) {
+				prayer.build();
 			}
-			prayerXp = event.getXp();
 			ensouledHeadId = 0;
 		}
 	}
@@ -466,10 +499,9 @@ public class SuppliesTrackerPlugin extends Plugin
 			skipTick = false;
 			return;
 		}
-		else if (magicXpChanged)
+		else if (xpDropTracker.hadXpThisTick(Skill.MAGIC))
 		{
 			checkUsedRunePouch();
-			magicXpChanged = false;
 			noXpCast = false;
 		}
 		else if (noXpCast)
@@ -686,13 +718,13 @@ public class SuppliesTrackerPlugin extends Plugin
 			case SURGE_SPELL_ANIMATION:
 			case HIGH_ALCH_ANIMATION:
 			case LUNAR_HUMIDIFY:
-				oldInv = client.getItemContainer(InventoryID.INVENTORY);
+				ItemContainer oldInv = client.getItemContainer(InventoryID.INVENTORY);
 
 				if (oldInv != null && actionStack.stream().noneMatch(a -> a.getType() == CAST)) {
 					ItemMenuAction newAction = new ItemMenuAction(CAST, oldInv.getItems());
 					actionStack.push(newAction);
 				}
-				if (!magicXpChanged)
+				if (!xpDropTracker.hadXpThisTick(Skill.MAGIC))
 				{
 					skipTick = true;
 					noXpCast = true;
@@ -741,8 +773,9 @@ public class SuppliesTrackerPlugin extends Plugin
 		ItemContainer itemContainer = itemContainerChanged.getItemContainer();
 		int containerId = itemContainer.getId();
 
-		if (containerId == InventoryID.INVENTORY.getId() && oldInv != null)
+		if (containerId == InventoryID.INVENTORY.getId())
 		{
+			loadInvChanges(itemContainer);
 			processInvChange(itemContainer);
 		}
 
@@ -750,6 +783,44 @@ public class SuppliesTrackerPlugin extends Plugin
 		{
 			processEquipChange(itemContainer);
 		}
+	}
+
+	private void loadInvChanges(ItemContainer itemContainer) {
+		if (itemAmounts == null) {
+			itemAmounts = new HashMap<>(28 * 4 / 3);
+			for (Item item : client.getItemContainer(InventoryID.INVENTORY).getItems()) {
+				if (item.getId() < 0)
+					continue;
+				itemAmounts.merge(item.getId(), item.getQuantity(), Integer::sum);
+			}
+			return;
+		}
+
+		// load new inv
+		Map<Integer, Integer> newItemAmounts = new HashMap<>(28 * 4 / 3);
+		changedItems.clear();
+		for (Item item : itemContainer.getItems()) {
+			if (item.getId() < 0)
+				continue;
+			newItemAmounts.merge(item.getId(), item.getQuantity(), Integer::sum);
+		}
+
+		// compute changed items
+		newItemAmounts.forEach((key, value) -> {
+			int dif = value - itemAmounts.getOrDefault(key, 0);
+			if (dif != 0) {
+				changedItems.put(key, dif);
+			}
+		});
+		itemAmounts.forEach((key, value) -> {
+			if (!newItemAmounts.containsKey(key)) {
+				int dif = newItemAmounts.getOrDefault(key, 0) - value;
+				if (dif != 0) {
+					changedItems.put(key, dif);
+				}
+			}
+		});
+		itemAmounts = newItemAmounts;
 	}
 
 	private void processEquipChange(ItemContainer itemContainer) {
@@ -894,7 +965,7 @@ public class SuppliesTrackerPlugin extends Plugin
 				return false;
 			}))
 		{
-			oldInv = client.getItemContainer(InventoryID.INVENTORY);
+			ItemContainer oldInv = client.getItemContainer(InventoryID.INVENTORY);
 			int slot = event.getMenuEntry().getParam0();
 			int pushItem = oldInv.getItems()[event.getMenuEntry().getParam0()].getId();
 			if (pushItem == PURPLE_SWEETS || pushItem == PURPLE_SWEETS_10476)
@@ -909,7 +980,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		if (teleportPattern.matcher(menuOption).find() ||
 			teletabPattern.matcher(menuOption).find())
 		{
-			oldInv = client.getItemContainer(InventoryID.INVENTORY);
+			ItemContainer oldInv = client.getItemContainer(InventoryID.INVENTORY);
 
 			// Makes stack only contains one teleport type to stop from adding multiple of one teleport
 			if (oldInv != null && actionStack.stream().noneMatch(a ->
@@ -924,7 +995,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		// but the target differs based on each spell name
 		if (spellPattern.matcher(menuOption).find())
 		{
-			oldInv = client.getItemContainer(InventoryID.INVENTORY);
+			ItemContainer oldInv = client.getItemContainer(InventoryID.INVENTORY);
 
 			if (oldInv != null && actionStack.stream().noneMatch(a ->
 					a.getType() == CAST)) {
@@ -959,7 +1030,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		}
 
 		//Adds tracking to Master Scroll Book
-		if (menuOption.equalsIgnoreCase("activate") && target.contains("teleport scroll")) {
+		if (menuOption.equalsIgnoreCase("activate") && target.endsWith(" teleport scroll")) {
 			switch (target) {
 				case "watson teleport scroll":
 					buildEntries(WATSON_TELEPORT);
@@ -1005,6 +1076,7 @@ public class SuppliesTrackerPlugin extends Plugin
 					break;
 				case "key master teleport":
 					buildEntries(KEY_MASTER_TELEPORT);
+					break;
 			}
 		}
 		client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", target + "|" + menuOption + "|" + event.getMenuAction().name(), "");
@@ -1533,7 +1605,7 @@ public class SuppliesTrackerPlugin extends Plugin
 
 	private void checkUsedRunePouch()
 	{
-		if (!magicXpChanged && !noXpCast) {
+		if (!xpDropTracker.hadXpThisTick(Skill.MAGIC) && !noXpCast) {
 			return;
 		}
 		if (amountused1 != 0 && amountused1 < 20)
@@ -1605,6 +1677,9 @@ public class SuppliesTrackerPlugin extends Plugin
 		if (event.getGameState() != GameState.LOGGED_IN || client.getUsername().equalsIgnoreCase(sessionUser)) {
 			return;
 		}
+
+		skillTracker.loadAll(client);
+
 		sessionUser = client.getUsername();
 
 		//clear on new username login
