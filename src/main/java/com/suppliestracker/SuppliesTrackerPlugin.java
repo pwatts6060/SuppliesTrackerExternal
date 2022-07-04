@@ -476,10 +476,6 @@ public class SuppliesTrackerPlugin extends Plugin
 			}
 			ensouledHeadId = 0;
 		}
-
-		if (skill.equals(Skill.FISHING)) {
-			bait.onXpDrop();
-		}
 	}
 
 	@Subscribe
@@ -782,12 +778,19 @@ public class SuppliesTrackerPlugin extends Plugin
 		if (containerId == InventoryID.INVENTORY.getId())
 		{
 			loadInvChanges(itemContainer);
+			xpDropLinkedSupplies();
 			processInvChange(itemContainer);
 		}
 
 		if (containerId == InventoryID.EQUIPMENT.getId())
 		{
 			processEquipChange(itemContainer);
+		}
+	}
+
+	private void xpDropLinkedSupplies() {
+		if (xpDropTracker.hadXpThisTick(Skill.FISHING)) {
+			bait.onXpDrop();
 		}
 	}
 
