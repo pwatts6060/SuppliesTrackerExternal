@@ -933,7 +933,7 @@ public class SuppliesTrackerPlugin extends Plugin
 			}
 		}
 
-		if (target.equals("use"))
+		if (menuOption.equals("use"))
 		{
 			if (itemManager.getItemComposition(event.getId()).getName().toLowerCase().contains("compost"))
 			{
