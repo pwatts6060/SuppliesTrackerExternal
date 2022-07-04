@@ -906,7 +906,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		}
 
 		// Create pattern for teleport scrolls and tabs
-		if (teleportPattern.matcher(target).find() ||
+		if (teleportPattern.matcher(menuOption).find() ||
 			teletabPattern.matcher(menuOption).find())
 		{
 			oldInv = client.getItemContainer(InventoryID.INVENTORY);
