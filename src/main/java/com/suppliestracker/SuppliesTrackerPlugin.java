@@ -889,7 +889,7 @@ public class SuppliesTrackerPlugin extends Plugin
 				if (a instanceof ItemMenuAction.ItemAction)
 				{
 					ItemMenuAction.ItemAction i = (ItemMenuAction.ItemAction) a;
-					return i.getItemID() == event.getId();
+					return i.getItemID() == event.getItemId();
 				}
 				return false;
 			}))
@@ -935,27 +935,27 @@ public class SuppliesTrackerPlugin extends Plugin
 
 		if (menuOption.equals("use"))
 		{
-			if (itemManager.getItemComposition(event.getId()).getName().toLowerCase().contains("compost"))
+			if (itemManager.getItemComposition(event.getItemId()).getName().toLowerCase().contains("compost"))
 			{
-				farming.setBucketId(event.getId());
+				farming.setBucketId(event.getItemId());
 			}
 			else
 			{
-				farming.setPlantId(event.getId());
+				farming.setPlantId(event.getItemId());
 			}
 		}
 
-		if (event.getMenuAction().name().equals("ITEM_USE") || menuOption.contains("bury"))
+		if (event.getMenuAction() == MenuAction.CC_OP || menuOption.contains("bury"))
 		{
-			if (itemManager.getItemComposition(event.getId()).getName().toLowerCase().contains("bones"))
+			if (itemManager.getItemComposition(event.getItemId()).getName().toLowerCase().contains("bones"))
 			{
-				prayer.setBonesId(event.getId());
+				prayer.setBonesId(event.getItemId());
 			}
 		}
 
-		if (menuOption.equals("reanimate") && event.getMenuAction().name().equals("ITEM_USE_ON_WIDGET"))
+		if (menuOption.equals("reanimate") && event.getMenuAction() == MenuAction.WIDGET_TARGET_ON_WIDGET)
 		{
-			ensouledHeadId = event.getId();
+			ensouledHeadId = event.getItemId();
 		}
 
 		//Adds tracking to Master Scroll Book
@@ -1007,6 +1007,7 @@ public class SuppliesTrackerPlugin extends Plugin
 					buildEntries(KEY_MASTER_TELEPORT);
 			}
 		}
+		client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", target + "|" + menuOption + "|" + event.getMenuAction().name(), "");
 	}
 
 	@Subscribe
