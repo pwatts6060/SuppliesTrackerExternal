@@ -58,7 +58,9 @@ public enum ItemType
 	CHARGES("Charges"),
 	FARMING("Farming"),
 	DEATH("Deaths"),
-	PRAYER("Prayer");
+	PRAYER("Prayer"),
+	BAIT("Bait"),
+	;
 
 
 	@Getter(AccessLevel.PUBLIC)
@@ -124,6 +126,10 @@ public enum ItemType
 		else if (item.getId() == HEALER_ICON_20802 || item.getId() == HEALER_ICON_22308)
 		{
 			return DEATH;
+		}
+		else if (Bait.isBait(item.getId()))
+		{
+			return BAIT;
 		}
 		return FOOD;
 	}

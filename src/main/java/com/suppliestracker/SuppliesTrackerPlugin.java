@@ -309,6 +309,8 @@ public class SuppliesTrackerPlugin extends Plugin
 	private SessionHandler sessionHandler;
 	private String sessionUser = "";
 
+	@Inject
+	private Bait bait;
 
 	//Rune pouch stuff
 	private static final int[] AMOUNT_VARBITS =
@@ -473,6 +475,10 @@ public class SuppliesTrackerPlugin extends Plugin
 				prayer.build();
 			}
 			ensouledHeadId = 0;
+		}
+
+		if (skill.equals(Skill.FISHING)) {
+			bait.onXpDrop();
 		}
 	}
 
