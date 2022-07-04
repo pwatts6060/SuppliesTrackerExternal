@@ -1124,7 +1124,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		GameObject gameObject = event.getGameObject();
 
 		Player localPlayer = client.getLocalPlayer();
-		if ((gameObject.getId() != ObjectID.CANNON_BASE && gameObject.getId() != ObjectID.CANNON_BASE_43029) || cannonPlaced) {
+		if (gameObject.getId() != ObjectID.CANNON_BASE && gameObject.getId() != ObjectID.CANNON_BASE_43029 || cannonPlaced) {
 			return;
 		}
 		if (localPlayer.getWorldLocation().distanceTo(gameObject.getWorldLocation()) <= 2
@@ -1138,18 +1138,20 @@ public class SuppliesTrackerPlugin extends Plugin
 	private void onProjectileMoved(ProjectileMoved event)
 	{
 		Projectile projectile = event.getProjectile();
-
-		if ((projectile.getId() != CANNONBALL && projectile.getId() != GRANITE_CANNONBALL) || cannonPosition == null) {
+		int pId = projectile.getId();
+		boolean regCball = pId == CANNONBALL || pId == GraphicID.CANNONBALL_OR;
+		boolean graniteCball = pId == GRANITE_CANNONBALL || pId == GraphicID.GRANITE_CANNONBALL_OR;
+		if ((!regCball && !graniteCball) || cannonPosition == null) {
 			return;
 		}
 		WorldPoint projectileLoc = WorldPoint.fromLocal(client, projectile.getX1(), projectile.getY1(), client.getPlane());
 
-		if (!projectileLoc.equals(cannonPosition) || projectile.getX() != 0 || projectile.getY() != 0) {
+		if (projectileLoc.distanceTo2D(cannonPosition) > 1 || projectile.getX() != 0 || projectile.getY() != 0) {
 			return;
 		}
 		if (!skipProjectileCheckThisTick)
 		{
-			buildEntries(projectile.getId() == GRANITE_CANNONBALL ? ItemID.GRANITE_CANNONBALL : ItemID.CANNONBALL);
+			buildEntries(graniteCball ? ItemID.GRANITE_CANNONBALL : ItemID.CANNONBALL);
 		}
 	}
 
