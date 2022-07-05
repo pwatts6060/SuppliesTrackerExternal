@@ -79,17 +79,7 @@ import net.runelite.api.Skill;
 import net.runelite.api.VarPlayer;
 import net.runelite.api.Varbits;
 import net.runelite.api.coords.WorldPoint;
-import net.runelite.api.events.AnimationChanged;
-import net.runelite.api.events.ChatMessage;
-import net.runelite.api.events.GameObjectSpawned;
-import net.runelite.api.events.GameStateChanged;
-import net.runelite.api.events.GameTick;
-import net.runelite.api.events.ItemContainerChanged;
-import net.runelite.api.events.MenuOptionClicked;
-import net.runelite.api.events.ProjectileMoved;
-import net.runelite.api.events.SoundEffectPlayed;
-import net.runelite.api.events.StatChanged;
-import net.runelite.api.events.VarbitChanged;
+import net.runelite.api.events.*;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.game.ItemManager;
@@ -132,8 +122,6 @@ public class SuppliesTrackerPlugin extends Plugin
 	private static final double ASSEMBLER_PERCENT = 0.20;
 	private static final double ACCUMULATOR_PERCENT = 0.28;
 	private static final double ATTRACTOR_PERCENT = 0.40;
-
-	private static final int BLOWPIPE_SOUND = 2696;
 
 	//blowpipe scale usage
 	private static final double SCALES_PERCENT = 2.0 / 3.0;
@@ -456,6 +444,12 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Subscribe
 	private void onGameTick(GameTick tick)
 	{
+		if (mainHandId == TOXIC_BLOWPIPE
+				&& client.getLocalPlayer().getAnimation() == BLOWPIPE_ATTACK
+				&& client.getLocalPlayer().getAnimationFrame() == 0) {
+			blowpipeShot();
+		}
+
 		skipProjectileCheckThisTick = false;
 
 		if (xpDropTracker.hadXpThisTick(Skill.MAGIC))
@@ -1145,14 +1139,6 @@ public class SuppliesTrackerPlugin extends Plugin
 				&& localPlayer.getAnimation() == AnimationID.BURYING_BONES)
 		{
 			cannonPosition = gameObject.getWorldLocation();
-		}
-	}
-
-	@Subscribe
-	public void onSoundEffectPlayed(SoundEffectPlayed event)
-	{
-		if (mainHandId == TOXIC_BLOWPIPE && event.getSoundId() == BLOWPIPE_SOUND) {
-			blowpipeShot();
 		}
 	}
 
