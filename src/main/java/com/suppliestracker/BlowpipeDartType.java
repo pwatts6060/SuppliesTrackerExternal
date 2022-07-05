@@ -43,18 +43,19 @@ import static net.runelite.api.ItemID.STEEL_DART;
 @AllArgsConstructor
 public enum BlowpipeDartType
 {
-	BRONZE(BRONZE_DART),
-	IRON(IRON_DART),
-	STEEL(STEEL_DART),
-	BLACK(BLACK_DART),
-	MITHRIL(MITHRIL_DART),
-	ADAMANT(ADAMANT_DART),
-	RUNE(RUNE_DART),
-	AMETHYST(AMETHYST_DART),
-	DRAGON(DRAGON_DART),
+	BRONZE(BRONZE_DART, 226),
+	IRON(IRON_DART, 227),
+	STEEL(STEEL_DART, 228),
+	BLACK(BLACK_DART, 32),
+	MITHRIL(MITHRIL_DART, 229),
+	ADAMANT(ADAMANT_DART, 230),
+	RUNE(RUNE_DART, 231),
+	AMETHYST(AMETHYST_DART, 1936),
+	DRAGON(DRAGON_DART, 1122),
 	;
 
 	public final int dartID;
+	public final int projID;
 
 	public static final BlowpipeDartType[] values = values();
 
@@ -65,5 +66,14 @@ public enum BlowpipeDartType
 			}
 		}
 		return BlowpipeDartType.MITHRIL;
+	}
+
+	public static BlowpipeDartType forProjID(int projID) {
+		for (BlowpipeDartType type : values) {
+			if (type.projID == projID) {
+				return type;
+			}
+		}
+		return null;
 	}
 }

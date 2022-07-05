@@ -78,8 +78,10 @@ import net.runelite.api.Projectile;
 import net.runelite.api.Skill;
 import net.runelite.api.VarPlayer;
 import net.runelite.api.Varbits;
+import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.*;
+import net.runelite.api.kit.KitType;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.game.ItemManager;
@@ -288,6 +290,8 @@ public class SuppliesTrackerPlugin extends Plugin
 	private boolean sessionLoading = false;
 	private SessionHandler sessionHandler;
 	private String sessionUser = "";
+
+	private Projectile lastBlowpipeProj = null;
 
 	@Inject
 	private Bait bait;
@@ -1145,11 +1149,53 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Subscribe
 	private void onProjectileMoved(ProjectileMoved event)
 	{
+		cannonball(event);
+		blowpipeDartCheck(event);
+	}
+
+	private void blowpipeDartCheck(ProjectileMoved event) {
+		if (mainHandId != TOXIC_BLOWPIPE || client.getLocalPlayer().getAnimation() != BLOWPIPE_ATTACK) {
+			return;
+		}
+		Projectile projectile = event.getProjectile();
+		if (projectile.equals(lastBlowpipeProj)) {
+			return;
+		}
+		BlowpipeDartType dart = BlowpipeDartType.forProjID(projectile.getId());
+		if (dart == null) {
+			return;
+		}
+		LocalPoint localPoint = new LocalPoint(projectile.getX1(), projectile.getY1());
+		WorldPoint point = WorldPoint.fromLocal(client, localPoint);
+		if (!client.getLocalPlayer().getWorldLocation().equals(point)) {
+			return;
+		}
+		for (Player player : client.getPlayers()) {
+			if (player == client.getLocalPlayer()) {
+				continue;
+			}
+			if (player.getWorldLocation().equals(client.getLocalPlayer().getWorldLocation())
+				&& player.getPlayerComposition().getEquipmentId(KitType.WEAPON) == TOXIC_BLOWPIPE
+				&& player.getAnimation() == BLOWPIPE_ATTACK) {
+				// player is on same tile and also using blowpipe, we can't guarantee dart projectile is ours
+				return;
+			}
+		}
+		lastBlowpipeProj = projectile;
+		if (!config.blowpipeAmmo().equals(dart)) {
+			configManager.setConfiguration(SuppliesTrackerConfig.GROUP_NAME, SuppliesTrackerConfig.BLOW_PIPE_AMMO, dart);
+		}
+	}
+
+	private void cannonball(ProjectileMoved event) {
+		if (cannonPosition == null) {
+			return;
+		}
 		Projectile projectile = event.getProjectile();
 		int pId = projectile.getId();
 		boolean regCball = pId == CANNONBALL || pId == GraphicID.CANNONBALL_OR;
 		boolean graniteCball = pId == GRANITE_CANNONBALL || pId == GraphicID.GRANITE_CANNONBALL_OR;
-		if ((!regCball && !graniteCball) || cannonPosition == null) {
+		if (!regCball && !graniteCball) {
 			return;
 		}
 		WorldPoint projectileLoc = WorldPoint.fromLocal(client, projectile.getX1(), projectile.getY1(), client.getPlane());
