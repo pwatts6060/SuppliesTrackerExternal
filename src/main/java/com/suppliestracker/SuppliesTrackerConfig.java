@@ -35,17 +35,6 @@ import static com.suppliestracker.SuppliesTrackerConfig.GROUP_NAME;
 public interface SuppliesTrackerConfig extends Config
 {
 	String GROUP_NAME = "suppliestracker";
-	String BLOW_PIPE_AMMO = "blowpipeAmmo";
-
-	@ConfigItem(
-		keyName = BLOW_PIPE_AMMO,
-		name = "Ammo",
-		description = "What type of dart are you using in your toxic blowpipe"
-	)
-	default BlowpipeDartType blowpipeAmmo()
-	{
-		return BlowpipeDartType.MITHRIL;
-	}
 
 	@ConfigItem(
 			keyName = "chargesBox",

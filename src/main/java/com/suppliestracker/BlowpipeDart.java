@@ -41,7 +41,7 @@ import static net.runelite.api.ItemID.STEEL_DART;
  * Type of darts that can be put into the blowpipe
  */
 @AllArgsConstructor
-public enum BlowpipeDartType
+public enum BlowpipeDart
 {
 	BRONZE(BRONZE_DART, 226),
 	IRON(IRON_DART, 227),
@@ -57,19 +57,19 @@ public enum BlowpipeDartType
 	public final int dartID;
 	public final int projID;
 
-	public static final BlowpipeDartType[] values = values();
+	public static final BlowpipeDart[] values = values();
 
-	public static BlowpipeDartType forName(String name) {
-		for (BlowpipeDartType type : values) {
+	public static BlowpipeDart forName(String name) {
+		for (BlowpipeDart type : values) {
 			if (type.name().equalsIgnoreCase(name)) {
 				return type;
 			}
 		}
-		return BlowpipeDartType.MITHRIL;
+		return BlowpipeDart.MITHRIL;
 	}
 
-	public static BlowpipeDartType forProjID(int projID) {
-		for (BlowpipeDartType type : values) {
+	public static BlowpipeDart forProjID(int projID) {
+		for (BlowpipeDart type : values) {
 			if (type.projID == projID) {
 				return type;
 			}

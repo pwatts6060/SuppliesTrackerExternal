@@ -292,6 +292,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private String sessionUser = "";
 
 	private Projectile lastBlowpipeProj = null;
+	private BlowpipeDart blowpipeDart = BlowpipeDart.ADAMANT;
 
 	@Inject
 	private Bait bait;
@@ -477,7 +478,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		// randomize the usage of supplies since we CANNOT actually get real supplies used
 		if (random.nextDouble() <= ava_percent)
 		{
-			buildEntries(config.blowpipeAmmo().dartID);
+			buildEntries(blowpipeDart.dartID);
 		}
 		if (random.nextDouble() <= SCALES_PERCENT)
 		{
@@ -1120,8 +1121,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		Matcher bpMatcher = bpDartsPattern.matcher(message);
 		if (bpMatcher.matches()) {
 			String dartName = bpMatcher.group(1);
-			BlowpipeDartType dart = BlowpipeDartType.forName(dartName);
-			configManager.setConfiguration(SuppliesTrackerConfig.GROUP_NAME, SuppliesTrackerConfig.BLOW_PIPE_AMMO, dart);
+			blowpipeDart = BlowpipeDart.forName(dartName);
 		}
 	}
 
@@ -1161,7 +1161,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		if (projectile.equals(lastBlowpipeProj)) {
 			return;
 		}
-		BlowpipeDartType dart = BlowpipeDartType.forProjID(projectile.getId());
+		BlowpipeDart dart = BlowpipeDart.forProjID(projectile.getId());
 		if (dart == null) {
 			return;
 		}
@@ -1181,10 +1181,8 @@ public class SuppliesTrackerPlugin extends Plugin
 				return;
 			}
 		}
+		blowpipeDart = dart;
 		lastBlowpipeProj = projectile;
-		if (!config.blowpipeAmmo().equals(dart)) {
-			configManager.setConfiguration(SuppliesTrackerConfig.GROUP_NAME, SuppliesTrackerConfig.BLOW_PIPE_AMMO, dart);
-		}
 	}
 
 	private void cannonball(ProjectileMoved event) {
