@@ -530,10 +530,10 @@ public class SuppliesTrackerPlugin extends Plugin
 	{
 		updateRunePouch();
 
-		if (attackStyleVarbit != -1 && attackStyleVarbit == client.getVar(VarPlayer.ATTACK_STYLE)) {
+		if (attackStyleVarbit != -1 && attackStyleVarbit == client.getVarpValue(VarPlayer.ATTACK_STYLE)) {
 			return;
 		}
-		attackStyleVarbit = client.getVar(VarPlayer.ATTACK_STYLE);
+		attackStyleVarbit = client.getVarpValue(VarPlayer.ATTACK_STYLE);
 		if (attackStyleVarbit == 0 || attackStyleVarbit == 3)
 		{
 			if (client.getLocalPlayer() != null && client.getLocalPlayer().getInteracting() instanceof Player)
