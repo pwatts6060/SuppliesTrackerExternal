@@ -404,9 +404,9 @@ public class SuppliesTrackerPlugin extends Plugin
 	{
 		panel = new SuppliesTrackerPanel(itemManager, this);
 		farming = new Farming(this, itemManager);
-		final BufferedImage header = ImageUtil.getResourceStreamFromClass(getClass(), "panel_icon.png");
+		final BufferedImage header = ImageUtil.loadImageResource(getClass(), "panel_icon.png");
 		panel.loadHeaderIcon(header);
-		final BufferedImage icon = ImageUtil.getResourceStreamFromClass(getClass(), "panel_icon.png");
+		final BufferedImage icon = ImageUtil.loadImageResource(getClass(), "panel_icon.png");
 
 		this.sessionHandler = new SessionHandler(client);
 
@@ -418,9 +418,6 @@ public class SuppliesTrackerPlugin extends Plugin
 			.build();
 
 		clientToolbar.addNavigation(navButton);
-		if (config.curSessionDefault()) {
-			switchTracking();
-		}
 	}
 
 	@Override
@@ -1468,14 +1465,7 @@ public class SuppliesTrackerPlugin extends Plugin
 			currentSuppliesEntry.put(itemId, newEntryC);
 		}
 
-		if (showSession)
-		{
-			SwingUtilities.invokeLater(() -> panel.addItem(newEntryC));
-		}
-		else
-		{
-			SwingUtilities.invokeLater(() -> panel.addItem(newEntry));
-		}
+		SwingUtilities.invokeLater(() -> panel.addItem(showSession ? newEntryC : newEntry));
 	}
 
 
@@ -1705,6 +1695,7 @@ public class SuppliesTrackerPlugin extends Plugin
 
 		//clear on new username login
 		suppliesEntry.clear();
+		currentSuppliesEntry.clear();
 		SwingUtilities.invokeLater(() -> panel.resetAll());
 		sessionHandler.clearSession();
 
@@ -1742,6 +1733,9 @@ public class SuppliesTrackerPlugin extends Plugin
 		catch (IOException e)
 		{
 			e.printStackTrace();
+		}
+		if (!showSession && config.curSessionDefault()) {
+			switchTracking();
 		}
 	}
 
