@@ -418,6 +418,9 @@ public class SuppliesTrackerPlugin extends Plugin
 			.build();
 
 		clientToolbar.addNavigation(navButton);
+		if (config.curSessionDefault()) {
+			switchTracking();
+		}
 	}
 
 	@Override
