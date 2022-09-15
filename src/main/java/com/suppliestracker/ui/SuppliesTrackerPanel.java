@@ -145,7 +145,7 @@ public class SuppliesTrackerPanel extends PluginPanel
 
 		layoutPanel.add(switchTrack);
 
-		errorPanel.setContent("Supply trackers", "You have not used any supplies yet.\nCheck Configs for options.     \nMake sure to set blowpipe dart in configs");
+		errorPanel.setContent("Supply trackers", "You have not used any supplies yet.\nCheck Configs for options.");
 		add(errorPanel);
 	}
 
