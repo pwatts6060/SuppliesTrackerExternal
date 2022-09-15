@@ -15,14 +15,12 @@ Blowpipe ammo used is not actual use. It is an estimate based on number of attac
 
 #### Weapons currently implemented ####
 
-Scythe
-<br>Sanguinesti Staff
-<br>Trident of the swamps
-<br>Trident of the seas
-<br>Blade of Saeldor
-
-
-
+* Scythe
+* Sanguinesti Staff
+* Trident of the swamps
+* Trident of the seas
+* Blade of Saeldor
+* Tumeken's Shadow
 
 //TODO
 

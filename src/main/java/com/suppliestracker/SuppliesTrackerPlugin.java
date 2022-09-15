@@ -256,6 +256,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private static final int BARRAGE_ANIMATION = 1979;
 	private static final int BLITZ_ANIMATION = 1978;
 	private static final int SCYTHE_OF_VITUR_ANIMATION = 8056;
+	private static final int TUMEKENS_SHADOW_ANIMATION = 9493;
 	private static final int ONEHAND_SLASH_SWORD = 390;
 	private static final int ONEHAND_STAB_SWORD = 386;
 	private static final int GAUNTLET_PADDLEFISH = 23874;
@@ -274,7 +275,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private final Set<Integer> TRIDENT_OF_THE_SEAS_IDS = ImmutableSet.of(TRIDENT_OF_THE_SEAS, TRIDENT_OF_THE_SEAS_E, TRIDENT_OF_THE_SEAS_FULL);
 	private final Set<Integer> TRIDENT_OF_THE_SWAMP_IDS = ImmutableSet.of(TRIDENT_OF_THE_SWAMP_E, TRIDENT_OF_THE_SWAMP, UNCHARGED_TOXIC_TRIDENT_E, UNCHARGED_TOXIC_TRIDENT);
 	private final Set<Integer> IBANS_STAFF_IDS = ImmutableSet.of(IBANS_STAFF, IBANS_STAFF_U);
-
+	private final Set<Integer> TUMEKENS_SHADOW_IDS = ImmutableSet.of(TUMEKENS_SHADOW_UNCHARGED, TUMEKENS_SHADOW);
 	private int ammoId = 0;
 	private int ammoAmount = 0;
 	private int thrownId = 0;
@@ -619,7 +620,7 @@ public class SuppliesTrackerPlugin extends Plugin
 					}
 				}
 				//Trident of the swamp
-				if (TRIDENT_OF_THE_SWAMP_IDS.contains(mainHandId))
+				else if (TRIDENT_OF_THE_SWAMP_IDS.contains(mainHandId))
 				{
 					if (config.chargesBox())
 					{
@@ -634,7 +635,7 @@ public class SuppliesTrackerPlugin extends Plugin
 					}
 				}
 				//Sang Staff
-				if (mainHandId == SANGUINESTI_STAFF)
+				else if (mainHandId == SANGUINESTI_STAFF)
 				{
 					if (config.chargesBox())
 					{
@@ -686,6 +687,20 @@ public class SuppliesTrackerPlugin extends Plugin
 					{
 						buildEntries(BLOOD_RUNE, 3);
 						buildEntries(COINS_995, itemManager.getItemPrice(VIAL_OF_BLOOD_22446) / 100);
+					}
+				}
+				break;
+			case TUMEKENS_SHADOW_ANIMATION:
+				if(TUMEKENS_SHADOW_IDS.contains(mainHandId))
+				{
+					if (config.chargesBox())
+					{
+						buildChargesEntries(TUMEKENS_SHADOW);
+					}
+					else
+					{
+						buildEntries(SOUL_RUNE, 2);
+						buildEntries(CHAOS_RUNE, 5);
 					}
 				}
 				break;
@@ -1405,6 +1420,10 @@ public class SuppliesTrackerPlugin extends Plugin
 				break;
 			case SCYTHE_OF_VITUR:
 				calculatedPrice = itemManager.getItemPrice(BLOOD_RUNE) * 3L + itemManager.getItemPrice(VIAL_OF_BLOOD_22446) / 100;
+				break;
+			case TUMEKENS_SHADOW:
+				calculatedPrice = itemManager.getItemPrice(SOUL_RUNE) * 2L
+						+ itemManager.getItemPrice(CHAOS_RUNE) * 5L;
 				break;
 			case TRIDENT_OF_THE_SWAMP:
 				calculatedPrice = itemManager.getItemPrice(CHAOS_RUNE) + itemManager.getItemPrice(DEATH_RUNE) +

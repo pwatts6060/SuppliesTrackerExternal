@@ -29,17 +29,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import static net.runelite.api.ItemID.BLADE_OF_SAELDOR;
-import static net.runelite.api.ItemID.COINS_995;
-import static net.runelite.api.ItemID.HEALER_ICON_20802;
-import static net.runelite.api.ItemID.HEALER_ICON_22308;
-import static net.runelite.api.ItemID.IBANS_STAFF;
-import static net.runelite.api.ItemID.ICY_BASALT;
-import static net.runelite.api.ItemID.SANGUINESTI_STAFF;
-import static net.runelite.api.ItemID.SCYTHE_OF_VITUR;
-import static net.runelite.api.ItemID.STONY_BASALT;
-import static net.runelite.api.ItemID.TRIDENT_OF_THE_SEAS;
-import static net.runelite.api.ItemID.TRIDENT_OF_THE_SWAMP;
+import static net.runelite.api.ItemID.*;
 
 /**
  * The potential types that supplies can be along with a categorization function
@@ -119,7 +109,8 @@ public enum ItemType
 		}
 		else if (item.getId() == SCYTHE_OF_VITUR || item.getId() == SANGUINESTI_STAFF ||
 				item.getId() == TRIDENT_OF_THE_SEAS || item.getId() == TRIDENT_OF_THE_SWAMP ||
-				item.getId() == BLADE_OF_SAELDOR || item.getId() == IBANS_STAFF)
+				item.getId() == BLADE_OF_SAELDOR || item.getId() == IBANS_STAFF ||
+				item.getId() == TUMEKENS_SHADOW)
 		{
 			return CHARGES;
 		}
