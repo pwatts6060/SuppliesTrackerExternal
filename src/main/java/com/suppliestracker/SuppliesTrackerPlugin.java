@@ -299,31 +299,33 @@ public class SuppliesTrackerPlugin extends Plugin
 
 	//Rune pouch stuff
 	private static final int[] AMOUNT_VARBITS =
-			{
-					Varbits.RUNE_POUCH_AMOUNT1, Varbits.RUNE_POUCH_AMOUNT2, Varbits.RUNE_POUCH_AMOUNT3
-			};
+		{
+			Varbits.RUNE_POUCH_AMOUNT1, Varbits.RUNE_POUCH_AMOUNT2, Varbits.RUNE_POUCH_AMOUNT3, Varbits.RUNE_POUCH_AMOUNT4
+		};
 	private static final int[] RUNE_VARBITS =
-			{
-					Varbits.RUNE_POUCH_RUNE1, Varbits.RUNE_POUCH_RUNE2, Varbits.RUNE_POUCH_RUNE3
-			};
+		{
+			Varbits.RUNE_POUCH_RUNE1, Varbits.RUNE_POUCH_RUNE2, Varbits.RUNE_POUCH_RUNE3, Varbits.RUNE_POUCH_RUNE4
+		};
 
 	private static final int[] OLD_AMOUNT_VARBITS =
-			{
-					0, 0, 0
-			};
+		{
+			0, 0, 0, 0
+		};
 	private static final int[] OLD_RUNE_VARBITS =
-			{
-					0, 0, 0
-			};
+		{
+			0, 0, 0, 0
+		};
 
 
 	private static int rune1 = 0;
 	private static int rune2 = 0;
 	private static int rune3 = 0;
+	private static int rune4 = 0;
 
 	private int amountused1 = 0;
 	private int amountused2 = 0;
 	private int amountused3 = 0;
+	private int amountused4 = 0;
 
 	private boolean noXpCast = false;
 
@@ -471,6 +473,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		amountused1 = 0;
 		amountused2 = 0;
 		amountused3 = 0;
+		amountused4 = 0;
 	}
 
 	private void blowpipeShot() {
@@ -1599,6 +1602,10 @@ public class SuppliesTrackerPlugin extends Plugin
 		{
 			buildEntries(Runes.getRune(rune3).getItemId(), amountused3);
 		}
+		if (amountused4 != 0 && amountused4 < 20)
+		{
+			buildEntries(Runes.getRune(rune4).getItemId(), amountused4);
+		}
 	}
 
 	/**
@@ -1631,6 +1638,14 @@ public class SuppliesTrackerPlugin extends Plugin
 			}
 			OLD_AMOUNT_VARBITS[2] = client.getVarbitValue(AMOUNT_VARBITS[2]);
 		}
+		if (OLD_AMOUNT_VARBITS[3] != client.getVarbitValue(AMOUNT_VARBITS[3]))
+		{
+			if (OLD_AMOUNT_VARBITS[3] > client.getVarbitValue(AMOUNT_VARBITS[3]))
+			{
+				amountused4 += OLD_AMOUNT_VARBITS[3] - client.getVarbitValue(AMOUNT_VARBITS[3]);
+			}
+			OLD_AMOUNT_VARBITS[3] = client.getVarbitValue(AMOUNT_VARBITS[3]);
+		}
 
 		//check runes
 		if (OLD_RUNE_VARBITS[0] != client.getVarbitValue(RUNE_VARBITS[0]))
@@ -1647,6 +1662,11 @@ public class SuppliesTrackerPlugin extends Plugin
 		{
 			rune3 = client.getVarbitValue(RUNE_VARBITS[2]);
 			OLD_RUNE_VARBITS[2] = client.getVarbitValue(RUNE_VARBITS[2]);
+		}
+		if (OLD_RUNE_VARBITS[3] != client.getVarbitValue(RUNE_VARBITS[3]))
+		{
+			rune4 = client.getVarbitValue(RUNE_VARBITS[3]);
+			OLD_RUNE_VARBITS[3] = client.getVarbitValue(RUNE_VARBITS[3]);
 		}
 	}
 
