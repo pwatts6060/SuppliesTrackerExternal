@@ -514,6 +514,10 @@ public class SuppliesTrackerPlugin extends Plugin
 			case ASSEMBLER_MAX_CAPE_L:
 			case AVAS_ASSEMBLER:
 			case AVAS_ASSEMBLER_L:
+			case MASORI_ASSEMBLER:
+			case MASORI_ASSEMBLER_L:
+			case MASORI_ASSEMBLER_MAX_CAPE:
+			case MASORI_ASSEMBLER_MAX_CAPE_L:
 				return ASSEMBLER_PERCENT;
 			case ACCUMULATOR_MAX_CAPE:
 			case AVAS_ACCUMULATOR:
