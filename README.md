@@ -29,3 +29,18 @@ Crystal tools <br>
 *preview has weapon charges enabled and disabled to show both styles*
 
 ![Preview](https://i.gyazo.com/dc858c9708d3da4eb2f5fdcc73d424b5.png)
+
+
+## Ability to save as JSON 
+Button on UI will allow user to swap to use JSON. 
+
+All previous entries will not have a date associated with it, as it is not possible to know. Anything that happened in the session may get the current time and date. 
+This will also save differently into JSON files. Each object in the JSON file will be:
+
+Items:
+	Item:
+		Name:
+		Consumed_time
+		
+
+		
