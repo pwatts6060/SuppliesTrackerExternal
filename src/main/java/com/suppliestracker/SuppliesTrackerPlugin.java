@@ -34,7 +34,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayDeque;
+import java.util.Date;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
@@ -1354,6 +1357,19 @@ public class SuppliesTrackerPlugin extends Plugin
 		{
 			sessionHandler.addToSession(itemId, count, false);
 			currentSuppliesEntry.put(itemId, newEntryC);
+		}
+
+		if(config.jsonEnabled())
+		{
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			Date date = new Date();
+			SuppliesTrackerItemJson jsonItem = new SuppliesTrackerItemJson(
+				itemId,
+				name,
+				newQuantityC,
+				calculatedPrice * newQuantityC,
+				date
+			);
 		}
 
 		SwingUtilities.invokeLater(() -> panel.addItem(showSession ? newEntryC : newEntry));
