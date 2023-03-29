@@ -24,6 +24,15 @@
  */
 package com.suppliestracker;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import java.io.IOException;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -39,5 +48,25 @@ public class SuppliesTrackerItemJson
 	private String name;
 	private int quantity;
 	private long price;
-	private Date usedTime;
+	private ZonedDateTime usedTime;
+
+	public String toJson()
+	{
+		Gson gson = new GsonBuilder()
+			.registerTypeAdapter(ZonedDateTime.class, new TypeAdapter<ZonedDateTime>() {
+				@Override
+				public void write(JsonWriter out, ZonedDateTime value) throws IOException {
+					out.value(value.toString());
+				}
+
+				@Override
+				public ZonedDateTime read(JsonReader in) throws IOException {
+					return ZonedDateTime.parse(in.nextString());
+				}
+			})
+			.enableComplexMapKeySerialization()
+			.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+			.create();
+		return gson.toJson(this);
+	}
 }

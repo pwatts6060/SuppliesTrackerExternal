@@ -36,6 +36,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayDeque;
 import java.util.Date;
 import java.util.Deque;
@@ -1276,8 +1278,18 @@ public class SuppliesTrackerPlugin extends Plugin
 	 *
 	 * @param itemId the id of the item
 	 * @param count  the amount of the item to add to the tracker
+	 * @param isFromGameStateChanged we want to intiialize the lists, but not the JSON as that will add dupes
 	 */
-	public void buildEntries(int itemId, int count)
+	public void buildEntries(int itemId, int count) { buildEntries(itemId, count, false); }
+
+	/**
+	 * Add an item to the supply tracker
+	 *
+	 * @param itemId the id of the item
+	 * @param count  the amount of the item to add to the tracker
+	 * @param isFromGameStateChanged we want to intiialize the lists, but not the JSON as that will add dupes
+	 */
+	public void buildEntries(int itemId, int count, boolean isFromGameStateChanged)
 	{
 		final ItemComposition itemComposition = itemManager.getItemComposition(itemId);
 		String name = itemComposition.getName();
@@ -1359,17 +1371,16 @@ public class SuppliesTrackerPlugin extends Plugin
 			currentSuppliesEntry.put(itemId, newEntryC);
 		}
 
-		if(config.jsonEnabled())
+		if(config.jsonEnabled() && !isFromGameStateChanged)
 		{
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			Date date = new Date();
-			SuppliesTrackerItemJson jsonItem = new SuppliesTrackerItemJson(
+			System.out.println("Is it here that we are shoving a bunch?");
+			sessionHandler.addNewRecordToJson(new SuppliesTrackerItemJson(
 				itemId,
 				name,
-				newQuantityC,
-				calculatedPrice * newQuantityC,
-				date
-			);
+				count,
+				calculatedPrice * count,
+				ZonedDateTime.now(ZoneId.systemDefault())
+			));
 		}
 
 		SwingUtilities.invokeLater(() -> panel.addItem(showSession ? newEntryC : newEntry));
@@ -1384,8 +1395,18 @@ public class SuppliesTrackerPlugin extends Plugin
 	 * Add an item to the supply tracker
 	 *
 	 * @param itemId the id of the item
+	 * @param count  the amount of the item to add to the tracker
 	 */
-	private void buildChargesEntries(int itemId, int count)
+	public void buildChargesEntries(int itemId, int count) { buildEntries(itemId, count, false); }
+
+	/**
+	 * Add an item to the supply tracker
+	 *
+	 * @param itemId the id of the item
+	 * @param count the amount of the item to add to the tracker
+	 * @param isFromGameStateChanged we want to intiialize the lists, but not the JSON as that will add dupes
+	 */
+	private void buildChargesEntries(int itemId, int count, boolean isFromGameStateChanged)
 	{
 		final ItemComposition itemComposition = itemManager.getItemComposition(itemId);
 		String name = itemComposition.getName();
@@ -1483,6 +1504,18 @@ public class SuppliesTrackerPlugin extends Plugin
 		{
 			sessionHandler.addToSession(itemId, count, true);
 			currentSuppliesEntry.put(itemId, newEntryC);
+		}
+
+		if(config.jsonEnabled() && !isFromGameStateChanged)
+		{
+			System.out.println("or here?");
+			sessionHandler.addNewRecordToJson(new SuppliesTrackerItemJson(
+				itemId,
+				name,
+				count,
+				calculatedPrice * count,
+				ZonedDateTime.now(ZoneId.systemDefault())
+			));
 		}
 
 		SwingUtilities.invokeLater(() -> panel.addItem(showSession ? newEntryC : newEntry));
@@ -1739,12 +1772,12 @@ public class SuppliesTrackerPlugin extends Plugin
 
 				if (temp[0].contains("c"))
 				{
-					buildChargesEntries(Integer.parseInt(temp[0].replace("c", "")), Integer.parseInt(temp[1]));
+					buildChargesEntries(Integer.parseInt(temp[0].replace("c", "")), Integer.parseInt(temp[1]), true);
 					sessionHandler.setupMaps(Integer.parseInt(temp[0].replace("c", "")), Integer.parseInt(temp[1]), true);
 				}
 				else
 				{
-					buildEntries(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
+					buildEntries(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]), true);
 					sessionHandler.setupMaps(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]), false);
 				}
 			}
