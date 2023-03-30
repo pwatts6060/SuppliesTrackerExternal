@@ -34,8 +34,3 @@ Crystal tools <br>
 ## Ability to save as JSON
 Previous entries in normal data entry will not be added to a json file, as we do not know when they were used.
 Will save all data according to the date that they were used. This can further expand to the UI panel of the plugin to show what was just used during a certain timespan.
-
-
-		
-
-		
