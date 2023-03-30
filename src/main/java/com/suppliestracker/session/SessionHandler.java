@@ -1,6 +1,13 @@
 package com.suppliestracker.session;
 
 import com.google.inject.Inject;
+import com.suppliestracker.SuppliesTrackerItemJson;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import jdk.vm.ci.meta.Local;
 import net.runelite.api.Client;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -82,6 +89,31 @@ public class SessionHandler
 			{
 				i.printStackTrace();
 			}
+
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public void addNewRecordToJson(SuppliesTrackerItemJson json)
+	{
+		try
+		{
+			File jsonDir = new File(RUNELITE_DIR + "/supplies-tracker/json");
+			jsonDir.mkdir();
+
+			DateTimeFormatter timeStampPattern = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			File sessionFile = new File(RUNELITE_DIR + "/supplies-tracker/json/" + timeStampPattern.format(java.time.LocalDateTime.now()) + ".log");
+
+			sessionFile.createNewFile();
+
+			Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(sessionFile, true), "UTF-8"));
+			writer.append(json.toJson());
+			writer.append("\n");
+			writer.flush();
+			writer.close();
 
 		}
 		catch (IOException e)
