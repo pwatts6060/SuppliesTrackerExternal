@@ -65,4 +65,14 @@ public interface SuppliesTrackerConfig extends Config
 	{
 		return false;
 	}
+
+	@ConfigItem(
+		keyName = "jsonEnabled",
+		name = "Save data as json",
+		description = "Save data in a json format."
+	)
+	default boolean jsonEnabled()
+	{
+		return false;
+	}
 }

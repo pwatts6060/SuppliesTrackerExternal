@@ -29,3 +29,8 @@ Crystal tools <br>
 *preview has weapon charges enabled and disabled to show both styles*
 
 ![Preview](https://i.gyazo.com/dc858c9708d3da4eb2f5fdcc73d424b5.png)
+
+
+## Ability to save as JSON
+Previous entries in normal data entry will not be added to a json file, as we do not know when they were used.
+Will save all data according to the date that they were used. This can further expand to the UI panel of the plugin to show what was just used during a certain timespan.
