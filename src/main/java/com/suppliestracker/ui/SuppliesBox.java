@@ -174,7 +174,7 @@ public abstract class SuppliesBox extends JPanel
 	public void update(SuppliesTrackerItem item)
 	{
 		trackedItems.removeIf(r -> r.getId() == item.getId());
-		if (item.getName() == null || item.getId() == 0 || item.getName().toLowerCase().equals("null"))
+		if (item.getName() == null || item.getId() == 0 || item.getName().equalsIgnoreCase("null"))
 		{
 			plugin.clearItem(item.getId());
 			return;
