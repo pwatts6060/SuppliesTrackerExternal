@@ -220,7 +220,7 @@ public class SuppliesTrackerPlugin extends Plugin
 			BLACK_CHINCHOMPA
 	);
 
-	private static final Set<Integer> runeIds = ImmutableSet.of(
+	static final Set<Integer> runeIds = ImmutableSet.of(
 			FIRE_RUNE,
 			AIR_RUNE,
 			WATER_RUNE,
@@ -241,7 +241,13 @@ public class SuppliesTrackerPlugin extends Plugin
 			MUD_RUNE,
 			SMOKE_RUNE,
 			STEAM_RUNE,
-			LAVA_RUNE
+			LAVA_RUNE,
+			BLIGHTED_ANCIENT_ICE_SACK,
+			BLIGHTED_VENGEANCE_SACK,
+			BLIGHTED_TELEPORT_SPELL_SACK,
+			BLIGHTED_WAVE_SACK,
+			BLIGHTED_ENTANGLE_SACK,
+			BLIGHTED_SURGE_SACK
 	);
 
 	//Hold Supply Data

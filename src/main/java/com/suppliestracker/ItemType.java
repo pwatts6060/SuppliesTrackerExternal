@@ -25,6 +25,7 @@
  */
 package com.suppliestracker;
 
+import static com.suppliestracker.SuppliesTrackerPlugin.runeIds;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -85,7 +86,7 @@ public enum ItemType
 		{
 			return AMMO;
 		}
-		else if (name.contains("rune"))
+		else if (runeIds.contains(itemId))
 		{
 			return RUNE;
 		}
