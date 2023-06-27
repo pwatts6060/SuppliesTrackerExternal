@@ -43,7 +43,7 @@ public interface SuppliesTrackerConfig extends Config
 	)
 	default boolean chargesBox()
 	{
-		return false;
+		return true;
 	}
 
 	@ConfigItem(
