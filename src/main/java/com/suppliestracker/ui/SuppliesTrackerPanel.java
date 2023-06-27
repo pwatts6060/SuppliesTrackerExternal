@@ -132,6 +132,10 @@ public class SuppliesTrackerPanel extends PluginPanel
 		popupMenu.add(reset);
 		overallPanel.setComponentPopupMenu(popupMenu);
 
+		switchTrack = new JButton("Switch Tracking");
+		switchTrack.addActionListener(e -> plugin.switchTracking());
+		layoutPanel.add(switchTrack);
+
 		// Create Supply Rows wrapper
 		logsContainer.setLayout(new BoxLayout(logsContainer, BoxLayout.Y_AXIS));
 		layoutPanel.add(overallPanel);
@@ -139,11 +143,6 @@ public class SuppliesTrackerPanel extends PluginPanel
 
 		overallPanel.setVisible(false);
 		logsContainer.setVisible(true);
-
-		switchTrack = new JButton("Switch Tracking");
-		switchTrack.addActionListener(e -> plugin.switchTracking());
-
-		layoutPanel.add(switchTrack);
 
 		errorPanel.setContent("Supply trackers", "You have not used any supplies yet.\nCheck Configs for options.");
 		add(errorPanel);
