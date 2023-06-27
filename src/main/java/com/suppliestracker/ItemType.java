@@ -111,7 +111,7 @@ public enum ItemType
 		else if (item.getId() == SCYTHE_OF_VITUR || item.getId() == SANGUINESTI_STAFF ||
 				item.getId() == TRIDENT_OF_THE_SEAS || item.getId() == TRIDENT_OF_THE_SWAMP ||
 				item.getId() == BLADE_OF_SAELDOR || item.getId() == IBANS_STAFF ||
-				item.getId() == TUMEKENS_SHADOW)
+				item.getId() == TUMEKENS_SHADOW || item.getId() == VENATOR_BOW || item.getId() == ANCIENT_ESSENCE)
 		{
 			return CHARGES;
 		}

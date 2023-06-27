@@ -263,6 +263,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private static final int BLITZ_ANIMATION = 1978;
 	private static final int SCYTHE_OF_VITUR_ANIMATION = 8056;
 	private static final int TUMEKENS_SHADOW_ANIMATION = 9493;
+	private static final int VENATOR_BOW_ANIMATION = 9858;
 	private static final int ONEHAND_SLASH_SWORD = 390;
 	private static final int ONEHAND_STAB_SWORD = 386;
 	private static final int GAUNTLET_PADDLEFISH = 23874;
@@ -698,6 +699,20 @@ public class SuppliesTrackerPlugin extends Plugin
 						buildEntries(BLOOD_RUNE, 3);
 						buildEntries(COINS_995, itemManager.getItemPrice(VIAL_OF_BLOOD_22446) / 100);
 					}
+				}
+				break;
+			case VENATOR_BOW_ANIMATION:
+				if(mainHandId == VENATOR_BOW)
+				{
+					buildChargesEntries(VENATOR_BOW);
+//					if (config.chargesBox())
+//					{
+//						buildChargesEntries(VENATOR_BOW);
+//					}
+//					else
+//					{
+//						buildEntries(ANCIENT_ESSENCE, 1);
+//					}
 				}
 				break;
 			case TUMEKENS_SHADOW_ANIMATION:
@@ -1430,6 +1445,9 @@ public class SuppliesTrackerPlugin extends Plugin
 				break;
 			case SCYTHE_OF_VITUR:
 				calculatedPrice = itemManager.getItemPrice(BLOOD_RUNE) * 3L + itemManager.getItemPrice(VIAL_OF_BLOOD_22446) / 100;
+				break;
+			case VENATOR_BOW:
+				calculatedPrice = itemManager.getItemPrice(ANCIENT_ESSENCE);
 				break;
 			case TUMEKENS_SHADOW:
 				calculatedPrice = itemManager.getItemPrice(SOUL_RUNE) * 2L

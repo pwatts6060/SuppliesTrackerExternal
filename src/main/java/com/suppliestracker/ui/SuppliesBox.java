@@ -553,7 +553,9 @@ public abstract class SuppliesBox extends JPanel
 						.append("gp")
 						.append("</html>");
 					return tooltip.toString();
-
+				case VENATOR_BOW:
+					tooltip.append("Ancient Essence x ").append(qty);
+					return tooltip.toString();
 				case TUMEKENS_SHADOW:
 					tooltip.append("<html>")
 							.append("Soul Rune x ")
