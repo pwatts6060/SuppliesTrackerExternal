@@ -20,6 +20,7 @@ Blowpipe ammo used is not actual use. It is an estimate based on number of attac
 * Trident of the seas
 * Blade of Saeldor
 * Tumeken's Shadow
+* Revenent weapons and their upgraded counterparts
 
 //TODO
 
