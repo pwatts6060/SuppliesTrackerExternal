@@ -24,13 +24,12 @@
  */
 package com.suppliestracker;
 
-import net.runelite.api.ItemID;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import net.runelite.api.ItemID;
 
 @Singleton
 public final class Bait {
