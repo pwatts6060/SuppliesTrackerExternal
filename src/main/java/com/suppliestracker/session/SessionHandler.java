@@ -59,7 +59,7 @@ public class SessionHandler
 	{
 		try
 		{
-			File sessionFile = new File(RUNELITE_DIR + "/supplies-tracker/" + client.getUsername() + ".txt");
+			File sessionFile = new File(RUNELITE_DIR + "/supplies-tracker/" + client.getAccountHash() + ".txt");
 
 			if (!sessionFile.createNewFile())
 			{

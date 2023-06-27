@@ -297,7 +297,7 @@ public class SuppliesTrackerPlugin extends Plugin
 
 	private boolean sessionLoading = false;
 	private SessionHandler sessionHandler;
-	private String sessionUser = "";
+	private long sessionHash = -1;
 
 	private Projectile lastBlowpipeProj = null;
 	private BlowpipeDart blowpipeDart = BlowpipeDart.ADAMANT;
@@ -1713,13 +1713,13 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Subscribe
 	private void onGameStateChanged(final GameStateChanged event)
 	{
-		if (event.getGameState() != GameState.LOGGED_IN || client.getUsername().equalsIgnoreCase(sessionUser)) {
+		if (event.getGameState() != GameState.LOGGED_IN || client.getAccountHash() == sessionHash) {
 			return;
 		}
 
 		skillTracker.loadAll(client);
 
-		sessionUser = client.getUsername();
+		sessionHash = client.getAccountHash();
 
 		//clear on new username login
 		suppliesEntry.clear();
