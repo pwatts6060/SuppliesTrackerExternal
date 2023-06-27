@@ -275,6 +275,16 @@ public class SuppliesTrackerPlugin extends Plugin
 	private static final int ENSOULED_HEADS_ANIMATION = 7198;
 	private static final int IBANS_STAFF_ANIMATION = 708;
 	private static final int SLAYERS_STAFF_ANIMATION = 1576;
+	private static final int ENTANGLE_ANIMATION = 1161;
+	private static final int VULNERABILITY_ANIMATION = 1165;
+	private static final int CRUMBLE_UNDEAD_ANIMATION = 1166;
+	private static final int ENFEEBLE_ANIMATION = 1168;
+	private static final int STUN_ANIMATION = 1169;
+	private static final int BOW_SHOOT_ANIMATION = 426;
+	private static final int WEBWEAVER_SPEC_ANIMATION = 9964;
+	private static final int ACCURSED_SPEC_ANIMATION = 9961;
+	private static final int CHAINMACE_ANIMATION = 245;
+	private static final int CHAINMACE_SPEC_ANIMATION = 9963;
 	private final Deque<ItemMenuAction> actionStack = new ArrayDeque<>();
 
 	//Item arrays
@@ -656,6 +666,16 @@ public class SuppliesTrackerPlugin extends Plugin
 					{
 						buildEntries(BLOOD_RUNE, 3);
 					}
+				} else if (mainHandId == THAMMARONS_SCEPTRE || mainHandId == ACCURSED_SCEPTRE || mainHandId == ACCURSED_SCEPTRE_A)
+				{
+					if (config.chargesBox())
+					{
+						buildChargesEntries(THAMMARONS_SCEPTRE);
+					}
+					else
+					{
+						buildEntries(REVENANT_ETHER, 1);
+					}
 				}
 				break;
 			case IBANS_STAFF_ANIMATION:
@@ -665,13 +685,30 @@ public class SuppliesTrackerPlugin extends Plugin
 				}
 				// let case fall through to handle non-charge path through regular cast path
 				// to prevent double counting when manually casting from the spell book.
-			case SLAYERS_STAFF_ANIMATION:
 			case LOW_LEVEL_MAGIC_ATTACK:
 			case BARRAGE_ANIMATION:
 			case BLITZ_ANIMATION:
 			case LOW_LEVEL_STANDARD_SPELLS:
 			case WAVE_SPELL_ANIMATION:
 			case SURGE_SPELL_ANIMATION:
+			case ENTANGLE_ANIMATION:
+			case ENFEEBLE_ANIMATION:
+			case VULNERABILITY_ANIMATION:
+			case STUN_ANIMATION:
+			case CRUMBLE_UNDEAD_ANIMATION:
+			case ACCURSED_SPEC_ANIMATION:
+				if (mainHandId == THAMMARONS_SCEPTRE || mainHandId == ACCURSED_SCEPTRE || mainHandId == ACCURSED_SCEPTRE_A)
+				{
+					if (config.chargesBox())
+					{
+						buildChargesEntries(THAMMARONS_SCEPTRE);
+					}
+					else
+					{
+						buildEntries(REVENANT_ETHER, 1);
+					}
+				}
+			case SLAYERS_STAFF_ANIMATION:
 			case HIGH_ALCH_ANIMATION:
 			case LUNAR_HUMIDIFY:
 				ItemContainer oldInv = client.getItemContainer(InventoryID.INVENTORY);
@@ -686,6 +723,34 @@ public class SuppliesTrackerPlugin extends Plugin
 				}{
 
 			}
+				break;
+			case BOW_SHOOT_ANIMATION:
+			case WEBWEAVER_SPEC_ANIMATION:
+				if (mainHandId == CRAWS_BOW || mainHandId == WEBWEAVER_BOW)
+				{
+					if (config.chargesBox())
+					{
+						buildChargesEntries(CRAWS_BOW);
+					}
+					else
+					{
+						buildEntries(REVENANT_ETHER, 1);
+					}
+				}
+				break;
+			case CHAINMACE_ANIMATION:
+			case CHAINMACE_SPEC_ANIMATION:
+				if (mainHandId == VIGGORAS_CHAINMACE || mainHandId == URSINE_CHAINMACE)
+				{
+					if (config.chargesBox())
+					{
+						buildChargesEntries(VIGGORAS_CHAINMACE);
+					}
+					else
+					{
+						buildEntries(REVENANT_ETHER, 1);
+					}
+				}
 				break;
 			case SCYTHE_OF_VITUR_ANIMATION:
 				if (mainHandId == SCYTHE_OF_VITUR || mainHandId == HOLY_SCYTHE_OF_VITUR || mainHandId == SANGUINE_SCYTHE_OF_VITUR)
@@ -1469,6 +1534,11 @@ public class SuppliesTrackerPlugin extends Plugin
 				break;
 			case BLADE_OF_SAELDOR:
 				calculatedPrice = 0;
+				break;
+			case THAMMARONS_SCEPTRE:
+			case CRAWS_BOW:
+			case VIGGORAS_CHAINMACE:
+				calculatedPrice = itemManager.getItemPrice(REVENANT_ETHER);
 				break;
 		}
 

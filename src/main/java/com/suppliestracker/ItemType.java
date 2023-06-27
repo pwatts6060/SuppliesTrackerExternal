@@ -82,7 +82,8 @@ public enum ItemType
 			|| name.contains("knive") || name.contains("throwing")
 			|| name.contains("zulrah's scale") || name.contains("cannonball")
 			|| name.contains("knife")|| name.contains("chinchompa")
-			|| name.endsWith(" brutal") || name.contains("thrownaxe"))
+			|| name.endsWith(" brutal") || name.contains("thrownaxe")
+			|| item.getId() == REVENANT_ETHER)
 		{
 			return AMMO;
 		}
@@ -111,7 +112,10 @@ public enum ItemType
 		else if (item.getId() == SCYTHE_OF_VITUR || item.getId() == SANGUINESTI_STAFF ||
 				item.getId() == TRIDENT_OF_THE_SEAS || item.getId() == TRIDENT_OF_THE_SWAMP ||
 				item.getId() == BLADE_OF_SAELDOR || item.getId() == IBANS_STAFF ||
-				item.getId() == TUMEKENS_SHADOW || item.getId() == VENATOR_BOW || item.getId() == ANCIENT_ESSENCE)
+				item.getId() == TUMEKENS_SHADOW || item.getId() == VENATOR_BOW || item.getId() == ANCIENT_ESSENCE ||
+		 		item.getId() == THAMMARONS_SCEPTRE || item.getId() == CRAWS_BOW ||
+				item.getId() == VIGGORAS_CHAINMACE || item.getId() == ACCURSED_SCEPTRE || item.getId() == WEBWEAVER_BOW ||
+				item.getId() == URSINE_CHAINMACE || item.getId() == ACCURSED_SCEPTRE_A)
 		{
 			return CHARGES;
 		}
