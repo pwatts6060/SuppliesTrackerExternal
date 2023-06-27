@@ -646,7 +646,7 @@ public class SuppliesTrackerPlugin extends Plugin
 					}
 				}
 				//Sang Staff
-				else if (mainHandId == SANGUINESTI_STAFF)
+				else if (mainHandId == SANGUINESTI_STAFF || mainHandId == HOLY_SANGUINESTI_STAFF)
 				{
 					if (config.chargesBox())
 					{
