@@ -27,6 +27,7 @@
 package com.suppliestracker.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -133,6 +134,7 @@ public class SuppliesTrackerPanel extends PluginPanel
 		overallPanel.setComponentPopupMenu(popupMenu);
 
 		switchTrack = new JButton("Switch Tracking");
+		switchTrack.setAlignmentX(Component.CENTER_ALIGNMENT);
 		switchTrack.addActionListener(e -> plugin.switchTracking());
 		layoutPanel.add(switchTrack);
 
