@@ -1738,9 +1738,6 @@ public class SuppliesTrackerPlugin extends Plugin
 		{
 			e.printStackTrace();
 		}
-		if (!showSession && config.curSessionDefault()) {
-			switchTracking();
-		}
 	}
 
 	public void switchTracking()

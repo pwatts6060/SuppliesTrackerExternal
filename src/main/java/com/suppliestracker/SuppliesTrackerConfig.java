@@ -55,14 +55,4 @@ public interface SuppliesTrackerConfig extends Config
 	{
 		return false;
 	}
-
-	@ConfigItem(
-		keyName = "curSession",
-		name = "Current Session by Default",
-		description = "Use current session as default option rather than all time."
-	)
-	default boolean curSessionDefault()
-	{
-		return false;
-	}
 }
