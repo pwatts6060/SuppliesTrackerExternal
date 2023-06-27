@@ -1,7 +1,9 @@
 package com.suppliestracker.Skills;
 
+import com.google.common.collect.ImmutableSet;
 import com.suppliestracker.SuppliesTrackerPlugin;
 
+import java.util.Set;
 import static net.runelite.api.ItemID.BOTTOMLESS_COMPOST_BUCKET;
 import static net.runelite.api.ItemID.BOTTOMLESS_COMPOST_BUCKET_22997;
 import static net.runelite.api.ItemID.CABBAGE_SEED;
@@ -28,7 +30,7 @@ public class Farming
 	private int plantId = 0;
 	private int compostId = 0;
 	private int bucketId = 0;
-	private final int[] ALLOTMENT_SEEDS = new int[]{POTATO_SEED, ONION_SEED, CABBAGE_SEED, TOMATO_SEED, SWEETCORN_SEED, STRAWBERRY_SEED, WATERMELON_SEED, SNAPE_GRASS_SEED};
+	private final Set<Integer> ALLOTMENT_SEEDS = ImmutableSet.of(POTATO_SEED, ONION_SEED, CABBAGE_SEED, TOMATO_SEED, SWEETCORN_SEED, STRAWBERRY_SEED, WATERMELON_SEED, SNAPE_GRASS_SEED);
 
 	/***	Will be switching all to onMenuOptionClicked similar to how
 	 *		hardwoods work next update so its automated just pushing this for now
@@ -50,14 +52,11 @@ public class Farming
 
         if (name.contains(" seed") || name.contains(" sapling"))
         {
-            for (int seedId: ALLOTMENT_SEEDS)
-            {
-                if (plantId == seedId)
-                {
-                    plugin.buildEntries(plantId, 3);
-                    return;
-                }
-            }
+			if (ALLOTMENT_SEEDS.contains(plantId))
+			{
+				plugin.buildEntries(plantId, 3);
+				return;
+			}
             plugin.buildEntries(plantId);
         }
     }
