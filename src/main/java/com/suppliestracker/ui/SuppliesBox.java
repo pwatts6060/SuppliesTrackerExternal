@@ -42,6 +42,7 @@ import com.suppliestracker.SuppliesTrackerItem;
 import com.suppliestracker.SuppliesTrackerPlugin;
 import lombok.AccessLevel;
 import lombok.Getter;
+import net.runelite.api.ItemID;
 import static net.runelite.api.ItemID.*;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.ui.ColorScheme;
@@ -695,6 +696,9 @@ public abstract class SuppliesBox extends JPanel
 		@Override
 		int getModifiedItemId(String name, int itemId)
 		{
+			if (itemId == BLIGHTED_SUPER_RESTORE4) {
+				return BLIGHTED_SUPER_RESTORE1; // has no price so hardcode :(
+			}
 			if (name.endsWith("(4)") ||
 					name.endsWith("(3)") ||
 					name.endsWith("(2)") ||
