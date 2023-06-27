@@ -104,7 +104,7 @@ public enum ItemType
 			return JEWELLERY;
 		}
 		else if (name.contains(" sapling") || name.contains(" seed") ||
-				name.contains("compost") || name.contains("plant cure"))
+				name.contains("compost") || name.contains("plant cure") || name.contains(" spore"))
 		{
 			return FARMING;
 		}

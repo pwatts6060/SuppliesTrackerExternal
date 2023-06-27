@@ -50,7 +50,7 @@ public class Farming
 
         String name = itemManager.getItemComposition(plantId).getName().toLowerCase();
 
-        if (name.contains(" seed") || name.contains(" sapling"))
+        if (name.contains(" seed") || name.contains(" sapling") || name.contains(" spore"))
         {
 			if (ALLOTMENT_SEEDS.contains(plantId))
 			{

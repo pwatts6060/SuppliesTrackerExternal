@@ -1005,7 +1005,7 @@ public class SuppliesTrackerPlugin extends Plugin
 			{
 				farming.setBucketId(event.getItemId());
 			}
-			else
+			else if (!target.contains("->"))
 			{
 				farming.setPlantId(event.getItemId());
 			}
