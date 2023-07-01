@@ -98,8 +98,7 @@ import static net.runelite.api.GraphicID.GRANITE_CANNONBALL;
 @PluginDescriptor(
 	name = "Supplies Used Tracker",
 	description = "Tracks supplies used during the session",
-	tags = {"cost"},
-	enabledByDefault = false
+	tags = {"cost"}
 )
 @Singleton
 @Slf4j
