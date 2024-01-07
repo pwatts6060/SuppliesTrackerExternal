@@ -654,7 +654,7 @@ public class SuppliesTrackerPlugin extends Plugin
 					}
 				}
 				// Warped Sceptre
-				else if (mainHandId == WARPRED_SCEPTRE) {
+				else if (mainHandId == WARPED_SCEPTRE) {
 					if (config.chargesBox()) 
 					{
 						buildChargesBox(WARPED_SCEPTRE)
