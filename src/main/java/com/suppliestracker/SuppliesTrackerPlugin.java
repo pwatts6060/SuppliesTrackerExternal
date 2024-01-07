@@ -1536,6 +1536,9 @@ public class SuppliesTrackerPlugin extends Plugin
 				calculatedPrice = itemManager.getItemPrice(CHAOS_RUNE) + itemManager.getItemPrice(DEATH_RUNE) +
 						itemManager.getItemPrice(FIRE_RUNE) * 5L + itemManager.getItemPrice(COINS_995) * 10L;
 				break;
+			case WARPED_SCEPTRE:
+				calculated_price = itemManager.getItemPrice(CHAOS_RUNE) * 2L + itemManager.getItemPrice(EARTH_RUNE) * 5L;
+				break;
 			case SANGUINESTI_STAFF:
 				calculatedPrice = itemManager.getItemPrice(BLOOD_RUNE) * 3L;
 				break;
