@@ -653,6 +653,18 @@ public class SuppliesTrackerPlugin extends Plugin
 						buildEntries(ZULRAHS_SCALES);
 					}
 				}
+				// Warped Sceptre
+				else if (mainHandId == WARPRED_SCEPTRE) {
+					if (config.chargesBox()) 
+					{
+						buildChargesBox(WARPED_SCEPTRE)
+					}
+					else 
+					{
+						buildEntries(CHAOS_RUNE, 2);
+						buildEntries(EARTH_RUNE, 5);
+					}
+				}
 				//Sang Staff
 				else if (mainHandId == SANGUINESTI_STAFF || mainHandId == HOLY_SANGUINESTI_STAFF)
 				{
