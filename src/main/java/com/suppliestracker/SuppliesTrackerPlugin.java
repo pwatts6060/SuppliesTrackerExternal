@@ -759,7 +759,7 @@ public class SuppliesTrackerPlugin extends Plugin
 					}
 					else
 					{
-						buildEntries(BLOOD_RUNE, 3);
+						buildEntries(BLOOD_RUNE, 2);
 						buildEntries(COINS_995, itemManager.getItemPrice(VIAL_OF_BLOOD_22446) / 100);
 					}
 				}
