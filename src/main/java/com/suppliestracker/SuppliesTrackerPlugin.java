@@ -1024,7 +1024,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		String target = Text.removeTags(event.getMenuTarget()).toLowerCase();
 		String menuOption = Text.removeTags(event.getMenuOption()).toLowerCase();
 
-		if (event.getMenuAction().equals(MenuAction.WIDGET_TARGET_ON_WIDGET) && (eatPattern.matcher(menuOption).find() || drinkPattern.matcher(menuOption).find()) &&
+		if (event.getMenuAction().equals(MenuAction.CC_OP) && (eatPattern.matcher(menuOption).find() || drinkPattern.matcher(menuOption).find()) &&
 			actionStack.stream().noneMatch(a ->
 			{
 				if (a instanceof ItemMenuAction.ItemAction)
@@ -1098,7 +1098,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		}
 
 		//Adds tracking to Master Scroll Book
-		if (event.getMenuAction().equals(MenuAction.WIDGET_TARGET_ON_WIDGET) && menuOption.equalsIgnoreCase("activate") && target.endsWith(" teleport scroll")) {
+		if (menuOption.equalsIgnoreCase("activate") && target.endsWith(" teleport scroll")) {
 			switch (target) {
 				case "watson teleport scroll":
 					buildEntries(WATSON_TELEPORT);
