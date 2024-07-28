@@ -657,7 +657,7 @@ public class SuppliesTrackerPlugin extends Plugin
 				else if (mainHandId == WARPED_SCEPTRE) {
 					if (config.chargesBox()) 
 					{
-						buildChargesBox(WARPED_SCEPTRE)
+						buildChargesEntries(WARPED_SCEPTRE);
 					}
 					else 
 					{
