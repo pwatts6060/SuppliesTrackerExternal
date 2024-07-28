@@ -91,7 +91,8 @@ public enum ItemType
 		{
 			return RUNE;
 		}
-		else if (name.contains("teleport") || itemId == STONY_BASALT || itemId == ICY_BASALT)
+		else if (name.contains("teleport") || itemId == STONY_BASALT || itemId == ICY_BASALT
+			|| itemId == PLAIN_OF_MUD_SPHERE || itemId == DORGESHKAAN_SPHERE || itemId == GOBLIN_VILLAGE_SPHERE)
 		{
 			return TELEPORT;
 		}
