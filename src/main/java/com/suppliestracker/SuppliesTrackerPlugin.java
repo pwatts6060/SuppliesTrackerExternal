@@ -653,6 +653,18 @@ public class SuppliesTrackerPlugin extends Plugin
 						buildEntries(ZULRAHS_SCALES);
 					}
 				}
+				// Warped Sceptre
+				else if (mainHandId == WARPED_SCEPTRE) {
+					if (config.chargesBox()) 
+					{
+						buildChargesBox(WARPED_SCEPTRE)
+					}
+					else 
+					{
+						buildEntries(CHAOS_RUNE, 2);
+						buildEntries(EARTH_RUNE, 5);
+					}
+				}
 				//Sang Staff
 				else if (mainHandId == SANGUINESTI_STAFF || mainHandId == HOLY_SANGUINESTI_STAFF)
 				{
@@ -1523,6 +1535,9 @@ public class SuppliesTrackerPlugin extends Plugin
 			case TRIDENT_OF_THE_SEAS:
 				calculatedPrice = itemManager.getItemPrice(CHAOS_RUNE) + itemManager.getItemPrice(DEATH_RUNE) +
 						itemManager.getItemPrice(FIRE_RUNE) * 5L + itemManager.getItemPrice(COINS_995) * 10L;
+				break;
+			case WARPED_SCEPTRE:
+				calculatedPrice = itemManager.getItemPrice(CHAOS_RUNE) * 2L + itemManager.getItemPrice(EARTH_RUNE) * 5L;
 				break;
 			case SANGUINESTI_STAFF:
 				calculatedPrice = itemManager.getItemPrice(BLOOD_RUNE) * 3L;
