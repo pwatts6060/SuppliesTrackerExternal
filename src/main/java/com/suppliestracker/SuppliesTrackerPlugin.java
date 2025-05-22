@@ -235,6 +235,7 @@ public class SuppliesTrackerPlugin extends Plugin
 			BLOOD_RUNE,
 			SOUL_RUNE,
 			WRATH_RUNE,
+			AETHER_RUNE,
 			MIST_RUNE,
 			DUST_RUNE,
 			MUD_RUNE,
@@ -1144,6 +1145,9 @@ public class SuppliesTrackerPlugin extends Plugin
 					break;
 				case "key master teleport":
 					buildEntries(KEY_MASTER_TELEPORT);
+					break;
+				case "chasm teleport scroll":
+					buildEntries(CHASM_TELEPORT_SCROLL);
 					break;
 			}
 		}

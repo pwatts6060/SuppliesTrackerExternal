@@ -51,6 +51,7 @@ import static net.runelite.api.ItemID.SOUL_RUNE;
 import static net.runelite.api.ItemID.STEAM_RUNE;
 import static net.runelite.api.ItemID.WATER_RUNE;
 import static net.runelite.api.ItemID.WRATH_RUNE;
+import static net.runelite.api.ItemID.AETHER_RUNE;
 
 public enum Runes
 {
@@ -74,7 +75,8 @@ public enum Runes
 	LAVA(18, LAVA_RUNE),
 	STEAM(19, STEAM_RUNE),
 	SMOKE(20, SMOKE_RUNE),
-	WRATH(21, WRATH_RUNE);
+	WRATH(21, WRATH_RUNE),
+	AETHER(22, AETHER_RUNE);
 
 	@Getter
 	private final int id;

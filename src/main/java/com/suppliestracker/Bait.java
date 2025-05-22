@@ -41,7 +41,8 @@ public final class Bait {
             ItemID.RAW_KARAMBWANJI,
             ItemID.FISHING_BAIT,
             ItemID.DARK_FISHING_BAIT,
-            ItemID.SANDWORMS
+            ItemID.SANDWORMS,
+            ItemID.DIABOLIC_WORMS
     ));
 
     @Inject
