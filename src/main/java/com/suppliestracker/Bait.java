@@ -29,20 +29,21 @@ import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import net.runelite.api.ItemID;
+import net.runelite.api.gameval.ItemID;
 
 @Singleton
 public final class Bait {
     private final SuppliesTrackerPlugin plugin;
     private static final Set<Integer> baitIds = new LinkedHashSet<>(Arrays.asList(
             ItemID.FEATHER,
-            ItemID.STRIPY_FEATHER,
+            ItemID.HUNTING_STRIPY_BIRD_FEATHER,
             ItemID.SPIRIT_FLAKES,
-            ItemID.RAW_KARAMBWANJI,
+            ItemID.TBWT_RAW_KARAMBWANJI,
             ItemID.FISHING_BAIT,
-            ItemID.DARK_FISHING_BAIT,
-            ItemID.SANDWORMS,
-            ItemID.DIABOLIC_WORMS
+            ItemID.WILDERNESS_FISHING_BAIT,
+            ItemID.PISCARILIUS_SANDWORMS,
+            ItemID.DIABOLIC_WORMS,
+			30900 // Shark Lure
     ));
 
     @Inject
