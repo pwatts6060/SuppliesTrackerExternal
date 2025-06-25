@@ -1395,8 +1395,12 @@ public class SuppliesTrackerPlugin extends Plugin
 			newQuantityC = count;
 		}
 
+		if (itemId == ItemID.GRANITE_CANNONBALL) {
+			calculatedPrice = itemManager.getItemPrice(ItemID.CANNONBALL);
+		} else {
+			calculatedPrice = itemManager.getItemPrice(itemId);
+		}
 		// calculate price for amount of doses used
-		calculatedPrice = itemManager.getItemPrice(itemId);
 		calculatedPrice = scalePriceByDoses(name, itemId, calculatedPrice);
 
 		// write the new quantity and calculated price for this entry
