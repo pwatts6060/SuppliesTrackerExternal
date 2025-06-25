@@ -57,6 +57,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import static com.suppliestracker.ActionType.CAST;
 import static net.runelite.api.ItemID.*;
+import net.runelite.api.gameval.VarbitID;
 import static net.runelite.client.RuneLite.RUNELITE_DIR;
 
 import net.runelite.api.AnimationID;
@@ -77,7 +78,6 @@ import net.runelite.api.Player;
 import net.runelite.api.Projectile;
 import net.runelite.api.Skill;
 import net.runelite.api.VarPlayer;
-import net.runelite.api.Varbits;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.*;
@@ -236,6 +236,7 @@ public class SuppliesTrackerPlugin extends Plugin
 			SOUL_RUNE,
 			WRATH_RUNE,
 			AETHER_RUNE,
+			SUNFIRE_RUNE,
 			MIST_RUNE,
 			DUST_RUNE,
 			MUD_RUNE,
@@ -314,35 +315,8 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Inject
 	private Bait bait;
 
-	//Rune pouch stuff
-	private static final int[] AMOUNT_VARBITS =
-		{
-			Varbits.RUNE_POUCH_AMOUNT1, Varbits.RUNE_POUCH_AMOUNT2, Varbits.RUNE_POUCH_AMOUNT3, Varbits.RUNE_POUCH_AMOUNT4
-		};
-	private static final int[] RUNE_VARBITS =
-		{
-			Varbits.RUNE_POUCH_RUNE1, Varbits.RUNE_POUCH_RUNE2, Varbits.RUNE_POUCH_RUNE3, Varbits.RUNE_POUCH_RUNE4
-		};
-
-	private static final int[] OLD_AMOUNT_VARBITS =
-		{
-			0, 0, 0, 0
-		};
-	private static final int[] OLD_RUNE_VARBITS =
-		{
-			0, 0, 0, 0
-		};
-
-
-	private static int rune1 = 0;
-	private static int rune2 = 0;
-	private static int rune3 = 0;
-	private static int rune4 = 0;
-
-	private int amountused1 = 0;
-	private int amountused2 = 0;
-	private int amountused3 = 0;
-	private int amountused4 = 0;
+	@Inject
+	private RunePouch runePouch;
 
 	private boolean noXpCast = false;
 
@@ -369,7 +343,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private ConfigManager configManager;
 
 	@Inject
-	private Client client;
+	Client client;
 
 	@Inject
 	private RuneManager runeManager;
@@ -476,21 +450,12 @@ public class SuppliesTrackerPlugin extends Plugin
 
 		skipProjectileCheckThisTick = false;
 
-		if (xpDropTracker.hadXpThisTick(Skill.MAGIC))
+		if (xpDropTracker.hadXpThisTick(Skill.MAGIC) || noXpCast)
 		{
-			checkUsedRunePouch();
+			runePouch.checkUsedRunePouch(xpDropTracker, noXpCast);
 			noXpCast = false;
 		}
-		else if (noXpCast)
-		{
-			checkUsedRunePouch();
-			noXpCast = false;
-		}
-
-		amountused1 = 0;
-		amountused2 = 0;
-		amountused3 = 0;
-		amountused4 = 0;
+		runePouch.resetAmountUsed();
 	}
 
 	private void blowpipeShot() {
@@ -548,7 +513,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Subscribe
 	private void onVarbitChanged(VarbitChanged event)
 	{
-		updateRunePouch();
+		runePouch.updateRunePouch();
 
 		if (attackStyleVarbit != -1 && attackStyleVarbit == client.getVarpValue(VarPlayer.ATTACK_STYLE)) {
 			return;
@@ -1710,91 +1675,6 @@ public class SuppliesTrackerPlugin extends Plugin
 				break;
 		}
 		return itemId;
-	}
-
-	private void checkUsedRunePouch()
-	{
-		if (!xpDropTracker.hadXpThisTick(Skill.MAGIC) && !noXpCast) {
-			return;
-		}
-		if (amountused1 != 0 && amountused1 < 20)
-		{
-			buildEntries(Runes.getRune(rune1).getItemId(), amountused1);
-		}
-		if (amountused2 != 0 && amountused2 < 20)
-		{
-			buildEntries(Runes.getRune(rune2).getItemId(), amountused2);
-		}
-		if (amountused3 != 0 && amountused3 < 20)
-		{
-			buildEntries(Runes.getRune(rune3).getItemId(), amountused3);
-		}
-		if (amountused4 != 0 && amountused4 < 20)
-		{
-			buildEntries(Runes.getRune(rune4).getItemId(), amountused4);
-		}
-	}
-
-	/**
-	 * Checks local variable data against client data then returns differences then updates local to client
-	 */
-	private void updateRunePouch()
-	{
-		//check amounts
-		if (OLD_AMOUNT_VARBITS[0] != client.getVarbitValue(AMOUNT_VARBITS[0]))
-		{
-			if (OLD_AMOUNT_VARBITS[0] > client.getVarbitValue(AMOUNT_VARBITS[0]))
-			{
-				amountused1 += OLD_AMOUNT_VARBITS[0] - client.getVarbitValue(AMOUNT_VARBITS[0]);
-			}
-			OLD_AMOUNT_VARBITS[0] = client.getVarbitValue(AMOUNT_VARBITS[0]);
-		}
-		if (OLD_AMOUNT_VARBITS[1] != client.getVarbitValue(AMOUNT_VARBITS[1]))
-		{
-			if (OLD_AMOUNT_VARBITS[1] > client.getVarbitValue(AMOUNT_VARBITS[1]))
-			{
-				amountused2 += OLD_AMOUNT_VARBITS[1] - client.getVarbitValue(AMOUNT_VARBITS[1]);
-			}
-			OLD_AMOUNT_VARBITS[1] = client.getVarbitValue(AMOUNT_VARBITS[1]);
-		}
-		if (OLD_AMOUNT_VARBITS[2] != client.getVarbitValue(AMOUNT_VARBITS[2]))
-		{
-			if (OLD_AMOUNT_VARBITS[2] > client.getVarbitValue(AMOUNT_VARBITS[2]))
-			{
-				amountused3 += OLD_AMOUNT_VARBITS[2] - client.getVarbitValue(AMOUNT_VARBITS[2]);
-			}
-			OLD_AMOUNT_VARBITS[2] = client.getVarbitValue(AMOUNT_VARBITS[2]);
-		}
-		if (OLD_AMOUNT_VARBITS[3] != client.getVarbitValue(AMOUNT_VARBITS[3]))
-		{
-			if (OLD_AMOUNT_VARBITS[3] > client.getVarbitValue(AMOUNT_VARBITS[3]))
-			{
-				amountused4 += OLD_AMOUNT_VARBITS[3] - client.getVarbitValue(AMOUNT_VARBITS[3]);
-			}
-			OLD_AMOUNT_VARBITS[3] = client.getVarbitValue(AMOUNT_VARBITS[3]);
-		}
-
-		//check runes
-		if (OLD_RUNE_VARBITS[0] != client.getVarbitValue(RUNE_VARBITS[0]))
-		{
-			rune1 = client.getVarbitValue(RUNE_VARBITS[0]);
-			OLD_RUNE_VARBITS[0] = client.getVarbitValue(RUNE_VARBITS[0]);
-		}
-		if (OLD_RUNE_VARBITS[1] != client.getVarbitValue(RUNE_VARBITS[1]))
-		{
-			rune2 = client.getVarbitValue(RUNE_VARBITS[1]);
-			OLD_RUNE_VARBITS[1] = client.getVarbitValue(RUNE_VARBITS[1]);
-		}
-		if (OLD_RUNE_VARBITS[2] != client.getVarbitValue(RUNE_VARBITS[2]))
-		{
-			rune3 = client.getVarbitValue(RUNE_VARBITS[2]);
-			OLD_RUNE_VARBITS[2] = client.getVarbitValue(RUNE_VARBITS[2]);
-		}
-		if (OLD_RUNE_VARBITS[3] != client.getVarbitValue(RUNE_VARBITS[3]))
-		{
-			rune4 = client.getVarbitValue(RUNE_VARBITS[3]);
-			OLD_RUNE_VARBITS[3] = client.getVarbitValue(RUNE_VARBITS[3]);
-		}
 	}
 
 	@Subscribe
