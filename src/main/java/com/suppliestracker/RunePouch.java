@@ -24,37 +24,42 @@ public class RunePouch
 			VarbitID.RUNE_POUCH_TYPE_3, VarbitID.RUNE_POUCH_TYPE_4
 		};
 
-	private final int[] OLD_AMOUNT_VARBITS = new int[RUNE_VARBITS.length];
-	private final int[] OLD_RUNE_VARBITS = new int[RUNE_VARBITS.length];
-	private final int[] runes = new int[RUNE_VARBITS.length];
-	private final int[] amounts_used = new int[RUNE_VARBITS.length];
+	private final int[] pouchAmount;
+	private final int[] pouchRuneIds;
+	private final int[] prevPouchRuneIds;
+	private final int[] amounts_used;
 
 	@Inject
 	RunePouch(SuppliesTrackerPlugin plugin) {
 		this.plugin = plugin;
+		pouchAmount = new int[RUNE_VARBITS.length];
+		pouchRuneIds = new int[RUNE_VARBITS.length];
+		prevPouchRuneIds = new int[RUNE_VARBITS.length];
+		amounts_used = new int[RUNE_VARBITS.length];
 	}
 
 	/**
 	 * Checks local variable data against client data then returns differences then updates local to client
 	 */
-	void updateRunePouch()
+	void updateVarbit(int varbitId)
 	{
-		for (int i = 0; i < amounts_used.length; i++) {
-			//check amounts
-			if (OLD_AMOUNT_VARBITS[i] != plugin.client.getVarbitValue(AMOUNT_VARBITS[i]))
-			{
-				if (OLD_AMOUNT_VARBITS[i] > plugin.client.getVarbitValue(AMOUNT_VARBITS[i]))
-				{
-					amounts_used[i] += OLD_AMOUNT_VARBITS[i] - plugin.client.getVarbitValue(AMOUNT_VARBITS[i]);
-				}
-				OLD_AMOUNT_VARBITS[i] = plugin.client.getVarbitValue(AMOUNT_VARBITS[0]);
+		for (int i = 0; i < RUNE_VARBITS.length; i++) {
+			if (RUNE_VARBITS[i] == varbitId) {
+				prevPouchRuneIds[i] = pouchRuneIds[i];
+				pouchRuneIds[i] = plugin.client.getVarbitValue(RUNE_VARBITS[i]);
+				return;
 			}
+		}
 
-			//check runes
-			if (OLD_RUNE_VARBITS[i] != plugin.client.getVarbitValue(RUNE_VARBITS[i]))
-			{
-				runes[i] = plugin.client.getVarbitValue(RUNE_VARBITS[i]);
-				OLD_RUNE_VARBITS[i] = plugin.client.getVarbitValue(RUNE_VARBITS[i]);
+		for (int i = 0; i < AMOUNT_VARBITS.length; i++) {
+			if (AMOUNT_VARBITS[i] == varbitId) {
+				int newAmount = plugin.client.getVarbitValue(AMOUNT_VARBITS[i]);
+				if (newAmount < pouchAmount[i])
+				{
+					amounts_used[i] += pouchAmount[i] - newAmount;
+				}
+				pouchAmount[i] = newAmount;
+				return;
 			}
 		}
 	}
@@ -64,10 +69,15 @@ public class RunePouch
 		if (!xpDropTracker.hadXpThisTick(Skill.MAGIC) && !noXpCast) {
 			return;
 		}
-		for (int i = 0; i < runes.length; i++) {
+		for (int i = 0; i < pouchRuneIds.length; i++) {
 			if (amounts_used[i] != 0 && amounts_used[i] < 20)
 			{
-				plugin.buildEntries(Runes.getRune(runes[i]).getItemId(), amounts_used[i]);
+				if (pouchRuneIds[i] == 0) {
+					// special case when last runes used from pouch
+					plugin.buildEntries(Runes.getRune(prevPouchRuneIds[i]).getItemId(), amounts_used[i]);
+				} else {
+					plugin.buildEntries(Runes.getRune(pouchRuneIds[i]).getItemId(), amounts_used[i]);
+				}
 			}
 		}
 	}

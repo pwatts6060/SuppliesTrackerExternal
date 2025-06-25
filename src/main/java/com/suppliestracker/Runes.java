@@ -30,33 +30,33 @@ import java.awt.image.BufferedImage;
 import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
-import static net.runelite.api.ItemID.*;
+import static net.runelite.api.gameval.ItemID.*;
 
 public enum Runes
 {
-	AIR(1, AIR_RUNE),
-	WATER(2, WATER_RUNE),
-	EARTH(3, EARTH_RUNE),
-	FIRE(4, FIRE_RUNE),
-	MIND(5, MIND_RUNE),
-	CHAOS(6, CHAOS_RUNE),
-	DEATH(7, DEATH_RUNE),
-	BLOOD(8, BLOOD_RUNE),
-	COSMIC(9, COSMIC_RUNE),
-	NATURE(10, NATURE_RUNE),
-	LAW(11, LAW_RUNE),
-	BODY(12, BODY_RUNE),
-	SOUL(13, SOUL_RUNE),
-	ASTRAL(14, ASTRAL_RUNE),
-	MIST(15, MIST_RUNE),
-	MUD(16, MUD_RUNE),
-	DUST(17, DUST_RUNE),
-	LAVA(18, LAVA_RUNE),
-	STEAM(19, STEAM_RUNE),
-	SMOKE(20, SMOKE_RUNE),
-	WRATH(21, WRATH_RUNE),
-	SUNFIRE(22, SUNFIRE_RUNE),
-	AETHER(23, AETHER_RUNE),
+	AIR(1, AIRRUNE),
+	WATER(2, WATERRUNE),
+	EARTH(3, EARTHRUNE),
+	FIRE(4, FIRERUNE),
+	MIND(5, MINDRUNE),
+	CHAOS(6, CHAOSRUNE),
+	DEATH(7, DEATHRUNE),
+	BLOOD(8, BLOODRUNE),
+	COSMIC(9, COSMICRUNE),
+	NATURE(10, NATURERUNE),
+	LAW(11, LAWRUNE),
+	BODY(12, BODYRUNE),
+	SOUL(13, SOULRUNE),
+	ASTRAL(14, ASTRALRUNE),
+	MIST(15, MISTRUNE),
+	MUD(16, MUDRUNE),
+	DUST(17, DUSTRUNE),
+	LAVA(18, LAVARUNE),
+	STEAM(19, STEAMRUNE),
+	SMOKE(20, SMOKERUNE),
+	WRATH(21, WRATHRUNE),
+	SUNFIRE(22, SUNFIRERUNE),
+	AETHER(23, AETHERRUNE),
 	;
 
 	@Getter
@@ -86,9 +86,9 @@ public enum Runes
 		this.itemId = itemId;
 	}
 
-	public static Runes getRune(int varbit)
+	public static Runes getRune(int index)
 	{
-		return runes.get(varbit);
+		return runes.get(index);
 	}
 
 }

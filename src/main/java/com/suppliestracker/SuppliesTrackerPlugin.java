@@ -57,7 +57,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import static com.suppliestracker.ActionType.CAST;
 import static net.runelite.api.ItemID.*;
-import net.runelite.api.gameval.VarbitID;
 import static net.runelite.client.RuneLite.RUNELITE_DIR;
 
 import net.runelite.api.AnimationID;
@@ -513,7 +512,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Subscribe
 	private void onVarbitChanged(VarbitChanged event)
 	{
-		runePouch.updateRunePouch();
+		runePouch.updateVarbit(event.getVarbitId());
 
 		if (attackStyleVarbit != -1 && attackStyleVarbit == client.getVarpValue(VarPlayer.ATTACK_STYLE)) {
 			return;
