@@ -57,6 +57,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import static com.suppliestracker.ActionType.CAST;
 import static net.runelite.api.ItemID.*;
+import net.runelite.api.gameval.VarPlayerID;
 import static net.runelite.client.RuneLite.RUNELITE_DIR;
 
 import net.runelite.api.AnimationID;
@@ -317,6 +318,9 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Inject
 	private RunePouch runePouch;
 
+	@Inject
+	private Quiver quiver;
+
 	private boolean noXpCast = false;
 
 	//skills
@@ -498,6 +502,13 @@ public class SuppliesTrackerPlugin extends Plugin
 			case MASORI_ASSEMBLER_L:
 			case MASORI_ASSEMBLER_MAX_CAPE:
 			case MASORI_ASSEMBLER_MAX_CAPE_L:
+			case DIZANAS_QUIVER:
+			case DIZANAS_QUIVER_L:
+			case DIZANAS_QUIVER_UNCHARGED:
+			case DIZANAS_QUIVER_UNCHARGED_L:
+			case BLESSED_DIZANAS_QUIVER:
+			case BLESSED_DIZANAS_QUIVER_L:
+			case DIZANAS_MAX_CAPE:
 				return ASSEMBLER_PERCENT;
 			case ACCUMULATOR_MAX_CAPE:
 			case AVAS_ACCUMULATOR:
@@ -513,6 +524,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private void onVarbitChanged(VarbitChanged event)
 	{
 		runePouch.updateVarbit(event.getVarbitId());
+		quiver.updateVarp(event.getVarpId());
 
 		if (attackStyleVarbit != -1 && attackStyleVarbit == client.getVarpValue(VarPlayer.ATTACK_STYLE)) {
 			return;
@@ -789,6 +801,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Subscribe
 	private void onItemContainerChanged(ItemContainerChanged itemContainerChanged)
 	{
+
 		ItemContainer itemContainer = itemContainerChanged.getItemContainer();
 		int containerId = itemContainer.getId();
 
@@ -859,6 +872,8 @@ public class SuppliesTrackerPlugin extends Plugin
 	}
 
 	private void processEquipChange(ItemContainer itemContainer) {
+		quiver.setQuiverEquipped(itemContainer.getItem(EquipmentInventorySlot.CAPE.getSlotIdx()));
+
 		//set mainhand for trident tracking
 		if (itemContainer.getItems().length > EQUIPMENT_MAINHAND_SLOT)
 		{
