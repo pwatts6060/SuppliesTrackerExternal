@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 import javax.inject.Inject;
 import lombok.Getter;
-import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.Item;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.VarPlayerID;
