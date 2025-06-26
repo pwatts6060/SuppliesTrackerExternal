@@ -872,8 +872,6 @@ public class SuppliesTrackerPlugin extends Plugin
 	}
 
 	private void processEquipChange(ItemContainer itemContainer) {
-		quiver.setQuiverEquipped(itemContainer.getItem(EquipmentInventorySlot.CAPE.getSlotIdx()));
-
 		//set mainhand for trident tracking
 		if (itemContainer.getItems().length > EQUIPMENT_MAINHAND_SLOT)
 		{

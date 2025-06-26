@@ -12,8 +12,6 @@ import net.runelite.client.game.ItemVariationMapping;
 public class Quiver
 {
 	private final SuppliesTrackerPlugin plugin;
-	@Getter
-	private boolean wearingQuiver;
 	private int quiverAmmoId;
 	private int quiverAmmoCount;
 
@@ -54,11 +52,5 @@ public class Quiver
 				plugin.buildEntries(quiverAmmoId, countChange);
 			}
 		}
-	}
-
-
-	void setQuiverEquipped(Item cape)
-	{
-		wearingQuiver = cape != null && DIZANAS_QUIVER_IDS.contains(cape.getId());
 	}
 }
