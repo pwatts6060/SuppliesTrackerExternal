@@ -1302,7 +1302,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		}
 		if (!skipProjectileCheckThisTick)
 		{
-			buildEntries(graniteCball ? ItemID.GRANITE_CANNONBALL : ItemID.CANNONBALL);
+			buildEntries(graniteCball ? ItemID.GRANITE_CANNONBALL : STEEL_CANNONBALL);
 		}
 	}
 
@@ -1409,7 +1409,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		}
 
 		if (itemId == ItemID.GRANITE_CANNONBALL) {
-			calculatedPrice = itemManager.getItemPrice(ItemID.CANNONBALL);
+			calculatedPrice = itemManager.getItemPrice(STEEL_CANNONBALL);
 		} else {
 			calculatedPrice = itemManager.getItemPrice(itemId);
 		}
