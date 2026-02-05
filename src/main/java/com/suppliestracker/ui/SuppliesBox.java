@@ -108,6 +108,8 @@ public abstract class SuppliesBox extends JPanel
 				return new FoodSuppliesBox(itemManager, id, plugin, panel, type);
 			case POTION:
 				return new PotionSuppliesBox(itemManager, id, plugin, panel, type);
+			case JARS:
+				return new JarsSuppliesBox(itemManager, id, plugin, panel, type);
 			case DEATH:
 				return new DeathSuppliesBox(itemManager, id, plugin, panel, type);
 		}
@@ -698,12 +700,21 @@ public abstract class SuppliesBox extends JPanel
 
 		}
 
+
+
 		@Override
 		final String buildTooltip(int itemId, int qty, SuppliesTrackerItem item)
 		{
-
+			final String itemName = item.getName();
 			final long price = item.getPrice();
-			return item.getName() + " x " + qty + "/4 (" + QuantityFormatter.quantityToStackSize(price) + "gp) ";
+			if (itemName.contains("mix")) {
+				return item.getName() + " x " + qty + "/2 (" + QuantityFormatter.quantityToStackSize(price) + "gp) ";
+			}
+			else
+			{
+				return item.getName() + " x " + qty + "/4 (" + QuantityFormatter.quantityToStackSize(price) + "gp) ";
+			}
+
 		}
 
 		@Override
@@ -731,7 +742,7 @@ public abstract class SuppliesBox extends JPanel
 		 */
 		private int getSingleDose(String name)
 		{
-			String nameModified = name.replace("(4)", "(1)");
+			String nameModified = name.replace(POTION_PATTERN, "(1)");
 
 			List<ItemPrice> prices = itemManager.search(nameModified);
 			if (!prices.isEmpty())
@@ -739,6 +750,27 @@ public abstract class SuppliesBox extends JPanel
 				return prices.get(0).getId();
 			}
 			return 0;
+		}
+	}
+
+	private static class JarsSuppliesBox extends SuppliesBox
+	{
+		protected JarsSuppliesBox(ItemManager itemManager, String id, SuppliesTrackerPlugin plugin, SuppliesTrackerPanel panel, ItemType type)
+		{
+			super(itemManager, id, plugin, panel, type);
+		}
+
+		@Override
+		final String buildTooltip(int itemId, int qty, SuppliesTrackerItem item)
+		{
+			final long price = item.getPrice();
+			return item.getName() + " x " + qty + " (" + QuantityFormatter.quantityToStackSize(price) + "gp) ";
+		}
+
+		@Override
+		int getModifiedItemId(String name, int itemId)
+		{
+			return itemId;
 		}
 	}
 

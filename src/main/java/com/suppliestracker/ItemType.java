@@ -41,6 +41,7 @@ public enum ItemType
 {
 	FOOD("Food"),
 	POTION("Potions"),
+	JARS("Butterfly Jars"),
 	RUNE("Runes"),
 	AMMO("Ammo"),
 	TELEPORT("Teleports"),
@@ -69,9 +70,13 @@ public enum ItemType
 	{
 		String name = item.getName().toLowerCase();
 		int itemId = item.getId();
-		if (name.endsWith("(4)"))
+		if (name.endsWith("(4)") || name.endsWith("mix(2)") || name.endsWith("mix (2)"))
 		{
 			return POTION;
+		}
+		else if (itemId == MOONLIGHT_MOTH || itemId == SUNLIGHT_MOTH || itemId == BLACK_WARLOCK
+				|| itemId == SNOWY_KNIGHT || itemId == SAPPHIRE_GLACIALIS || itemId == RUBY_HARVEST){
+			return JARS;
 		}
 		else if ((name.contains("bones") && !name.contains(" to ")) || name.startsWith("ensouled") || name.endsWith(" ashes"))
 		{

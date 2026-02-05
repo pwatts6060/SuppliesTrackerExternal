@@ -112,6 +112,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private static final Pattern teletabPattern = Pattern.compile("^break|^troll stronghold|^weiss|^inside|^outside|^group"); // "Troll Stronghold" from Stony basalt, "Weiss" from Icy basalt, "Inside"/"Outside"/"Group" from house tablet
 	private static final Pattern spellPattern = Pattern.compile("^cast|^grand\\sexchange|^outside|^seers|^yanille");
 	private static final Pattern bpDartsPattern = Pattern.compile("Darts: <col=007f00>(.*) dart x (.*)</col>\\. Scales: <col=007f00>(.*) \\((.*)%\\)</col>\\.");
+	private static final Pattern jarReleasePattern = Pattern.compile("^release");
 
 	//Equipment slot constants
 	private static final int EQUIPMENT_MAINHAND_SLOT = EquipmentInventorySlot.WEAPON.getSlotIdx();
@@ -128,7 +129,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private static final double SCALES_PERCENT = 2.0 / 3.0;
 
 	//Max use amounts
-	private static final int POTION_DOSES = 4, CAKE_DOSES = 3, PIZZA_PIE_DOSES = 2;
+	private static final int POTION_DOSES = 4, MIX_POTION_DOSES = 2, CAKE_DOSES = 3, PIZZA_PIE_DOSES = 2;
 
 	private static final Random random = new Random();
 
@@ -370,7 +371,9 @@ public class SuppliesTrackerPlugin extends Plugin
 		return name.endsWith("(4)") ||
 			name.endsWith("(3)") ||
 			name.endsWith("(2)") ||
-			name.endsWith("(1)");
+			name.endsWith("(1)") ||
+			name.endsWith("mix(2)") ||
+			name.endsWith("mix (2)");
 	}
 
 	/**
@@ -1002,7 +1005,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		String target = Text.removeTags(event.getMenuTarget()).toLowerCase();
 		String menuOption = Text.removeTags(event.getMenuOption()).toLowerCase();
 
-		if (event.getMenuAction().equals(MenuAction.CC_OP) && (eatPattern.matcher(menuOption).find() || drinkPattern.matcher(menuOption).find()) &&
+		if (event.getMenuAction().equals(MenuAction.CC_OP) && (eatPattern.matcher(menuOption).find() || drinkPattern.matcher(menuOption).find() || jarReleasePattern.matcher(menuOption).find()) &&
 			actionStack.stream().noneMatch(a ->
 			{
 				if (a instanceof ItemMenuAction.ItemAction)
@@ -1322,7 +1325,13 @@ public class SuppliesTrackerPlugin extends Plugin
 	{
 		if (isPotion(name))
 		{
-			return price / POTION_DOSES;
+			if (name.contains("mix")) {
+				return price / MIX_POTION_DOSES;
+			}
+			else
+			{
+				return price / POTION_DOSES;
+			}
 		}
 		if (isPizzaPie(name))
 		{
@@ -1374,7 +1383,14 @@ public class SuppliesTrackerPlugin extends Plugin
 		// e.g. a half pizza becomes full pizza, 3 dose potion becomes 4, etc...
 		if (isPotion(name))
 		{
-			name = name.replaceAll(POTION_PATTERN, "(4)");
+			if (!name.contains("mix"))
+			{
+				name = name.replaceAll(POTION_PATTERN, "(4)");
+			}
+			else
+			{
+				name = name.replaceAll(POTION_PATTERN, "(2)");
+			}
 			itemId = getPotionID(name);
 		}
 		else if (isPizzaPie(name))
