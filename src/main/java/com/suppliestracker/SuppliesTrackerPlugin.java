@@ -261,6 +261,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private static final int BLOWPIPE_ATTACK = 5061;
 	private static final int HIGH_LEVEL_MAGIC_ATTACK = 1167;
 	private static final int POWERED_STAFF_ANIM = 11430;
+	private static final int BLAST_ANIM = 11423;
 	private static final int LOW_LEVEL_MAGIC_ATTACK = 1162;
 	private static final int BARRAGE_ANIMATION = 1979;
 	private static final int BARRAGE_NEW_ANIMATION = 10092;
@@ -705,6 +706,7 @@ public class SuppliesTrackerPlugin extends Plugin
 				// let case fall through to handle non-charge path through regular cast path
 				// to prevent double counting when manually casting from the spell book.
 			case LOW_LEVEL_MAGIC_ATTACK:
+			case BLAST_ANIM:
 			case BARRAGE_ANIMATION:
 			case BARRAGE_NEW_ANIMATION:
 			case BLITZ_ANIMATION:
