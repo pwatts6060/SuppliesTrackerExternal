@@ -263,7 +263,9 @@ public class SuppliesTrackerPlugin extends Plugin
 	private static final int POWERED_STAFF_ANIM = 11430;
 	private static final int LOW_LEVEL_MAGIC_ATTACK = 1162;
 	private static final int BARRAGE_ANIMATION = 1979;
+	private static final int BARRAGE_NEW_ANIMATION = 10092;
 	private static final int BLITZ_ANIMATION = 1978;
+	private static final int BLITZ_NEW_ANIMATION = 10091;
 	private static final int SCYTHE_OF_VITUR_ANIMATION = 8056;
 	private static final int TUMEKENS_SHADOW_ANIMATION = 9493;
 	private static final int VENATOR_BOW_ANIMATION = 9858;
@@ -704,7 +706,9 @@ public class SuppliesTrackerPlugin extends Plugin
 				// to prevent double counting when manually casting from the spell book.
 			case LOW_LEVEL_MAGIC_ATTACK:
 			case BARRAGE_ANIMATION:
+			case BARRAGE_NEW_ANIMATION:
 			case BLITZ_ANIMATION:
+			case BLITZ_NEW_ANIMATION:
 			case LOW_LEVEL_STANDARD_SPELLS:
 			case WAVE_SPELL_ANIMATION:
 			case SURGE_SPELL_ANIMATION:
