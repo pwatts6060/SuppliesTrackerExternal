@@ -109,7 +109,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private static final Pattern eatPattern = Pattern.compile("^eat");
 	private static final Pattern drinkPattern = Pattern.compile("^drink");
 	private static final Pattern teleportPattern = Pattern.compile("^teleport");
-	private static final Pattern teletabPattern = Pattern.compile("^break|^troll stronghold|^weiss|^inside|^outside|^group"); // "Troll Stronghold" from Stony basalt, "Weiss" from Icy basalt, "Inside"/"Outside"/"Group" from house tablet
+	private static final Pattern teletabPattern = Pattern.compile("^break|^troll stronghold|^weiss|^inside|^outside|^group|^varrock|^grand exchange|^camelot|^seers' village|^watchtower|^yanille"); // "Troll Stronghold" from Stony basalt, "Weiss" from Icy basalt, "Inside"/"Outside"/"Group" from house tablet
 	private static final Pattern spellPattern = Pattern.compile("^cast|^grand\\sexchange|^outside|^seers|^yanille");
 	private static final Pattern bpDartsPattern = Pattern.compile("Darts: <col=007f00>(.*) dart x (.*)</col>\\. Scales: <col=007f00>(.*) \\((.*)%\\)</col>\\.");
 	private static final Pattern jarReleasePattern = Pattern.compile("^release");
