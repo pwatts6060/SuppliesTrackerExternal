@@ -58,7 +58,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import static com.suppliestracker.ActionType.CAST;
 import static net.runelite.api.ItemID.*;
-import net.runelite.api.gameval.VarPlayerID;
 import static net.runelite.client.RuneLite.RUNELITE_DIR;
 
 import net.runelite.api.AnimationID;
@@ -260,7 +259,7 @@ public class SuppliesTrackerPlugin extends Plugin
 
 	private static final int BLOWPIPE_ATTACK = 5061;
 	private static final int HIGH_LEVEL_MAGIC_ATTACK = 1167;
-	private static final int SANG_STAFF_ANIM = 11430;
+	private static final int POWERED_STAFF_ANIM = 11430;
 	private static final int LOW_LEVEL_MAGIC_ATTACK = 1162;
 	private static final int BARRAGE_ANIMATION = 1979;
 	private static final int BLITZ_ANIMATION = 1978;
@@ -612,7 +611,7 @@ public class SuppliesTrackerPlugin extends Plugin
 
 		switch (playerAniId)
 		{
-			case SANG_STAFF_ANIM:
+			case POWERED_STAFF_ANIM:
 			case HIGH_LEVEL_MAGIC_ATTACK:
 				//Trident of the seas
 				if (TRIDENT_OF_THE_SEAS_IDS.contains(mainHandId)) {
