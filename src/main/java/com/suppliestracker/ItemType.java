@@ -121,7 +121,7 @@ public enum ItemType
 				item.getId() == TUMEKENS_SHADOW || item.getId() == VENATOR_BOW || item.getId() == ANCIENT_ESSENCE ||
 		 		item.getId() == THAMMARONS_SCEPTRE || item.getId() == CRAWS_BOW ||
 				item.getId() == VIGGORAS_CHAINMACE || item.getId() == ACCURSED_SCEPTRE || item.getId() == WEBWEAVER_BOW ||
-				item.getId() == URSINE_CHAINMACE || item.getId() == ACCURSED_SCEPTRE_A)
+				item.getId() == URSINE_CHAINMACE || item.getId() == ACCURSED_SCEPTRE_A || item.getId() == EYE_OF_AYAK)
 		{
 			return CHARGES;
 		}

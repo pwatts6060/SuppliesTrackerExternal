@@ -35,6 +35,7 @@ import static com.suppliestracker.SuppliesTrackerConfig.GROUP_NAME;
 public interface SuppliesTrackerConfig extends Config
 {
 	String GROUP_NAME = "suppliestracker";
+	String AYAK_USES_TEARS = "ayakUsesTears";
 
 	@ConfigItem(
 			keyName = "chargesBox",
@@ -54,5 +55,15 @@ public interface SuppliesTrackerConfig extends Config
 	default boolean vorkathsHead()
 	{
 		return false;
+	}
+
+	@ConfigItem(
+		keyName = AYAK_USES_TEARS,
+		name = "Ayak uses tear",
+		description = "Whether eye of ayak uses demon tears of runes as charges"
+	)
+	default boolean ayakUsesTears()
+	{
+		return true;
 	}
 }

@@ -248,7 +248,8 @@ public class SuppliesTrackerPlugin extends Plugin
 			BLIGHTED_VENGEANCE_SACK,
 			BLIGHTED_TELEPORT_SPELL_SACK,
 			BLIGHTED_ENTANGLE_SACK,
-			BLIGHTED_SURGE_SACK
+			BLIGHTED_SURGE_SACK,
+			DEMON_TEAR
 	);
 
 	//Hold Supply Data
@@ -276,6 +277,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private static final int LUNAR_HUMIDIFY = 6294;
 	private static final int ENSOULED_HEADS_ANIMATION = 7198;
 	private static final int IBANS_STAFF_ANIMATION = 708;
+	private static final int AYAK_ANIMATION = 12397;
 	private static final int SLAYERS_STAFF_ANIMATION = 1576;
 	private static final int ENTANGLE_ANIMATION = 1161;
 	private static final int VULNERABILITY_ANIMATION = 1165;
@@ -674,6 +676,22 @@ public class SuppliesTrackerPlugin extends Plugin
 					else
 					{
 						buildEntries(REVENANT_ETHER, 1);
+					}
+				}
+				break;
+			case AYAK_ANIMATION:
+				if (mainHandId == EYE_OF_AYAK)
+				{
+//					if (config.chargesBox()) // since eye of ayak has two methods of charging it, disable this feature
+//					{
+//						buildChargesEntries(EYE_OF_AYAK);
+//					}
+					if (config.ayakUsesTears())
+					{
+						buildEntries(DEMON_TEAR, 1);
+					} else {
+						buildEntries(DEATH_RUNE, 2);
+						buildEntries(CHAOS_RUNE, 1);
 					}
 				}
 				break;
@@ -1230,6 +1248,14 @@ public class SuppliesTrackerPlugin extends Plugin
 		else if (message.contains("Torfinn has retrieved some of your items."))
 		{
 			buildEntries(HEALER_ICON_22308);
+		}
+		else if (message.contains("Eye of Ayak has been charged with demon tears"))
+		{
+			configManager.setConfiguration(SuppliesTrackerConfig.GROUP_NAME, SuppliesTrackerConfig.AYAK_USES_TEARS, true);
+		}
+		else if (message.contains("Eye of Ayak has been charged with runes"))
+		{
+			configManager.setConfiguration(SuppliesTrackerConfig.GROUP_NAME, SuppliesTrackerConfig.AYAK_USES_TEARS, false);
 		}
 
 		Matcher bpMatcher = bpDartsPattern.matcher(message);
