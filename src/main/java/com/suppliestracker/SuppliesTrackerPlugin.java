@@ -39,6 +39,7 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -313,6 +314,8 @@ public class SuppliesTrackerPlugin extends Plugin
 	private Projectile lastBlowpipeProj = null;
 	private BlowpipeDart blowpipeDart = BlowpipeDart.ADAMANT;
 
+	public final Queue<Runnable> nextTickQueue = new ArrayDeque<>();
+
 	@Inject
 	private Bait bait;
 
@@ -448,6 +451,11 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Subscribe
 	private void onGameTick(GameTick tick)
 	{
+		while (!nextTickQueue.isEmpty()) {
+			final Runnable consumer = nextTickQueue.poll();
+			consumer.run();
+		}
+
 		if (mainHandId == TOXIC_BLOWPIPE
 				&& client.getLocalPlayer().getAnimation() == BLOWPIPE_ATTACK
 				&& client.getLocalPlayer().getAnimationFrame() == 0) {
@@ -875,6 +883,9 @@ public class SuppliesTrackerPlugin extends Plugin
 	}
 
 	private void processEquipChange(ItemContainer itemContainer) {
+		if (itemContainer == null) {
+			return;
+		}
 		//set mainhand for trident tracking
 		if (itemContainer.getItems().length > EQUIPMENT_MAINHAND_SLOT)
 		{
@@ -1725,6 +1736,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		currentSuppliesEntry.clear();
 		SwingUtilities.invokeLater(() -> panel.resetAll());
 		sessionHandler.clearSession();
+		nextTickQueue.add(() -> processEquipChange(client.getItemContainer(InventoryID.EQUIPMENT)));
 
 		try
 		{
