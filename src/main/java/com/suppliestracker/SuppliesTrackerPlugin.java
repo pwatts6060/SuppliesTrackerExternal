@@ -274,7 +274,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private static final int GAUNTLET_PADDLEFISH = 23874;
 	private static final int LOW_LEVEL_STANDARD_SPELLS = 711;
 	private static final int WAVE_SPELL_ANIMATION = 727;
-	private static final int SURGE_SPELL_ANIMATION = 7855;
+	private static final int SURGE_SPELL_ANIMATION = 9145;
 	private static final int HIGH_ALCH_ANIMATION = 713;
 	private static final int LUNAR_HUMIDIFY = 6294;
 	private static final int ENSOULED_HEADS_ANIMATION = 7198;
