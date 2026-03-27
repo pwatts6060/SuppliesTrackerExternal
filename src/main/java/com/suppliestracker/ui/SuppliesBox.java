@@ -484,7 +484,7 @@ public abstract class SuppliesBox extends JPanel
 				case SCYTHE_OF_VITUR:
 					tooltip.append("<html>")
 						.append("Blood Rune x ")
-						.append(qty * 3)
+						.append(qty * 2)
 						.append("<br>")
 						.append("Vial of Blood x ")
 						.append(qty).append("/100")
