@@ -583,9 +583,16 @@ public abstract class SuppliesBox extends JPanel
 						.append("gp)")
 						.append("</html>");
 					return tooltip.toString();
+				default:
+					final long price = item.getPrice();
+					tooltip.append(item.getName())
+						.append(" x ")
+						.append(qty)
+						.append(" (")
+						.append(QuantityFormatter.quantityToStackSize(price))
+						.append("gp) ");
+					return tooltip.toString();
 			}
-
-			return tooltip.toString();
 		}
 
 		@Override

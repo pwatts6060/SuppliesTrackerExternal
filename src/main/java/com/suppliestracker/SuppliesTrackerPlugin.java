@@ -325,6 +325,9 @@ public class SuppliesTrackerPlugin extends Plugin
 	private Bait bait;
 
 	@Inject
+	private ElementalTomes elementalTomes;
+
+	@Inject
 	private RunePouch runePouch;
 
 	@Inject
@@ -604,6 +607,15 @@ public class SuppliesTrackerPlugin extends Plugin
 		catch (IndexOutOfBoundsException ignored)
 		{
 		}
+	}
+
+	@Subscribe
+	public void onGraphicChanged(final GraphicChanged event) {
+		if (event.getActor() != client.getLocalPlayer())  {
+			return;
+		}
+
+		this.elementalTomes.graphicChange(event);
 	}
 
 	@Subscribe
@@ -1263,6 +1275,14 @@ public class SuppliesTrackerPlugin extends Plugin
 		{
 			configManager.setConfiguration(SuppliesTrackerConfig.GROUP_NAME, SuppliesTrackerConfig.AYAK_USES_TEARS, false);
 		}
+		else if (message.contains("tome has been charged with Burnt Pages"))
+		{
+			configManager.setConfiguration(SuppliesTrackerConfig.GROUP_NAME, SuppliesTrackerConfig.FIRE_TOME_USES_SEARING, false);
+		}
+		else if (message.contains("tome has been charged with Searing Pages"))
+		{
+			configManager.setConfiguration(SuppliesTrackerConfig.GROUP_NAME, SuppliesTrackerConfig.FIRE_TOME_USES_SEARING, true);
+		}
 
 		Matcher bpMatcher = bpDartsPattern.matcher(message);
 		if (bpMatcher.matches()) {
@@ -1475,6 +1495,10 @@ public class SuppliesTrackerPlugin extends Plugin
 		}
 		// calculate price for amount of doses used
 		calculatedPrice = scalePriceByDoses(name, itemId, calculatedPrice);
+
+		if (ElementalTomes.isPage(itemId)) {
+			calculatedPrice /= 20;
+		}
 
 		// write the new quantity and calculated price for this entry
 		SuppliesTrackerItem newEntry = new SuppliesTrackerItem(

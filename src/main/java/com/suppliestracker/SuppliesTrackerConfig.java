@@ -36,6 +36,7 @@ public interface SuppliesTrackerConfig extends Config
 {
 	String GROUP_NAME = "suppliestracker";
 	String AYAK_USES_TEARS = "ayakUsesTears";
+	String FIRE_TOME_USES_SEARING = "fireTomeUsesSearing";
 
 	@ConfigItem(
 			keyName = "chargesBox",
@@ -65,5 +66,15 @@ public interface SuppliesTrackerConfig extends Config
 	default boolean ayakUsesTears()
 	{
 		return true;
+	}
+
+	@ConfigItem(
+		keyName = FIRE_TOME_USES_SEARING,
+		name = "Tome of fire uses searing pages",
+		description = "Whether tome of fire uses searing pages or burnt pages"
+	)
+	default boolean fireTomeUsesSearing()
+	{
+		return false;
 	}
 }
