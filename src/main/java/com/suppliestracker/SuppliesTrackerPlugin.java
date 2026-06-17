@@ -524,7 +524,7 @@ public class SuppliesTrackerPlugin extends Plugin
 			case DIZANAS_QUIVER:
 			case DIZANAS_QUIVER_L:
 			case DIZANAS_QUIVER_UNCHARGED:
-			case DIZANAS_QUIVER_UNCHARGED_L:
+			case DIZANAS_QUIVER_L_UNCHARGED:
 			case BLESSED_DIZANAS_QUIVER:
 			case BLESSED_DIZANAS_QUIVER_L:
 			case DIZANAS_MAX_CAPE:
