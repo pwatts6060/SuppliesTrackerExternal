@@ -7,7 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import net.runelite.api.Client;
-import net.runelite.api.ItemID;
+import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.VarbitID;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +45,7 @@ public class BloodFuryTest
 	{
 		setCharges(10000);
 		setCharges(9999);
-		verify(plugin).buildChargesEntries(ItemID.AMULET_OF_BLOOD_FURY, 1);
+		verify(plugin).buildChargesEntries(ItemID.BLOOD_AMULET, 1);
 	}
 
 	@Test
@@ -53,7 +53,7 @@ public class BloodFuryTest
 	{
 		setCharges(10000);
 		setCharges(9997);
-		verify(plugin).buildChargesEntries(ItemID.AMULET_OF_BLOOD_FURY, 3);
+		verify(plugin).buildChargesEntries(ItemID.BLOOD_AMULET, 3);
 	}
 
 	@Test
@@ -61,7 +61,7 @@ public class BloodFuryTest
 	{
 		setCharges(1);
 		setCharges(0);
-		verify(plugin).buildChargesEntries(ItemID.AMULET_OF_BLOOD_FURY, 1);
+		verify(plugin).buildChargesEntries(ItemID.BLOOD_AMULET, 1);
 	}
 
 	@Test

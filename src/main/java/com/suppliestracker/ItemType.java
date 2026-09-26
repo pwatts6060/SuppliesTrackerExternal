@@ -105,7 +105,7 @@ public enum ItemType
 		{
 			return COINS;
 		}
-		else if (itemId == AMULET_OF_BLOOD_FURY)
+		else if (itemId == net.runelite.api.gameval.ItemID.BLOOD_AMULET)
 		{
 			return CHARGES;
 		}

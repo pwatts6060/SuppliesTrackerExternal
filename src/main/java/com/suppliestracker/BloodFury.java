@@ -2,7 +2,7 @@ package com.suppliestracker;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import net.runelite.api.ItemID;
+import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.VarbitID;
 
 /**
@@ -43,7 +43,7 @@ public class BloodFury
 		int used = oldCharges - charges;
 		if (used > 0 && used <= MAX_CHARGES_PER_UPDATE)
 		{
-			plugin.buildChargesEntries(ItemID.AMULET_OF_BLOOD_FURY, used);
+			plugin.buildChargesEntries(ItemID.BLOOD_AMULET, used);
 		}
 	}
 

@@ -1626,9 +1626,9 @@ public class SuppliesTrackerPlugin extends Plugin
 			case VIGGORAS_CHAINMACE:
 				calculatedPrice = itemManager.getItemPrice(REVENANT_ETHER);
 				break;
-			case AMULET_OF_BLOOD_FURY:
+			case net.runelite.api.gameval.ItemID.BLOOD_AMULET:
 				// each blood shard adds 10,000 charges
-				calculatedPrice = itemManager.getItemPrice(BLOOD_SHARD) / 10000;
+				calculatedPrice = itemManager.getItemPrice(net.runelite.api.gameval.ItemID.BLOOD_SHARD) / 10000;
 				break;
 		}
 
