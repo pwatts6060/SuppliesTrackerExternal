@@ -46,7 +46,8 @@ public class BloodFury
 	 */
 	public void onOwnHitsplat(int amount)
 	{
-		// misses (and nothing else) show as 0, successful hits of 0 are rounded up to 1
+		// a 0 is usually a miss, but can be a successful hit that still used a charge;
+		// those can't be told apart here, so the next charges message corrects for them
 		if (amount <= 0 || !isWearing() || !isMeleeAttack())
 		{
 			return;
