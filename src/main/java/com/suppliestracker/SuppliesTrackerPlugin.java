@@ -333,6 +333,9 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Inject
 	private Quiver quiver;
 
+	@Inject
+	private BloodFury bloodFury;
+
 	private boolean noXpCast = false;
 
 	//skills
@@ -544,6 +547,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	{
 		runePouch.updateVarbit(event.getVarbitId());
 		quiver.updateVarp(event.getVarpId());
+		bloodFury.updateVarbit(event.getVarbitId());
 
 		if (attackStyleVarbit != -1 && attackStyleVarbit == client.getVarpValue(VarPlayer.ATTACK_STYLE)) {
 			return;
@@ -1534,7 +1538,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	 *
 	 * @param itemId the id of the item
 	 */
-	private void buildChargesEntries(int itemId, int count)
+	void buildChargesEntries(int itemId, int count)
 	{
 		final ItemComposition itemComposition = itemManager.getItemComposition(itemId);
 		String name = itemComposition.getName();
@@ -1621,6 +1625,10 @@ public class SuppliesTrackerPlugin extends Plugin
 			case CRAWS_BOW:
 			case VIGGORAS_CHAINMACE:
 				calculatedPrice = itemManager.getItemPrice(REVENANT_ETHER);
+				break;
+			case AMULET_OF_BLOOD_FURY:
+				// each blood shard adds 10,000 charges
+				calculatedPrice = itemManager.getItemPrice(BLOOD_SHARD) / 10000;
 				break;
 		}
 
@@ -1780,6 +1788,11 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Subscribe
 	private void onGameStateChanged(final GameStateChanged event)
 	{
+		if (event.getGameState() == GameState.LOGIN_SCREEN || event.getGameState() == GameState.HOPPING)
+		{
+			bloodFury.reset();
+		}
+
 		if (event.getGameState() != GameState.LOGGED_IN || client.getAccountHash() == sessionHash) {
 			return;
 		}

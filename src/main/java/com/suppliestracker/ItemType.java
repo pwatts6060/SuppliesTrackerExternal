@@ -105,6 +105,10 @@ public enum ItemType
 		{
 			return COINS;
 		}
+		else if (itemId == AMULET_OF_BLOOD_FURY)
+		{
+			return CHARGES;
+		}
 		else if (name.contains("ring of") || name.contains("amulet") ||
 				name.contains("bracelet") || name.contains("necklace"))
 		{
