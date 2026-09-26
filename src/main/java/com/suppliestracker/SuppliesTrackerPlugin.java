@@ -926,6 +926,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		if (itemContainer == null) {
 			return;
 		}
+		bloodFury.onEquipmentChanged();
 		//set mainhand for trident tracking
 		if (itemContainer.getItems().length > EQUIPMENT_MAINHAND_SLOT)
 		{

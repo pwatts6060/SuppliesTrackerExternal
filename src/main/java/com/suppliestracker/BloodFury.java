@@ -5,12 +5,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import net.runelite.api.ChatMessageType;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.Skill;
 import net.runelite.api.gameval.InventoryID;
 import net.runelite.api.gameval.ItemID;
+import net.runelite.client.chat.ChatColorType;
+import net.runelite.client.chat.ChatMessageBuilder;
+import net.runelite.client.chat.ChatMessageManager;
+import net.runelite.client.chat.QueuedMessage;
 import net.runelite.client.util.Text;
 
 /**
@@ -26,19 +31,60 @@ public class BloodFury
 	// a melee hitsplat can land a tick after the xp drop for the attack
 	private static final int MELEE_XP_WINDOW_TICKS = 2;
 
+	static final String EQUIP_REMINDER = "Supplies Tracker: Check your Amulet of blood fury now and again after combat"
+		+ " so every charge is tracked, including successful hits of 0.";
+	static final String UNEQUIP_REMINDER = "Supplies Tracker: Check your Amulet of blood fury to add any successful"
+		+ " hits of 0 since your last Check.";
+
 	private final SuppliesTrackerPlugin plugin;
 	private final XpDropTracker xpDropTracker;
+	private final ChatMessageManager chatMessageManager;
 
 	// remaining charges from the last chat message, or -1 if not known yet
 	private int lastKnownCharges = -1;
 	// charges added from counted hits since lastKnownCharges was read
 	private int countedSinceCheck = 0;
+	private boolean wasWearing = false;
 
 	@Inject
-	BloodFury(SuppliesTrackerPlugin plugin, XpDropTracker xpDropTracker)
+	BloodFury(SuppliesTrackerPlugin plugin, XpDropTracker xpDropTracker, ChatMessageManager chatMessageManager)
 	{
 		this.plugin = plugin;
 		this.xpDropTracker = xpDropTracker;
+		this.chatMessageManager = chatMessageManager;
+	}
+
+	/**
+	 * Called when the worn equipment changes, including when it loads after logging in
+	 */
+	public void onEquipmentChanged()
+	{
+		boolean wearing = isWearing();
+		if (wearing && !wasWearing)
+		{
+			remind(EQUIP_REMINDER);
+		}
+		else if (!wearing && wasWearing && countedSinceCheck > 0)
+		{
+			remind(UNEQUIP_REMINDER);
+		}
+		wasWearing = wearing;
+	}
+
+	private void remind(String message)
+	{
+		if (!plugin.getConfig().bloodFuryCheckReminder())
+		{
+			return;
+		}
+
+		chatMessageManager.queue(QueuedMessage.builder()
+			.type(ChatMessageType.CONSOLE)
+			.runeLiteFormattedMessage(new ChatMessageBuilder()
+				.append(ChatColorType.HIGHLIGHT)
+				.append(message)
+				.build())
+			.build());
 	}
 
 	/**
@@ -91,6 +137,7 @@ public class BloodFury
 	{
 		lastKnownCharges = -1;
 		countedSinceCheck = 0;
+		wasWearing = false;
 	}
 
 	private boolean isWearing()

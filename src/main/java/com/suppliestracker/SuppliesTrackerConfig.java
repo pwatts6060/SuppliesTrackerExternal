@@ -77,4 +77,15 @@ public interface SuppliesTrackerConfig extends Config
 	{
 		return false;
 	}
+
+	@ConfigItem(
+		keyName = "bloodFuryCheckReminder",
+		name = "Blood fury Check reminder",
+		description = "Remind you in chat to Check your Amulet of blood fury when you equip it (or log in wearing it)"
+			+ " and when you take it off, so successful hits of 0 are tracked exactly"
+	)
+	default boolean bloodFuryCheckReminder()
+	{
+		return false;
+	}
 }

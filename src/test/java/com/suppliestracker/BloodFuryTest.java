@@ -7,7 +7,12 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import com.suppliestracker.Skills.XpDropTracker;
+import net.runelite.client.chat.ChatMessageManager;
+import net.runelite.client.chat.QueuedMessage;
+import org.mockito.ArgumentCaptor;
 import net.runelite.api.Client;
 import net.runelite.api.EquipmentInventorySlot;
 import net.runelite.api.Item;
@@ -21,7 +26,9 @@ import org.junit.Test;
 public class BloodFuryTest
 {
 	private SuppliesTrackerPlugin plugin;
+	private SuppliesTrackerConfig config;
 	private XpDropTracker xpDropTracker;
+	private ChatMessageManager chatMessageManager;
 	private ItemContainer worn;
 	private BloodFury bloodFury;
 
@@ -31,13 +38,31 @@ public class BloodFuryTest
 		plugin = mock(SuppliesTrackerPlugin.class);
 		Client client = mock(Client.class);
 		plugin.client = client;
+		config = mock(SuppliesTrackerConfig.class);
+		when(plugin.getConfig()).thenReturn(config);
 		worn = mock(ItemContainer.class);
 		when(client.getItemContainer(InventoryID.WORN)).thenReturn(worn);
 		xpDropTracker = mock(XpDropTracker.class);
-		bloodFury = new BloodFury(plugin, xpDropTracker);
+		chatMessageManager = mock(ChatMessageManager.class);
+		bloodFury = new BloodFury(plugin, xpDropTracker, chatMessageManager);
 
 		wearAmulet(ItemID.BLOOD_AMULET);
 		gainXp(Skill.STRENGTH);
+	}
+
+	private void removeAmulet()
+	{
+		when(worn.getItem(EquipmentInventorySlot.AMULET.getSlotIdx())).thenReturn(null);
+	}
+
+	private void verifyReminders(String... expected)
+	{
+		ArgumentCaptor<QueuedMessage> captor = ArgumentCaptor.forClass(QueuedMessage.class);
+		verify(chatMessageManager, times(expected.length)).queue(captor.capture());
+		for (int i = 0; i < expected.length; i++)
+		{
+			assertTrue(captor.getAllValues().get(i).getRuneLiteFormattedMessage().contains(expected[i]));
+		}
 	}
 
 	private void wearAmulet(int itemId)
@@ -170,5 +195,62 @@ public class BloodFuryTest
 		bloodFury.onChatMessage("Your Amulet of the damned will work for 50 more hits.");
 		check("100");
 		verify(plugin, never()).buildChargesEntries(anyInt(), anyInt());
+	}
+
+	@Test
+	public void noReminderWhenSettingIsOff()
+	{
+		bloodFury.onEquipmentChanged();
+		verify(chatMessageManager, never()).queue(any());
+	}
+
+	@Test
+	public void remindsWhenEquippedOrLoggedInWearing()
+	{
+		when(config.bloodFuryCheckReminder()).thenReturn(true);
+		bloodFury.onEquipmentChanged();
+		verifyReminders(BloodFury.EQUIP_REMINDER);
+	}
+
+	@Test
+	public void remindsOnlyOnceWhileStillWearing()
+	{
+		when(config.bloodFuryCheckReminder()).thenReturn(true);
+		bloodFury.onEquipmentChanged();
+		bloodFury.onEquipmentChanged();
+		verifyReminders(BloodFury.EQUIP_REMINDER);
+	}
+
+	@Test
+	public void remindsToCheckWhenRemovedWithUncheckedHits()
+	{
+		when(config.bloodFuryCheckReminder()).thenReturn(true);
+		bloodFury.onEquipmentChanged();
+		bloodFury.onOwnHitsplat(10);
+		removeAmulet();
+		bloodFury.onEquipmentChanged();
+		verifyReminders(BloodFury.EQUIP_REMINDER, BloodFury.UNEQUIP_REMINDER);
+	}
+
+	@Test
+	public void noRemovalReminderWhenAlreadyChecked()
+	{
+		when(config.bloodFuryCheckReminder()).thenReturn(true);
+		bloodFury.onEquipmentChanged();
+		bloodFury.onOwnHitsplat(10);
+		check("100");
+		removeAmulet();
+		bloodFury.onEquipmentChanged();
+		verifyReminders(BloodFury.EQUIP_REMINDER);
+	}
+
+	@Test
+	public void remindsAgainAfterLoggingBackIn()
+	{
+		when(config.bloodFuryCheckReminder()).thenReturn(true);
+		bloodFury.onEquipmentChanged();
+		bloodFury.reset();
+		bloodFury.onEquipmentChanged();
+		verifyReminders(BloodFury.EQUIP_REMINDER, BloodFury.EQUIP_REMINDER);
 	}
 }
