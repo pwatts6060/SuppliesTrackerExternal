@@ -547,7 +547,6 @@ public class SuppliesTrackerPlugin extends Plugin
 	{
 		runePouch.updateVarbit(event.getVarbitId());
 		quiver.updateVarp(event.getVarpId());
-		bloodFury.updateVarbit(event.getVarbitId());
 
 		if (attackStyleVarbit != -1 && attackStyleVarbit == client.getVarpValue(VarPlayer.ATTACK_STYLE)) {
 			return;
@@ -1186,12 +1185,22 @@ public class SuppliesTrackerPlugin extends Plugin
 	}
 
 	@Subscribe
+	private void onHitsplatApplied(HitsplatApplied event)
+	{
+		if (event.getHitsplat().isMine() && event.getActor() != client.getLocalPlayer())
+		{
+			bloodFury.onOwnHitsplat(event.getHitsplat().getAmount());
+		}
+	}
+
+	@Subscribe
 	private void onChatMessage(ChatMessage event) {
 		String message = event.getMessage();
 
 		if (event.getType() != ChatMessageType.GAMEMESSAGE && event.getType() != ChatMessageType.SPAM) {
 			return;
 		}
+		bloodFury.onChatMessage(message);
 		if (message.toLowerCase().contains("you plant "))
 		{
 			farming.onChatPlant(message.toLowerCase());
@@ -1788,7 +1797,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Subscribe
 	private void onGameStateChanged(final GameStateChanged event)
 	{
-		if (event.getGameState() == GameState.LOGIN_SCREEN || event.getGameState() == GameState.HOPPING)
+		if (event.getGameState() == GameState.LOGIN_SCREEN)
 		{
 			bloodFury.reset();
 		}
