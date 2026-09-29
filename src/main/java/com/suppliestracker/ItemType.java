@@ -105,6 +105,10 @@ public enum ItemType
 		{
 			return COINS;
 		}
+		else if (itemId == net.runelite.api.gameval.ItemID.BLOOD_AMULET)
+		{
+			return CHARGES;
+		}
 		else if (name.contains("ring of") || name.contains("amulet") ||
 				name.contains("bracelet") || name.contains("necklace"))
 		{
