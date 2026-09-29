@@ -609,6 +609,24 @@ public class SuppliesTrackerPlugin extends Plugin
 		}
 	}
 
+	/**
+	 * Snapshots the inventory so the runes used by this cast can be found
+	 * once the inventory updates
+	 */
+	private void trackSpellCast()
+	{
+		ItemContainer oldInv = client.getItemContainer(InventoryID.INVENTORY);
+
+		if (oldInv != null && actionStack.stream().noneMatch(a -> a.getType() == CAST)) {
+			ItemMenuAction newAction = new ItemMenuAction(CAST, oldInv.getItems());
+			actionStack.push(newAction);
+		}
+		if (!xpDropTracker.hadXpThisTick(Skill.MAGIC))
+		{
+			noXpCast = true;
+		}
+	}
+
 	@Subscribe
 	public void onGraphicChanged(final GraphicChanged event) {
 		if (event.getActor() != client.getLocalPlayer())  {
@@ -693,6 +711,11 @@ public class SuppliesTrackerPlugin extends Plugin
 						buildEntries(REVENANT_ETHER, 1);
 					}
 				}
+				// Twinflame staff shares this animation but casts regular spells using runes
+				else if (mainHandId == TWINFLAME_STAFF)
+				{
+					trackSpellCast();
+				}
 				break;
 			case AYAK_ANIMATION:
 				if (mainHandId == EYE_OF_AYAK)
@@ -746,18 +769,7 @@ public class SuppliesTrackerPlugin extends Plugin
 			case SLAYERS_STAFF_ANIMATION:
 			case HIGH_ALCH_ANIMATION:
 			case LUNAR_HUMIDIFY:
-				ItemContainer oldInv = client.getItemContainer(InventoryID.INVENTORY);
-
-				if (oldInv != null && actionStack.stream().noneMatch(a -> a.getType() == CAST)) {
-					ItemMenuAction newAction = new ItemMenuAction(CAST, oldInv.getItems());
-					actionStack.push(newAction);
-				}
-				if (!xpDropTracker.hadXpThisTick(Skill.MAGIC))
-				{
-					noXpCast = true;
-				}{
-
-			}
+				trackSpellCast();
 				break;
 			case BOW_SHOOT_ANIMATION:
 			case WEBWEAVER_SPEC_ANIMATION:
