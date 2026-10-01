@@ -281,6 +281,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	private static final int ENSOULED_HEADS_ANIMATION = 7198;
 	private static final int IBANS_STAFF_ANIMATION = 708;
 	private static final int AYAK_ANIMATION = 12397;
+	private static final int AYAK_SPEC_ANIMATION = 12394;
 	private static final int SLAYERS_STAFF_ANIMATION = 1576;
 	private static final int ENTANGLE_ANIMATION = 1161;
 	private static final int VULNERABILITY_ANIMATION = 1165;
@@ -469,6 +470,11 @@ public class SuppliesTrackerPlugin extends Plugin
 				&& client.getLocalPlayer().getAnimationFrame() == 0) {
 			blowpipeShot();
 		}
+		if (mainHandId == EYE_OF_AYAK
+				&& client.getLocalPlayer().getAnimation() == AYAK_ANIMATION
+				&& client.getLocalPlayer().getAnimationFrame() == 0) {
+			ayakCast();
+		}
 
 		skipProjectileCheckThisTick = false;
 
@@ -490,6 +496,24 @@ public class SuppliesTrackerPlugin extends Plugin
 		if (random.nextDouble() <= SCALES_PERCENT)
 		{
 			buildEntries(ZULRAHS_SCALES);
+		}
+	}
+
+	/**
+	 * Handles the logic for counting an Eye of Ayak cast. Invoked both through the onAnimationChanged listener (for
+	 * special attack) and on tick start (for normal attacks, as these are too quick to be counted with
+	 * onAnimationChanged, similar to Blowpipe).
+	 */
+	private void ayakCast()
+	{
+		if (config.ayakUsesTears())
+		{
+			buildEntries(DEMON_TEAR, 1);
+		}
+		else
+		{
+			buildEntries(DEATH_RUNE, 2);
+			buildEntries(CHAOS_RUNE, 1);
 		}
 	}
 
@@ -717,22 +741,6 @@ public class SuppliesTrackerPlugin extends Plugin
 					trackSpellCast();
 				}
 				break;
-			case AYAK_ANIMATION:
-				if (mainHandId == EYE_OF_AYAK)
-				{
-//					if (config.chargesBox()) // since eye of ayak has two methods of charging it, disable this feature
-//					{
-//						buildChargesEntries(EYE_OF_AYAK);
-//					}
-					if (config.ayakUsesTears())
-					{
-						buildEntries(DEMON_TEAR, 1);
-					} else {
-						buildEntries(DEATH_RUNE, 2);
-						buildEntries(CHAOS_RUNE, 1);
-					}
-				}
-				break;
 			case IBANS_STAFF_ANIMATION:
 				//Iban's staff
 				if (IBANS_STAFF_IDS.contains(mainHandId) && config.chargesBox()) {
@@ -826,6 +834,10 @@ public class SuppliesTrackerPlugin extends Plugin
 //						buildEntries(ANCIENT_ESSENCE, 1);
 //					}
 				}
+				break;
+
+			case AYAK_SPEC_ANIMATION:
+				ayakCast();
 				break;
 			case TUMEKENS_SHADOW_ANIMATION:
 				if(TUMEKENS_SHADOW_IDS.contains(mainHandId))
