@@ -53,6 +53,11 @@ public class XpDropTracker {
         return lastXpDrop(skill).tick == client.getTickCount();
     }
 
+    public boolean hadXpWithinTicks(Skill skill, int ticks) {
+        int tick = lastXpDrop(skill).tick;
+        return tick >= 0 && client.getTickCount() - tick <= ticks;
+    }
+
     @AllArgsConstructor
     static class XpDrop {
 

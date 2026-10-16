@@ -334,6 +334,9 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Inject
 	private Quiver quiver;
 
+	@Inject
+	private BloodFury bloodFury;
+
 	private boolean noXpCast = false;
 
 	//skills
@@ -947,6 +950,7 @@ public class SuppliesTrackerPlugin extends Plugin
 		if (itemContainer == null) {
 			return;
 		}
+		bloodFury.onEquipmentChanged();
 		//set mainhand for trident tracking
 		if (itemContainer.getItems().length > EQUIPMENT_MAINHAND_SLOT)
 		{
@@ -1206,12 +1210,22 @@ public class SuppliesTrackerPlugin extends Plugin
 	}
 
 	@Subscribe
+	private void onHitsplatApplied(HitsplatApplied event)
+	{
+		if (event.getHitsplat().isMine() && event.getActor() != client.getLocalPlayer())
+		{
+			bloodFury.onOwnHitsplat(event.getHitsplat().getAmount());
+		}
+	}
+
+	@Subscribe
 	private void onChatMessage(ChatMessage event) {
 		String message = event.getMessage();
 
 		if (event.getType() != ChatMessageType.GAMEMESSAGE && event.getType() != ChatMessageType.SPAM) {
 			return;
 		}
+		bloodFury.onChatMessage(message);
 		if (message.toLowerCase().contains("you plant "))
 		{
 			farming.onChatPlant(message.toLowerCase());
@@ -1558,7 +1572,7 @@ public class SuppliesTrackerPlugin extends Plugin
 	 *
 	 * @param itemId the id of the item
 	 */
-	private void buildChargesEntries(int itemId, int count)
+	void buildChargesEntries(int itemId, int count)
 	{
 		final ItemComposition itemComposition = itemManager.getItemComposition(itemId);
 		String name = itemComposition.getName();
@@ -1645,6 +1659,10 @@ public class SuppliesTrackerPlugin extends Plugin
 			case CRAWS_BOW:
 			case VIGGORAS_CHAINMACE:
 				calculatedPrice = itemManager.getItemPrice(REVENANT_ETHER);
+				break;
+			case net.runelite.api.gameval.ItemID.BLOOD_AMULET:
+				// each blood shard adds 10,000 charges
+				calculatedPrice = itemManager.getItemPrice(net.runelite.api.gameval.ItemID.BLOOD_SHARD) / 10000;
 				break;
 		}
 
@@ -1804,6 +1822,11 @@ public class SuppliesTrackerPlugin extends Plugin
 	@Subscribe
 	private void onGameStateChanged(final GameStateChanged event)
 	{
+		if (event.getGameState() == GameState.LOGIN_SCREEN)
+		{
+			bloodFury.reset();
+		}
+
 		if (event.getGameState() != GameState.LOGGED_IN || client.getAccountHash() == sessionHash) {
 			return;
 		}
